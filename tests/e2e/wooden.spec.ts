@@ -91,7 +91,7 @@ test('all campaign transitions and final victory handle actual collision outcome
   test.setTimeout(120000);
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
   await start(page);
-  for (let level = 0; level < 10; level++) {
+  for (let level = 0; level < 20; level++) {
     await expect.poll(async () => (await state(page)).level).toBe(level);
     await expect.poll(async () => (await state(page)).status).toBe('playing');
     // Controlled projectile fixtures exercise collisions and the complete scene lifecycle.
@@ -107,7 +107,7 @@ test('all campaign transitions and final victory handle actual collision outcome
   }
   await expect(page.getByRole('heading', { name: 'Maestro del taller' })).toBeVisible();
   const save = await page.evaluate(() => JSON.parse(localStorage.getItem('wooden-tanks-v1')!));
-  expect(save.unlocked).toBe(10); expect(save.wins).toBe(1);
+  expect(save.unlocked).toBe(20); expect(save.wins).toBe(1);
   await page.getByRole('button', { name: 'Volver al menú' }).click();
   await expect(page.locator('#play')).toBeVisible(); expect(errors).toEqual([]);
 });

@@ -4,7 +4,7 @@ import { World } from '../src/game/World.ts';
 import { findPath } from '../src/game/EnemyAI.ts';
 import { circleCircle, lineClear, sweepCircle } from '../src/game/CollisionManager.ts';
 import { demo } from './fixtures/reference-level.ts';
-import { boardHoles, levels } from '../src/game/LevelManager.ts';
+import { levels } from '../src/game/LevelManager.ts';
 import type { Level, Projectile, TankKind } from '../src/game/types.ts';
 const hole = { x: 300, y: 300, radius: 15 };
 const level: Level = { id: 1, name: 'Holes', subtitle: '', difficulty: 1, player: { x: 100, y: 500 }, enemies: [{ x: 500, y: 100, kind: 'basic' }], obstacles: [], holes: [hole] };
@@ -12,7 +12,7 @@ const level: Level = { id: 1, name: 'Holes', subtitle: '', difficulty: 1, player
 test('every displayed board hole participates in movement collision in all missions', () => {
   for (const mission of [...levels, demo]) {
     const world = new World(mission);
-    assert.equal(world.holes.length, boardHoles.length);
+    assert.deepEqual(world.holes, mission.holes ?? []);
     for (const pit of world.holes) assert.equal(world.canStand(pit, world.player.radius, world.player.id), false);
   }
 });

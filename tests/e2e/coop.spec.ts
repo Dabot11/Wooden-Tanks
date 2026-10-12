@@ -159,9 +159,9 @@ test('Game Over retry and campaign victory replay preserve both players and cont
   // Start the real final mission, then produce its lethal impacts with controlled shells.
   await page.evaluate(() => {
     const s = (window as any).__wooden;
-    s.scene.restart({ session: { ...s.session, level: 9 } });
+    s.scene.restart({ session: { ...s.session, level: 19 } });
   });
-  await expect.poll(async () => (await state(page)).level).toBe(9);
+  await expect.poll(async () => (await state(page)).level).toBe(19);
   await expect.poll(async () => (await state(page)).status).toBe('playing');
   await page.evaluate(() => {
     const w = (window as any).__wooden.world;

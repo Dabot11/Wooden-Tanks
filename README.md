@@ -1,6 +1,6 @@
 # Wooden Tanks
 
-Juego de combate táctico para navegador, construido con **TypeScript, Phaser 3 y Vite**. Diez misiones de campaña, jugables en solitario o en cooperativo local. Todos los gráficos se generan localmente con Canvas; el audio se sintetiza con Web Audio. No necesita cuentas, claves ni servicios externos.
+Juego de combate táctico para navegador, construido con **TypeScript, Phaser 3 y Vite**. Veinte misiones de campaña, jugables en solitario o en cooperativo local. Todos los gráficos se generan localmente con Canvas; el audio se sintetiza con Web Audio. No necesita cuentas, claves ni servicios externos.
 
 ## Ejecutar
 
@@ -83,6 +83,8 @@ En el menú, elige **Cooperativo local** y conecta los mandos por Bluetooth o US
 
 El modo de un jugador sigue disponible en **Un jugador**. Las pruebas simulan dos Xbox con el mismo nombre e índices independientes; la conexión física Bluetooth/USB en macOS debe comprobarse en la laptop.
 
+Las misiones 11–20 añaden rutas alternas, islas con cavidades, pasos estrechos y fortificaciones de corcho. La campaña termina en la misión 20. Si ya completaste la campaña original, la misión 11 queda disponible al cargar tu progreso; se conserva tu récord y tus preferencias.
+
 ## Enemigos
 
 - **Gris · básico:** lento, defensivo; dispara con línea de visión y busca otro ángulo cuando pierde al jugador.
@@ -105,7 +107,7 @@ Para reutilizar Chromium instalado en el sistema:
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e
 ```
 
-Playwright arranca Vite automáticamente si no está activo. Comprueba una victoria con controles reales, movimiento y apuntado, disparos, pausa, reinicio, pérdida de vidas, Game Over, las diez transiciones de campaña, victoria final, persistencia y proporción 16:9. También comprueba twin-stick, RT, retención de apuntado, conexión/desconexión, alternancia de dispositivos, menús con A/B y zonas muertas guardadas. Las pruebas de pérdida de vidas y de transiciones usan proyectiles de prueba para producir colisiones controladas. El acceso de diagnóstico `window.__wooden` solo existe en modo desarrollo; no forma parte de la compilación de producción.
+Playwright arranca Vite automáticamente si no está activo. Comprueba una victoria con controles reales, movimiento y apuntado, disparos, pausa, reinicio, pérdida de vidas, Game Over, las veinte transiciones de campaña, victoria final, persistencia y proporción 16:9. También comprueba twin-stick, RT, retención de apuntado, conexión/desconexión, alternancia de dispositivos, menús con A/B y zonas muertas guardadas. Las pruebas de pérdida de vidas y de transiciones usan proyectiles de prueba para producir colisiones controladas. El acceso de diagnóstico `window.__wooden` solo existe en modo desarrollo; no forma parte de la compilación de producción.
 
 ## Arquitectura
 

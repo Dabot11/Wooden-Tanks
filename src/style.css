@@ -172,3 +172,11 @@ kbd { font-family: inherit; font-size: .85em; border: 1px solid #8f826150; borde
 .mouse-reticle { position: absolute; pointer-events: none; width: calc(20 * var(--unit)); height: calc(20 * var(--unit)); transform: translate(-50%, -50%); border-radius: 50%; border: calc(1.5 * var(--unit)) solid #fff6dc; box-shadow: 0 0 0 calc(1 * var(--unit)) #263b31bb; background: linear-gradient(#263b31cc, #263b31cc) center / 100% calc(1 * var(--unit)) no-repeat, linear-gradient(#263b31cc, #263b31cc) center / calc(1 * var(--unit)) 100% no-repeat; }
 .mouse-reticle::after { content: ''; position: absolute; left: 50%; top: 50%; width: calc(3 * var(--unit)); height: calc(3 * var(--unit)); background: #fff4cf; border-radius: 50%; transform: translate(-50%, -50%); }
 .mouse-reticle[hidden] { display: none; }
+
+/* Twenty missions remain reachable without clipping the dialog. */
+.selector-modal { max-height: calc(650 * var(--unit)); display: flex; flex-direction: column; }
+.selector-modal .mission-grid { min-height: 0; overflow-y: auto; overscroll-behavior: contain; margin: calc(16 * var(--unit)) 0; }
+.selector-modal .mission-choice { min-height: calc(82 * var(--unit)); padding: calc(10 * var(--unit)); flex-shrink: 0; }
+.selector-modal .mission-choice strong { font-size: calc(22 * var(--unit)); }
+.selector-modal .mission-choice span { font-size: calc(9 * var(--unit)); min-height: calc(24 * var(--unit)); margin: calc(4 * var(--unit)) 0; line-height: 1.35; }
+.selector-modal .modal-actions { flex-shrink: 0; }

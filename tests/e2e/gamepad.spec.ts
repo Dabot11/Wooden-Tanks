@@ -175,8 +175,8 @@ test('A confirms and B returns from Game Over and victory screens', async ({ pag
   await expect(page.locator('#play')).toBeVisible();
   await press(page, 0);
   await expect.poll(async () => (await state(page)).status).toBe('playing'); await neutral(page);
-  await page.evaluate(() => { const s = (window as any).__wooden; s.scene.restart({ session: { ...s.session, level: 9 } }); });
-  await expect.poll(async () => (await state(page)).level).toBe(9);
+  await page.evaluate(() => { const s = (window as any).__wooden; s.scene.restart({ session: { ...s.session, level: 19 } }); });
+  await expect.poll(async () => (await state(page)).level).toBe(19);
   await expect.poll(async () => (await state(page)).status).toBe('playing');
   await page.evaluate(() => {
     const w = (window as any).__wooden.world;
