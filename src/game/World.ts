@@ -60,47 +60,68 @@ export class World {
     this.player.turret = lerpAngle(this.player.turret, Math.atan2(input.aim.y - this.player.y, input.aim.x - this.player.x), dt * 24);
     if (input.fire) this.fire(this.player);
     if (ai && this.player.alive) for (const tank of this.enemies) this.ai.update(this, tank, dt);
-    for (const p of this.projectiles) if (p.alive) this.stepProjectile(p, dt);
+    this.stepProjectiles(this.projectiles, dt);
     this.projectiles = this.projectiles.filter(p => p.alive);
   }
   stepProjectile(p: Projectile, dt: number) {
-    p.age += dt;
-    if (p.age > 7) { p.alive = false; return; }
+    this.stepProjectiles([p], dt);
+  }
+  private stepProjectiles(projectiles: Projectile[], dt: number) {
+    for (const p of projectiles) {
+      if (!p.alive) continue;
+      p.age += dt;
+      if (p.age > 7) p.alive = false;
+    }
     let time = dt;
-    // Swept collision prevents tunneling; remaining time is consumed after reflection.
-    for (let iteration = 0; iteration < 6 && time > 1e-7 && p.alive; iteration++) {
-      const delta = { x: p.vx * time, y: p.vy * time };
+    // Advance every shell to the earliest shared impact, then recalculate trajectories.
+    // Relative sweeps catch crossing shells and respect earlier walls, hits and ricochets.
+    while (time > 1e-7) {
+      const active = projectiles.filter(p => p.alive);
+      if (!active.length) break;
       let first = 1.001;
-      let target: Tank | Obstacle | Rect | null = null;
+      let source: Projectile | null = null;
+      let target: Tank | Obstacle | Rect | Projectile | null = null;
       let normal: Vec = { x: 0, y: 0 };
-      for (const box of [...this.walls, ...this.obstacles.filter(o => o.alive)]) {
-        const hit = sweepBox(p, delta, box, 4);
-        if (hit && hit.t < first) { first = hit.t; normal = hit.normal; target = box; }
+      for (let i = 0; i < active.length; i++) {
+        const p = active[i], delta = { x: p.vx * time, y: p.vy * time };
+        for (const box of this.solids) {
+          const hit = sweepBox(p, delta, box, 4);
+          if (hit && hit.t < first) { first = hit.t; normal = hit.normal; source = p; target = box; }
+        }
+        for (const tank of this.tanks) {
+          if (!tank.alive || (tank.id === p.owner && p.age < 0.12 && !p.bounces)) continue;
+          const hit = sweepCircle(p, delta, tank, tank.radius + 3);
+          if (hit !== null && hit < first) { first = hit; source = p; target = tank; }
+        }
+        for (let j = i + 1; j < active.length; j++) {
+          const other = active[j];
+          const hit = sweepCircle(p, { x: (p.vx - other.vx) * time, y: (p.vy - other.vy) * time }, other, 8);
+          if (hit !== null && hit < first) { first = hit; source = p; target = other; }
+        }
       }
-      for (const tank of this.tanks) {
-        if (!tank.alive || (tank.id === p.owner && p.age < 0.12 && !p.bounces)) continue;
-        const hit = sweepCircle(p, delta, tank, tank.radius + 3);
-        if (hit !== null && hit < first) { first = hit; target = tank; }
-      }
-      if (!target) { p.x += delta.x; p.y += delta.y; break; }
-      p.x += delta.x * first; p.y += delta.y * first;
-      time *= 1 - first;
-      if ('kind' in target) {
-        target.alive = false; p.alive = false;
+      const advance = source ? time * first : time;
+      for (const p of active) { p.x += p.vx * advance; p.y += p.vy * advance; }
+      if (!source || !target) break;
+      time -= advance;
+      if ('owner' in target) {
+        source.alive = false; target.alive = false;
+        this.events.push({ type: 'impact', x: (source.x + target.x) / 2, y: (source.y + target.y) / 2 });
+      } else if ('kind' in target) {
+        target.alive = false; source.alive = false;
         this.events.push({ type: 'destroy', x: target.x, y: target.y, player: target.id === 0, kind: target.kind });
       } else if (isObstacle(target) && target.destructible) {
-        target.hp--; p.alive = false;
-        this.events.push({ type: 'impact', x: p.x, y: p.y });
+        target.hp--; source.alive = false;
+        this.events.push({ type: 'impact', x: source.x, y: source.y });
         if (target.hp <= 0) {
           target.alive = false;
           this.events.push({ type: 'break', x: target.x + target.w / 2, y: target.y + target.h / 2 });
         }
       } else {
-        const velocity = reflect({ x: p.vx, y: p.vy }, normal);
-        p.vx = velocity.x; p.vy = velocity.y; p.bounces++;
-        p.x += normal.x * 0.15; p.y += normal.y * 0.15;
-        this.events.push({ type: 'bounce', x: p.x, y: p.y });
-        if (p.bounces > 2) p.alive = false;
+        const velocity = reflect({ x: source.vx, y: source.vy }, normal);
+        source.vx = velocity.x; source.vy = velocity.y; source.bounces++;
+        source.x += normal.x * 0.15; source.y += normal.y * 0.15;
+        this.events.push({ type: 'bounce', x: source.x, y: source.y });
+        if (source.bounces > 2) source.alive = false;
       }
     }
   }

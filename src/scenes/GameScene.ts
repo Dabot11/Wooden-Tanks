@@ -7,7 +7,6 @@ import { progress } from '../game/Progress';
 import { audio } from '../game/AudioManager';
 import { HUD } from '../ui/HUD';
 import { showOverlay } from '../ui/Overlay';
-import { ARENA } from '../game/types';
 import { gamepad } from '../input/GamepadRuntime';
 import { showGamepadSettings } from '../ui/GamepadSettings';
 export interface Session { level: number; score: number; lives: number; missionStartScore: number }
@@ -15,7 +14,7 @@ export class GameScene extends Phaser.Scene {
   world!: World; session!: Session; status: 'intro' | 'playing' | 'paused' | 'won' | 'dead' | 'ended' = 'intro';
   private board!: BoardRenderer; private effects!: ParticleEffects; private hud!: HUD;
   private keys!: Record<string, Phaser.Input.Keyboard.Key>; private root!: HTMLElement;
-  private reticle!: Phaser.GameObjects.Graphics; private queuedShot = false; private aimMode: 'default' | 'mouse' | 'gamepad' = 'default'; private padAim = { x: 0, y: -1 };
+  private queuedShot = false; private aimMode: 'default' | 'mouse' | 'gamepad' = 'default'; private padAim = { x: 0, y: -1 };
   private closePause?: () => void; private closePadSettings?: () => void;
   constructor() { super('Game'); }
   init(data: { session?: Session }) {
@@ -28,7 +27,6 @@ export class GameScene extends Phaser.Scene {
     this.board = new BoardRenderer(this, this.world); this.effects = new ParticleEffects(this);
     this.root = document.querySelector<HTMLElement>('#ui')!;
     this.hud = new HUD(this.root, this.world, this.session, () => this.pauseGame());
-    this.reticle = this.add.graphics().setDepth(50);
     this.keys = this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SPACE,ESC,M') as Record<string, Phaser.Input.Keyboard.Key>;
     this.input.keyboard!.addCapture(['UP', 'DOWN', 'LEFT', 'RIGHT', 'SPACE', 'ESC']);
     this.input.keyboard!.on('keydown-ESC', (event: KeyboardEvent) => {
@@ -58,7 +56,7 @@ export class GameScene extends Phaser.Scene {
   pauseGame() {
     if (this.status !== 'playing') return;
     gamepad.suppress();
-    this.status = 'paused'; this.queuedShot = false; this.reticle.clear(); this.tweens.pauseAll(); this.time.paused = true;
+    this.status = 'paused'; this.queuedShot = false; this.tweens.pauseAll(); this.time.paused = true;
     document.querySelector('#app')!.classList.remove('gameplay');
     this.closePause = showOverlay(this.root, { eyebrow: `MISIÓN ${this.world.level.id}`, title: 'Una pequeña pausa', description: 'El taller puede esperar. Vuelve cuando estés listo.', cancel: () => this.resumeGame(), symbol: '<span class="pause-icon" style="margin:auto;width:24px;height:26px"></span>', actions: [
       { text: 'Reanudar →', run: () => this.resumeGame() },
@@ -79,7 +77,7 @@ export class GameScene extends Phaser.Scene {
   private menu() { progress.record(this.session.score); this.time.paused = false; this.scene.start('Menu'); }
   private win() {
     gamepad.suppress();
-    this.status = 'won'; this.reticle.clear(); document.querySelector('#app')!.classList.remove('gameplay');
+    this.status = 'won'; document.querySelector('#app')!.classList.remove('gameplay');
     const bonus = Math.max(100, Math.round(500 - this.world.elapsed * 3)); this.session.score += bonus;
     progress.record(this.session.score); audio.play('win'); this.hud.update(this.world, this.session);
     const final = this.session.level === levels.length - 1 || this.session.level === -1;
@@ -100,7 +98,7 @@ export class GameScene extends Phaser.Scene {
   }
   private loseLife() {
     gamepad.suppress();
-    this.status = 'dead'; this.reticle.clear(); this.session.lives--; progress.record(this.session.score); this.hud.update(this.world, this.session);
+    this.status = 'dead'; this.session.lives--; progress.record(this.session.score); this.hud.update(this.world, this.session);
     this.time.delayedCall(1300, () => {
       if (this.session.lives > 0) this.restartMission();
       else {
@@ -138,13 +136,6 @@ export class GameScene extends Phaser.Scene {
     }
     this.world.events.length = 0;
     this.board.render(delta / 1000); this.hud.update(this.world, this.session);
-    this.reticle.clear();
-    const target = this.aimMode === 'gamepad' ? { x: this.world.player.x + this.padAim.x * 90, y: this.world.player.y + this.padAim.y * 90 } : pointer;
-    if (this.aimMode !== 'default' && target.x > ARENA.x && target.x < ARENA.x + ARENA.w && target.y > ARENA.y && target.y < ARENA.y + ARENA.h) {
-      this.reticle.lineStyle(1.2, 0x314d4b, 0.72).strokeCircle(target.x, target.y, 9);
-      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) this.reticle.lineBetween(target.x + dx * 12, target.y + dy * 12, target.x + dx * 17, target.y + dy * 17);
-      this.reticle.fillStyle(0x314d4b, 0.8).fillCircle(target.x, target.y, 1.5);
-    }
     if (!this.world.player.alive) this.loseLife(); else if (!this.world.enemies.length) this.win();
   }
 }

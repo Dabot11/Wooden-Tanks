@@ -1,4 +1,4 @@
-import { ARENA, lerpAngle, wrapAngle } from './types';
+import { ARENA, SPEED_SCALE, lerpAngle, wrapAngle } from './types';
 import type { Tank, Vec, Rect } from './types';
 import type { World } from './World';
 import { circleBox, lineClear, sweepCircle } from './CollisionManager';
@@ -136,7 +136,7 @@ export class EnemyAI {
         plan.move = goal ? { x: goal.x - tank.x, y: goal.y - tank.y } : { x: 0, y: 0 };
       }
     }
-    const speed = { basic: 36, patrol: 75, offensive: 90, tactical: 78, player: 155 }[tank.kind] * Math.min(1.2, 0.85 + world.level.difficulty * 0.12);
+    const speed = { basic: 36, patrol: 75, offensive: 90, tactical: 78, player: 155 }[tank.kind] * SPEED_SCALE * Math.min(1.2, 0.85 + world.level.difficulty * 0.12);
     // Track navigation waypoints continuously; reaction intervals only govern decisions.
     if (tank.state !== 'Evade') {
       while (tank.path.length && Math.hypot(tank.path[0].x - tank.x, tank.path[0].y - tank.y) < 9) tank.path.shift();

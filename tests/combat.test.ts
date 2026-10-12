@@ -69,3 +69,75 @@ test('enemy fires only with an unobstructed direct line of sight', () => {
   const world = new World(base); const enemy = world.enemies[0]; enemy.x = 450; enemy.y = 150; enemy.cooldown = 0;
   world.update(0.05, input); assert.equal(world.projectiles.filter(p => p.owner === enemy.id).length, 0);
 });
+
+test('player and every enemy move at 75 percent of their previous speeds', () => {
+  const world = new World(base);
+  world.update(0.05, { ...input, move: { x: 1, y: 0 } }, false);
+  assert.ok(Math.abs(world.player.x - 150 - 155 * 0.75 * 0.05) < 1e-8);
+  for (const [kind, previous] of [['basic', 36], ['patrol', 75], ['offensive', 90], ['tactical', 78]] as const) {
+    const w = new World({ ...base, enemies: [{ x: 900, y: 500, kind }] });
+    const enemy = w.enemies[0];
+    enemy.think = 100; enemy.cooldown = 100; enemy.path = [{ x: 700, y: 500 }];
+    w.update(0.05, input);
+    assert.ok(Math.abs(900 - enemy.x - previous * 0.75 * 0.97 * 0.05) < 1e-8, kind);
+  }
+});
+test('new missiles travel at 75 percent speed without changing reload timing', () => {
+  const world = new World(base); world.player.turret = Math.PI / 2;
+  assert.ok(world.fire(world.player));
+  assert.equal(Math.hypot(world.projectiles[0].vx, world.projectiles[0].vy), 430 * 0.75);
+  assert.equal(world.player.cooldown, 0.28);
+});
+const openWorld = () => new World({ ...base, obstacles: [] });
+test('head-on shells destroy each other for both friendly and hostile owners', () => {
+  for (const owner of [0, 1]) for (const reversed of [false, true]) {
+    const w = openWorld();
+    w.projectiles = [shot({ x: 500, y: 300 }), shot({ id: 21, owner, x: 520, y: 300, vx: -430 })];
+    if (reversed) w.projectiles.reverse();
+    w.update(0.05, input, false);
+    assert.equal(w.projectiles.length, 0);
+    assert.equal(w.events.filter(e => e.type === 'impact').length, 1);
+    assert.ok(w.tanks.every(t => t.alive));
+  }
+});
+test('fast perpendicular shells collide between frame endpoints', () => {
+  const w = openWorld();
+  w.projectiles = [shot({ x: 500, y: 300, vx: 1000 }), shot({ id: 21, x: 525, y: 275, vx: 0, vy: 1000 })];
+  w.update(0.05, input, false);
+  assert.equal(w.projectiles.length, 0);
+});
+test('parallel shells and crossing paths reached at different times do not collide', () => {
+  for (const pair of [
+    [shot({ x: 500, y: 300 }), shot({ id: 21, x: 520, y: 300 })],
+    [shot({ x: 500, y: 300, vx: 1000 }), shot({ id: 21, x: 510, y: 260, vx: 0, vy: 1000 })],
+  ]) {
+    const w = openWorld(); w.projectiles = pair; w.update(0.05, input, false);
+    assert.equal(w.projectiles.length, 2);
+  }
+});
+test('an earlier wall bounce prevents a false collision through the wall', () => {
+  const w = new World({ ...base, obstacles: [{ x: 300, y: 100, w: 4, h: 200 }] });
+  w.projectiles = [shot({ x: 290 }), shot({ id: 21, x: 320, vx: -430 })];
+  w.update(0.05, input, false);
+  assert.equal(w.projectiles.length, 2);
+  assert.ok(w.projectiles.every(p => p.bounces === 1));
+  assert.equal(w.events.filter(e => e.type === 'impact').length, 0);
+});
+test('shells can collide during the remainder of a frame after a bounce', () => {
+  const w = new World(base);
+  w.projectiles = [shot({ x: 290 }), shot({ id: 21, x: 276, vx: 100 })];
+  w.update(0.05, input, false);
+  assert.equal(w.projectiles.length, 0);
+  assert.equal(w.events.filter(e => e.type === 'bounce').length, 1);
+  assert.equal(w.events.filter(e => e.type === 'impact').length, 1);
+});
+test('expired shells cannot destroy live shells and collisions free ammunition slots', () => {
+  const w = openWorld(); w.player.turret = Math.PI / 2;
+  w.projectiles = [shot({ x: 500, y: 300, age: 7 }), shot({ id: 21, x: 520, y: 300, vx: -430 })];
+  w.update(0.05, input, false); assert.equal(w.projectiles.length, 1);
+  w.projectiles = [shot({ x: 500, y: 300 }), shot({ id: 21, x: 520, y: 300, vx: -430 }),
+    ...[22, 23, 24].map((id, i) => shot({ id, x: 600, y: 300 + i * 20 }))];
+  assert.equal(w.fire(w.player), false);
+  w.update(0.05, input, false);
+  assert.equal(w.projectiles.length, 3); assert.ok(w.fire(w.player));
+});
