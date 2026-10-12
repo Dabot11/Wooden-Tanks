@@ -105,3 +105,11 @@ test('browser adapter safely tolerates missing Gamepad API and permission errors
     Object.defineProperty(globalThis, 'navigator', { value: { getGamepads: () => [null, pad({ index: 1 })] }, configurable: true }); assert.equal(readBrowserPads()[1]?.index, 1);
   } finally { if (original) Object.defineProperty(globalThis, 'navigator', original); else Reflect.deleteProperty(globalThis, 'navigator'); }
 });
+
+test('a fresh deflection takes over immediately beyond the configured deadzone', () => {
+  const c = ready();
+  assert.equal(c.poll([pad({ axes: [0.17, 0, 0, 0] })]).mode, 'keyboard-mouse');
+  assert.equal(c.poll([pad({ axes: [0.19, 0, 0, 0] })]).mode, 'gamepad');
+  c.poll([pad()]); c.keyboardMouse();
+  assert.equal(c.poll([pad({ axes: [0, 0, 0.201, 0] })]).mode, 'gamepad');
+});

@@ -49,6 +49,11 @@ test('Xbox twin-stick, retained aim, held RT, keyboard/mouse switching, pause ga
   await neutral(page); await press(page, 0);
   await expect.poll(async () => (await state(page)).status).toBe('playing');
   await neutral(page); await isolate(page);
+  const beforeSmallTilt = await state(page);
+  await page.mouse.move(950, 180); // Give ownership back to keyboard/mouse first.
+  await axes(page, [0.19, 0, 0, 0]); await page.waitForTimeout(220);
+  expect((await state(page)).x).toBeGreaterThan(beforeSmallTilt.x + 15);
+  await neutral(page);
   const initial = await state(page);
   await axes(page, [0.8, 0.6, -0.6, -0.8]); await page.waitForTimeout(300);
   const moved = await state(page);

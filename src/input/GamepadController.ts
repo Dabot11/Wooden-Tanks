@@ -103,7 +103,7 @@ export class GamepadController {
     if (edge('left') && !buttons.right) navigation.x = -1;
     if (edge('right') && !buttons.left) navigation.x = 1;
     const activity = confirm || cancel || pause || (fire && !this.trigger) || navigation.x !== 0 || navigation.y !== 0 ||
-      (Math.hypot(move.x, move.y) > 0 && Math.hypot(move.x - this.anchorMove.x, move.y - this.anchorMove.y) > 0.1) || (Math.hypot(aim.x, aim.y) > 0 && Math.hypot(aim.x - this.anchorAim.x, aim.y - this.anchorAim.y) > 0.1);
+      (Math.hypot(move.x, move.y) > 0 && (!Math.hypot(this.anchorMove.x, this.anchorMove.y) || Math.hypot(move.x - this.anchorMove.x, move.y - this.anchorMove.y) > 0.1)) || (Math.hypot(aim.x, aim.y) > 0 && (!Math.hypot(this.anchorAim.x, this.anchorAim.y) || Math.hypot(aim.x - this.anchorAim.x, aim.y - this.anchorAim.y) > 0.1));
     const neutral = !Math.hypot(move.x, move.y) && !Math.hypot(aim.x, aim.y) && triggerValue < 0.1 && !Object.values(buttons).some(Boolean);
     const wasArmed = this.armed;
     if (!this.armed && neutral) this.armed = true;
