@@ -44,7 +44,7 @@ export function showCoopSetup(root: HTMLElement, start: (layout: CoopLayout) => 
     if (event.key !== 'Enter' || !lobby.slots[0].keyboard || root.querySelector('.modal') !== modal) return;
     if (event.repeat) { event.preventDefault(); event.stopImmediatePropagation(); return; }
     if ((event.target as HTMLElement)?.closest('button')) return;
-    event.preventDefault(); event.stopImmediatePropagation(); lobby.keyboardReady(); refresh();
+    event.preventDefault(); event.stopImmediatePropagation(); delete modal.dataset.configure; lobby.keyboardReady(); refresh();
   }
   window.addEventListener('keydown', keyboard, true);
   function refresh() {
@@ -63,7 +63,7 @@ export function showCoopSetup(root: HTMLElement, start: (layout: CoopLayout) => 
       card.querySelector('span')!.textContent = slot.ready ? 'LISTO ✓' : slot.connected ? 'ESPERANDO' : 'FALTA CONTROL';
       let keyboardButton = card.querySelector<HTMLButtonElement>('.keyboard-ready');
       if (slot.keyboard) {
-        if (!keyboardButton) { keyboardButton = document.createElement('button'); keyboardButton.className = 'keyboard-ready'; keyboardButton.onclick = () => { lobby.keyboardReady(); refresh(); }; card.querySelector('div')!.append(keyboardButton); }
+        if (!keyboardButton) { keyboardButton = document.createElement('button'); keyboardButton.className = 'keyboard-ready'; keyboardButton.onclick = () => { delete modal.dataset.configure; lobby.keyboardReady(); refresh(); }; card.querySelector('div')!.append(keyboardButton); }
         keyboardButton.textContent = slot.ready ? 'Retirar listo' : 'Estoy listo · Enter';
       } else keyboardButton?.remove();
     });

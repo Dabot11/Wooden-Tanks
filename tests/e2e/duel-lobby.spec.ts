@@ -92,3 +92,14 @@ test('a controller can choose party size with D-pad and A, then ready without ac
   await page.getByRole('button',{name:'3 jugadores',exact:true}).click();
   await ready(page,0);await expect(page.locator('.lobby-player').nth(0)).toHaveAttribute('data-ready','true');
 });
+test('keyboard confirmation after controller navigation still lets the controller ready on its first press',async({page})=>{
+  await pads(page,1);await page.goto('/');await page.locator('#duel').click();
+  await page.getByRole('button',{name:'Teclado + controles →',exact:true}).click();await page.waitForTimeout(150);
+  for(const button of [13,12]) {
+    await page.evaluate(i=>(window as any).__lobbyPads[0].buttons[i]={pressed:true,value:1},button);await page.waitForTimeout(120);
+    await page.evaluate(i=>(window as any).__lobbyPads[0].buttons[i]={pressed:false,value:0},button);await page.waitForTimeout(120);
+  }
+  await expect(page.locator('.keyboard-ready')).toBeFocused();await page.keyboard.press('Enter');
+  await expect(page.locator('.lobby-player').nth(0)).toHaveAttribute('data-ready','true');
+  await ready(page,0);await expect.poll(()=>page.evaluate(()=>(window as any).__wooden?.status)).toBe('playing');
+});
