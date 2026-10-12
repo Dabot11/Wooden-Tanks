@@ -21,6 +21,7 @@ export class GamepadRuntime {
   private menus = new GamepadMenus();
   private badge: HTMLElement;
   private disconnectedUntil = 0;
+  private lastPointer?: { x: number; y: number };
   private originals = new WeakMap<HTMLElement, string>();
   private abort = new AbortController();
   constructor(private app: HTMLElement, private onDisconnect: () => void, private onPause: () => void) {
@@ -35,7 +36,11 @@ export class GamepadRuntime {
     document.addEventListener('visibilitychange', reset, options);
     window.addEventListener('keydown', event => { if (!event.repeat) gamepad.keyboardMouse(); }, options);
     window.addEventListener('pointerdown', () => gamepad.keyboardMouse(), options);
-    window.addEventListener('pointermove', event => { if (event.movementX || event.movementY) gamepad.keyboardMouse(); }, options);
+    window.addEventListener('pointermove', event => {
+      const moved = !this.lastPointer || event.clientX !== this.lastPointer.x || event.clientY !== this.lastPointer.y || event.movementX || event.movementY;
+      this.lastPointer = { x: event.clientX, y: event.clientY };
+      if (moved) gamepad.keyboardMouse();
+    }, options);
   }
   private refresh() {
     const previous = gamepad.frames;

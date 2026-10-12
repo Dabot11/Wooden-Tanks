@@ -12,6 +12,7 @@ export function showOverlay(root: HTMLElement, options: { eyebrow: string; title
   overlay.append(card); root.append(overlay);
   (card.querySelector('button') as HTMLButtonElement | null)?.focus();
   card.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (!e.repeat) options.cancel?.(); return; }
     if (e.key !== 'Tab') return;
     const buttons = Array.from(card.querySelectorAll<HTMLElement>('button:not(:disabled), input[type="range"]'));
     const i = buttons.indexOf(document.activeElement as HTMLElement);

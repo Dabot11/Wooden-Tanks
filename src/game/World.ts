@@ -124,7 +124,7 @@ export class World {
       time -= advance;
       if ('owner' in target) {
         source.alive = false; target.alive = false;
-        this.events.push({ type: 'impact', x: (source.x + target.x) / 2, y: (source.y + target.y) / 2 });
+        this.events.push({ type: 'shellCollision', x: (source.x + target.x) / 2, y: (source.y + target.y) / 2 });
       } else if ('kind' in target) {
         target.alive = false; source.alive = false;
         this.events.push({ type: 'destroy', x: target.x, y: target.y, player: target.kind === 'player', kind: target.kind });

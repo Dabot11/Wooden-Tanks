@@ -96,7 +96,7 @@ test('head-on shells destroy each other for both friendly and hostile owners', (
     if (reversed) w.projectiles.reverse();
     w.update(0.05, input, false);
     assert.equal(w.projectiles.length, 0);
-    assert.equal(w.events.filter(e => e.type === 'impact').length, 1);
+    assert.equal(w.events.filter(e => e.type === 'shellCollision').length, 1);
     assert.ok(w.tanks.every(t => t.alive));
   }
 });
@@ -121,7 +121,7 @@ test('an earlier wall bounce prevents a false collision through the wall', () =>
   w.update(0.05, input, false);
   assert.equal(w.projectiles.length, 2);
   assert.ok(w.projectiles.every(p => p.bounces === 1));
-  assert.equal(w.events.filter(e => e.type === 'impact').length, 0);
+  assert.equal(w.events.filter(e => e.type === 'shellCollision').length, 0);
 });
 test('shells can collide during the remainder of a frame after a bounce', () => {
   const w = new World(base);
@@ -129,7 +129,7 @@ test('shells can collide during the remainder of a frame after a bounce', () => 
   w.update(0.05, input, false);
   assert.equal(w.projectiles.length, 0);
   assert.equal(w.events.filter(e => e.type === 'bounce').length, 1);
-  assert.equal(w.events.filter(e => e.type === 'impact').length, 1);
+  assert.equal(w.events.filter(e => e.type === 'shellCollision').length, 1);
 });
 test('expired shells cannot destroy live shells and collisions free ammunition slots', () => {
   const w = openWorld(); w.player.turret = Math.PI / 2;

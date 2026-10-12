@@ -5,8 +5,8 @@ const state = (page: Page) => page.evaluate(() => {
     player: { x: scene.world.player.x, y: scene.world.player.y, angle: scene.world.player.angle, turret: scene.world.player.turret, shots: scene.world.player.shots },
     enemies: scene.world.enemies.map((t: any) => ({ x: t.x, y: t.y })) };
 });
-async function start(page: Page, demo = false) {
-  await page.goto('/'); await page.locator(demo ? '#demo' : '#play').click();
+async function start(page: Page) {
+  await page.goto('/'); await page.locator('#play').click();
   await expect.poll(async () => (await state(page)).status).toBe('playing');
 }
 async function fixtureHitPlayer(page: Page) {
@@ -39,10 +39,10 @@ test('win the first mission with real keyboard and aiming inputs, then advance a
   await expect(page.locator('.mission-choice').nth(2)).toBeDisabled();
   expect(errors).toEqual([]);
 });
-test('four directions, independent turret, short click, space, pause, restart, sound and demo', async ({ page }) => {
+test('four directions, independent turret, short click, space, pause, restart and sound', async ({ page }) => {
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
-  await start(page, true);
-  expect((await state(page)).enemies.length).toBe(3);
+  await start(page);
+  expect((await state(page)).enemies.length).toBe(1);
   // Isolate control timing from hostile shots; combat and lethal impacts have separate tests.
   await page.evaluate(() => (window as any).__wooden.world.enemies.forEach((t: any) => { t.cooldown = 1000; }));
   for (const [key, axis, sign] of [['w', 'y', -1], ['s', 'y', 1], ['a', 'x', -1], ['d', 'x', 1], ['ArrowLeft', 'x', -1], ['ArrowRight', 'x', 1]] as const) {
@@ -67,7 +67,7 @@ test('four directions, independent turret, short click, space, pause, restart, s
   await expect(page.getByRole('heading', { name: 'Una pequeña pausa' })).toBeVisible();
   await page.getByRole('button', { name: 'Reiniciar misión' }).click();
   await expect.poll(async () => (await state(page)).status).toBe('playing');
-  expect((await state(page)).player.x).toBe(388);
+  expect((await state(page)).player.x).toBe(180);
   await page.mouse.move(900, 520); await page.keyboard.press('Space');
   await expect.poll(async () => (await state(page)).player.shots).toBeGreaterThan(0);
   expect(errors).toEqual([]);

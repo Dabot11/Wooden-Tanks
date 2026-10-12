@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { demo, levels } from '../src/game/LevelManager.ts';
+import { demo } from './fixtures/reference-level.ts';
+import { levels } from '../src/game/LevelManager.ts';
 import { World } from '../src/game/World.ts';
 import { findPath, bankAngle, chooseCover, EnemyAI } from '../src/game/EnemyAI.ts';
 import { lineClear, circleBox, circleCircle } from '../src/game/CollisionManager.ts';

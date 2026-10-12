@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
-import { World } from '../game/World';
-import { demo, levels } from '../game/LevelManager';
-import { BoardRenderer } from '../game/BoardRenderer';
+import { levels } from '../game/LevelManager';
+import { createTextures } from '../game/TextureFactory';
 import { progress } from '../game/Progress';
 import { audio } from '../game/AudioManager';
 import { tankIcon } from '../ui/HUD';
@@ -13,15 +12,30 @@ export class MenuScene extends Phaser.Scene {
   constructor() { super('Menu'); }
   create() {
     gamepad.endCoop();
-    const world = new World(demo); new BoardRenderer(this, world);
-    // The menu is a physical board preview; real combat begins on selection.
-    world.player.turret = -Math.PI / 2;
+    createTextures(this); this.add.image(640, 360, 'floor');
     const root = document.querySelector<HTMLElement>('#ui')!;
-    root.innerHTML = `<div class="menu"><header class="menu-header"><span class="mini-brand">WOODEN <b>TANKS</b><span class="brand-dot"></span></span><span class="edition">LA COLECCIÓN DEL TALLER · Nº 01</span><button class="menu-sound icon-button" aria-label="Activar o silenciar sonido">${progress.data.muted ? '♪̸' : '♪'}</button></header><section class="menu-copy"><span class="eyebrow"><i></i> COMBATE TÁCTICO DE JUGUETE</span><h1>Wooden<br/><span>Tanks<span class="title-dot">.</span></span></h1><p class="menu-description">Pequeños tanques. Grandes estrategias.<br/>Encuentra tu ángulo y deja tu huella.</p><div class="menu-actions"><button id="play" class="button primary">Jugar campaña <span>→</span></button><button id="demo" class="button secondary">El tablero de referencia <span>→</span></button><div class="menu-links"><button id="select" class="text-button">Seleccionar misión <span>+</span></button><button id="gamepad-settings" class="text-button">Ajustes del control <span>→</span></button><button id="coop" class="text-button">Cooperativo · 2 jugadores <span>+</span></button></div></div><div class="menu-record"><span class="label">TU RÉCORD</span><strong>${String(progress.data.best).padStart(6, '0')}</strong><span class="record-rule"></span><span class="label">10 MISIONES<br/>3 VIDAS · 2 REBOTES</span></div></section><div class="board-caption"><span class="caption-line"></span><span>EL TALLER</span><b>65</b><small>UN TABLERO. TU PRÓXIMA BATALLA.</small></div><footer class="menu-footer"><span>${tankIcon} Hecho de madera. Diseñado para pensar.</span><span><kbd>WASD</kbd> mover <i>·</i> mouse apuntar <i>·</i> clic disparar</span></footer></div>`;
+    root.innerHTML = `<div class="menu"><header class="menu-header"><span class="mini-brand">WOODEN <b>TANKS</b><span class="brand-dot"></span></span><span class="edition">COMBATE TÁCTICO LOCAL</span><button class="menu-sound icon-button" aria-label="Activar o silenciar sonido">${progress.data.muted ? '♪̸' : '♪'}</button></header>
+    <section class="menu-copy"><span class="eyebrow"><i></i> ELIGE CÓMO JUGAR</span><h1>Wooden<br/><span>Tanks<span class="title-dot">.</span></span></h1><p class="menu-description">Encuentra tu ángulo. Defiende tu equipo.<br/>Diez misiones para jugar solo o acompañado.</p>
+    <nav class="menu-actions" aria-label="Menú principal"><button id="play" class="mode-button solo-mode"><span class="mode-icon">${tankIcon}</span><span class="mode-copy"><strong>Un jugador</strong><small>Teclado y mouse o un control</small></span><span class="mode-arrow">→</span></button><button id="coop" class="mode-button coop-mode"><span class="mode-icon duo-icon">${tankIcon}${tankIcon}</span><span class="mode-copy"><strong>Cooperativo local</strong><small>Dos tanques contra los enemigos</small></span><span class="mode-arrow">→</span></button><div class="menu-links"><button id="select" class="text-button">Misiones <span>→</span></button><button id="gamepad-settings" class="text-button">Ajustes del control <span>→</span></button></div></nav>
+    <div class="menu-record"><span class="label">RÉCORD</span><strong>${String(progress.data.best).padStart(6, '0')}</strong><span class="record-rule"></span><span class="label">${Math.min(progress.data.unlocked, levels.length)} / 10 MISIONES DESBLOQUEADAS</span></div></section>
+    <aside class="menu-guide" aria-label="Cómo jugar"><span class="eyebrow">PEQUEÑOS TANQUES. GRANDES ESTRATEGIAS.</span><div class="menu-tanks" aria-hidden="true"><span class="guide-tank p1-tank">${tankIcon}<b>P1</b></span><span class="team-plus">+</span><span class="guide-tank p2-tank">${tankIcon}<b>P2</b></span></div><h2>Encuentra tu ángulo.</h2><p>Muévete, apunta y aprovecha los rebotes.<br/>En equipo, cuida la espalda de tu compañero.</p><div class="guide-facts"><span><b>10</b> misiones</span><span><b>3</b> vidas</span><span><b>2</b> rebotes</span></div><span class="guide-note">Un jugador o cooperativo · Sin cuentas</span></aside>
+    <footer class="menu-footer"><span>${tankIcon} Hecho de madera. Diseñado para pensar.</span><span><kbd>↑ ↓</kbd> elegir <i>·</i> <kbd>Enter</kbd> confirmar <i>·</i> <kbd>Esc</kbd> volver</span></footer></div>`;
+    const navigate = (event: KeyboardEvent) => {
+      if (root.querySelector('.modal')) return;
+      const controls = Array.from(root.querySelectorAll<HTMLButtonElement>('.menu-actions button'));
+      if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      const current = controls.indexOf(document.activeElement as HTMLButtonElement);
+      const direction = event.key === 'ArrowUp' || event.key === 'ArrowLeft' ? -1 : 1;
+      const index = current < 0 ? 0 : (current + direction + controls.length) % controls.length;
+      controls[index].focus();
+    };
+    window.addEventListener('keydown', navigate);
+    this.events.once('shutdown', () => window.removeEventListener('keydown', navigate));
+    root.querySelector<HTMLElement>('#play')!.focus({ preventScroll: true });
     const start = (index: number) => { audio.unlock(); audio.muted = progress.data.muted; this.scene.start('Game', { session: { level: index, score: 0, lives: 3, missionStartScore: 0 } }); };
     root.querySelector('#coop')!.addEventListener('click', () => showCoopSetup(root, coop => { audio.unlock(); audio.muted = progress.data.muted; this.scene.start('Game', { session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop } }); }));
     root.querySelector('#play')!.addEventListener('click', () => start(0));
-    root.querySelector('#demo')!.addEventListener('click', () => start(-1));
     root.querySelector('.menu-sound')!.addEventListener('click', e => { audio.unlock(); audio.muted = !progress.data.muted; progress.data.muted = audio.muted; progress.save(); (e.currentTarget as HTMLElement).textContent = audio.muted ? '♪̸' : '♪'; });
     root.querySelector('#gamepad-settings')!.addEventListener('click', () => showGamepadSettings(root));
     root.querySelector('#select')!.addEventListener('click', () => {

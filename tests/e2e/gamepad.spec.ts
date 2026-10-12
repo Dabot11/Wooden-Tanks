@@ -50,9 +50,10 @@ test('Xbox twin-stick, retained aim, held RT, keyboard/mouse switching, pause ga
   await expect.poll(async () => (await state(page)).status).toBe('playing');
   await neutral(page); await isolate(page);
   const beforeSmallTilt = await state(page);
-  await page.mouse.move(950, 180); // Give ownership back to keyboard/mouse first.
+  await page.mouse.move(950, 180); await expect(page.locator('.mouse-reticle')).toBeVisible(); // Give ownership back to keyboard/mouse first.
   await axes(page, [0.19, 0, 0, 0]); await page.waitForTimeout(220);
   expect((await state(page)).x).toBeGreaterThan(beforeSmallTilt.x + 15);
+  await expect(page.locator('.mouse-reticle')).toBeHidden();
   await neutral(page);
   const initial = await state(page);
   await axes(page, [0.8, 0.6, -0.6, -0.8]); await page.waitForTimeout(300);
@@ -105,7 +106,7 @@ test('Xbox twin-stick, retained aim, held RT, keyboard/mouse switching, pause ga
 test('gamepad navigates mission selector, settings and pause without repeated confirmations', async ({ page }) => {
   test.setTimeout(90000);
   await mockAPI(page); await page.goto('/'); await connect(page); await neutral(page);
-  await press(page, 13); await press(page, 13); // Play -> Demo -> Select.
+  await press(page, 13); await press(page, 13); // Un jugador -> Cooperativo -> Misiones.
   await expect(page.locator('#select')).toBeFocused();
   await button(page, 0, true);
   await expect(page.getByRole('heading', { name: 'Elige tu batalla' })).toBeVisible();
@@ -124,12 +125,13 @@ test('gamepad navigates mission selector, settings and pause without repeated co
   await expect(page.locator('#left-deadzone')).toHaveValue('0.19'); await expect(page.locator('#right-deadzone')).toHaveValue('0.19');
   await page.getByRole('button', { name: 'Listo' }).click();
   await connect(page); await neutral(page);
-  // Left stick also navigates, once per deflection; A opens the demo.
+  // Left stick navigates once per deflection; A starts the solo campaign.
   await axes(page, [0, -1, 0, 0]); await page.waitForTimeout(200); await neutral(page);
   await axes(page, [0, -1, 0, 0]); await page.waitForTimeout(200); await neutral(page);
-  await expect(page.locator('#demo')).toBeFocused(); await press(page, 0);
+  await axes(page, [0, -1, 0, 0]); await page.waitForTimeout(200); await neutral(page);
+  await expect(page.locator('#play')).toBeFocused(); await press(page, 0);
   await expect.poll(async () => (await state(page)).status).toBe('playing');
-  expect((await state(page)).level).toBe(-1); await isolate(page); await neutral(page);
+  expect((await state(page)).level).toBe(0); await isolate(page); await neutral(page);
   await press(page, 9); await expect.poll(async () => (await state(page)).status).toBe('paused');
   // Configure within pause, and Menu closes both dialogs before resuming gameplay.
   await press(page, 13); await press(page, 13); await press(page, 13);
@@ -171,12 +173,15 @@ test('A confirms and B returns from Game Over and victory screens', async ({ pag
   await expect.poll(async () => (await state(page)).status).toBe('playing'); expect((await state(page)).lives).toBe(3);
   await neutral(page); await press(page, 9); await press(page, 13); await press(page, 13); await press(page, 0);
   await expect(page.locator('#play')).toBeVisible();
-  await press(page, 13); await expect(page.locator('#demo')).toBeFocused(); await press(page, 0);
+  await press(page, 0);
   await expect.poll(async () => (await state(page)).status).toBe('playing'); await neutral(page);
+  await page.evaluate(() => { const s = (window as any).__wooden; s.scene.restart({ session: { ...s.session, level: 9 } }); });
+  await expect.poll(async () => (await state(page)).level).toBe(9);
+  await expect.poll(async () => (await state(page)).status).toBe('playing');
   await page.evaluate(() => {
     const w = (window as any).__wooden.world;
     w.enemies.forEach((t: any, i: number) => { t.cooldown = 1000; w.projectiles.push({ id: 8000 + i, owner: 0, x: t.x - 28, y: t.y, vx: 430, vy: 0, age: 1, bounces: 0, alive: true }); });
   });
-  await expect(page.getByRole('heading', { name: 'El taller es tuyo' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Maestro del taller' })).toBeVisible();
   await neutral(page); await press(page, 1); await expect(page.locator('#play')).toBeVisible();
 });

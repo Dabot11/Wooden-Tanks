@@ -61,6 +61,7 @@ test('two identical controllers independently move, aim, fire and pause the coop
     expect({ x: p.x, y: p.y, shots: p.shots, alive: p.alive }).toEqual({ x: fixed.players[i].x, y: fixed.players[i].y, shots: fixed.players[i].shots, alive: fixed.players[i].alive });
     expect(p.turret).toBeCloseTo(fixed.players[i].turret, 5);
   }
+  await expect(page.locator('.mouse-reticle')).toBeHidden();
   await press(page, 1, 9); expect((await state(page)).status).toBe('paused');
   const paused = await state(page); await sticks(page, 0, [0, -1, 0, 0]); await button(page, 1, 7, 1); await page.waitForTimeout(200);
   expect((await state(page)).players).toEqual(paused.players);
@@ -77,6 +78,7 @@ test('keyboard and mouse control P1 while a single controller controls P2', asyn
   await page.mouse.move(900, 520); await page.keyboard.down('w'); await sticks(page, 0, [0, 1, -1, 0]);
   await page.waitForTimeout(350); await page.keyboard.up('w'); await neutral(page);
   const after = await state(page);
+  await expect(page.locator('.mouse-reticle')).toBeVisible();
   expect(after.players[0].y).toBeLessThan(before.players[0].y - 25);
   expect(after.players[1].y).toBeGreaterThan(before.players[1].y + 25);
   const desired = Math.atan2(520 - after.players[0].y, 900 - after.players[0].x);

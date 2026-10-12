@@ -5,18 +5,7 @@ export const boardHoles: Hole[] = [
   { x: 562, y: 572, radius: 15 }, { x: 562, y: 604, radius: 15 },
   { x: 1030, y: 342, radius: 15 }, { x: 1075, y: 342, radius: 15 }, { x: 1120, y: 342, radius: 15 },
 ];
-export const demo: Level = {
-  id: 65, holes: boardHoles, name: 'El taller', subtitle: 'El tablero de referencia', difficulty: 1.4,
-  player: { x: 388, y: 520 },
-  enemies: [{ x: 610, y: 302, kind: 'basic' }, { x: 830, y: 220, kind: 'patrol' }, { x: 1040, y: 170, kind: 'patrol' }],
-  obstacles: [
-    block(684, 98, 44, 208), block(540, 354, 44, 194),
-    block(258, 354, 44, 68), block(302, 374, 44, 48, true), block(346, 354, 44, 68),
-    block(452, 354, 44, 68), block(496, 374, 44, 48, true),
-    block(780, 286, 44, 68), block(874, 286, 44, 68),
-    block(918, 306, 44, 48, true), block(962, 286, 44, 68),
-  ],
-};
+
 const enemy = (x: number, y: number, kind: Spawn['kind']): Spawn => ({ x, y, kind });
 const mission = (id: number, name: string, subtitle: string, obstacles: (Rect & { destructible?: boolean })[], enemies: Spawn[], difficulty: number): Level =>
   ({ id, name, subtitle, obstacles, holes: boardHoles, enemies, difficulty, player: { x: 180, y: 520 } });
@@ -32,4 +21,4 @@ export const levels: Level[] = [
   mission(9, 'Fuego cruzado', 'No pierdas de vista ningún cañón.', [block(400, 210, 132, 44), block(748, 210, 132, 44), block(400, 430, 132, 44), block(748, 430, 132, 44), block(616, 300, 44, 66, true)], [enemy(1050, 140, 'tactical'), enemy(1050, 520, 'offensive'), enemy(620, 130, 'patrol'), enemy(650, 535, 'offensive')], 1.6),
   mission(10, 'Maestro del taller', 'Todo lo aprendido. Una última batalla.', [block(350, 170, 44, 175), block(550, 380, 44, 150), block(700, 140, 44, 175), block(890, 360, 44, 160), block(550, 314, 44, 66, true), block(890, 294, 44, 66, true)], [enemy(1080, 120, 'tactical'), enemy(1080, 520, 'tactical'), enemy(870, 190, 'offensive'), enemy(710, 510, 'patrol'), enemy(520, 180, 'basic')], 1.8),
 ];
-export function getLevel(index: number) { return index === -1 ? demo : levels[Math.max(0, Math.min(levels.length - 1, index))]; }
+export function getLevel(index: number) { return levels[Math.max(0, Math.min(levels.length - 1, index))]; }

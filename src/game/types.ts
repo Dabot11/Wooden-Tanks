@@ -18,7 +18,7 @@ export interface Spawn extends Vec { kind: Exclude<TankKind, 'player'> }
 export interface Level { id: number; name: string; subtitle: string; obstacles: (Rect & { destructible?: boolean })[]; holes?: Hole[]; player: Vec; enemies: Spawn[]; difficulty: number }
 export type CombatEvent =
   | { type: 'shot'; x: number; y: number; angle: number; player: boolean }
-  | { type: 'bounce' | 'impact' | 'break'; x: number; y: number }
+  | { type: 'bounce' | 'impact' | 'break' | 'shellCollision'; x: number; y: number }
   | { type: 'destroy'; x: number; y: number; player: boolean; kind: TankKind };
 export const ARENA: Rect = { x: 48, y: 44, w: 1184, h: 578 };
 export const WIDTH = 1280;

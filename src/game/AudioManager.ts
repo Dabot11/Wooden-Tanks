@@ -2,8 +2,9 @@ export class AudioManager {
   private context?: AudioContext;
   muted = false;
   unlock() { this.context ??= new AudioContext(); if (this.context.state === 'suspended') void this.context.resume(); }
-  play(type: 'shot' | 'bounce' | 'impact' | 'break' | 'destroy' | 'win') {
+  play(type: 'shot' | 'bounce' | 'impact' | 'break' | 'destroy' | 'win' | 'shellCollision') {
     if (this.muted || !this.context || this.context.state !== 'running') return;
+    if (type === 'shellCollision') type = 'destroy';
     const ctx = this.context, now = ctx.currentTime;
     const duration = type === 'destroy' ? 0.45 : type === 'win' ? 0.35 : type === 'shot' ? 0.12 : 0.07;
     const gain = ctx.createGain(); gain.connect(ctx.destination); gain.gain.setValueAtTime(type === 'destroy' ? 0.16 : 0.07, now); gain.gain.exponentialRampToValueAtTime(0.001, now + duration);

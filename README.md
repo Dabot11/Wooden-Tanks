@@ -1,6 +1,6 @@
 # Wooden Tanks
 
-Juego de combate táctico para navegador, construido con **TypeScript, Phaser 3 y Vite**. Once tableros jugables: diez misiones de campaña y una demostración inspirada en la referencia de Wii Play. Todos los gráficos se generan localmente con Canvas; el audio se sintetiza con Web Audio. No necesita cuentas, claves ni servicios externos.
+Juego de combate táctico para navegador, construido con **TypeScript, Phaser 3 y Vite**. Diez misiones de campaña, jugables en solitario o en cooperativo local. Todos los gráficos se generan localmente con Canvas; el audio se sintetiza con Web Audio. No necesita cuentas, claves ni servicios externos.
 
 ## Ejecutar
 
@@ -37,11 +37,13 @@ La dirección prevista es `https://dabot11.github.io/Wooden-Tanks/`; estará dis
 | Esc | Pausar / reanudar |
 | M | Activar / silenciar audio |
 
+Al apuntar con mouse, la mira se centra exactamente en el cursor y se oculta al usar el mando, pausar o perder el tanque. Los misiles que chocan se destruyen con un destello, una onda expansiva y humo, sin daño de área.
+
 Cada tanque se destruye con un impacto. Tienes tres vidas, cinco proyectiles simultáneos y una recarga de 280 ms. Las balas rebotan hasta dos veces; el siguiente impacto sólido las elimina. Caducan a los siete segundos. **Tu propio proyectil también puede destruirte al regresar.** Los huecos circulares son cavidades del suelo: bloquean a los tanques, la IA los rodea y los proyectiles pasan por encima. Los bloques de corcho se rompen tras tres impactos; los bloques de madera son indestructibles.
 
 Destruye todos los enemigos para pasar de misión. Completarla desbloquea la siguiente y otorga una bonificación de tiempo. Al morir se reinicia el tablero y la puntuación vuelve a la que tenías al entrar en esa misión. Reiniciar desde la pausa también restaura esa puntuación, sin consumir una vida. El récord, las misiones desbloqueadas, las campañas ganadas y la preferencia de sonido se guardan en LocalStorage. Si el almacenamiento no está disponible, la partida funciona igualmente durante la sesión.
 
-El menú permite abrir directamente **El tablero de referencia**, la misión 65, con el jugador azul abajo a la izquierda, un enemigo oscuro en el centro y dos morados arriba a la derecha. Ganar esa demostración no desbloquea misiones de campaña.
+El inicio ofrece **Un jugador**, **Cooperativo local**, **Misiones** y **Ajustes del control**. Navega con mouse, Tab o flechas y Enter; Esc regresa de los diálogos. Con mando, usa stick/cruceta y A/B.
 
 ## Control Xbox y otros gamepads estándar
 
@@ -69,7 +71,7 @@ Si Chrome bloquea el audio al empezar exclusivamente con el mando, haz un clic e
 
 ## Cooperativo local
 
-En el menú, elige **Cooperativo · 2 jugadores** y conecta los mandos por Bluetooth o USB. Chrome puede necesitar una pulsación en cada mando para mostrarlo.
+En el menú, elige **Cooperativo local** y conecta los mandos por Bluetooth o USB. Chrome puede necesitar una pulsación en cada mando para mostrarlo.
 
 - **Dos controles:** el usado en el menú se asigna a P1 (azul); el otro, a P2 (dorado). Cada uno usa LS para mover, RS para apuntar y RT para disparar.
 - **Teclado + control:** P1 conserva WASD, mouse y clic/espacio; el mando controla exclusivamente a P2.
@@ -79,7 +81,7 @@ En el menú, elige **Cooperativo · 2 jugadores** y conecta los mandos por Bluet
 - MENÚ en cualquiera de los mandos o ESC pausa para ambos. A confirma y B regresa; una pulsación simultánea no activa dos opciones.
 - Una desconexión pausa la partida y conserva la asignación. Reconecta el mismo mando antes de reanudar; suelta sticks y gatillos para volver a jugar. Un tercer mando no sustituye automáticamente al ausente. Si Chrome le asigna otro índice al reconectarlo, vuelve al menú y asigna los controles de nuevo.
 
-El modo de un jugador sigue disponible en **Jugar campaña**. Las pruebas simulan dos Xbox con el mismo nombre e índices independientes; la conexión física Bluetooth/USB en macOS debe comprobarse en la laptop.
+El modo de un jugador sigue disponible en **Un jugador**. Las pruebas simulan dos Xbox con el mismo nombre e índices independientes; la conexión física Bluetooth/USB en macOS debe comprobarse en la laptop.
 
 ## Enemigos
 
@@ -110,7 +112,7 @@ Playwright arranca Vite automáticamente si no está activo. Comprueba una victo
 - `src/game/World.ts`: simulación independiente de Phaser; tanques, combate y eventos.
 - `CollisionManager.ts`: barrido continuo contra cajas y círculos, reflexión por normal y comprobación de línea de visión.
 - `EnemyAI.ts`: estados de IA, navegación y cálculo de rebotes.
-- `LevelManager.ts`: datos de campaña y demostración.
+- `LevelManager.ts`: datos de campaña.
 - `Tank.ts` / `types.ts`: entidades y parámetros del combate.
 - `TextureFactory.ts` / `BoardRenderer.ts`: texturas procedurales, tablero, sombras, orugas, tanques y proyectiles.
 - `ParticleEffects.ts` / `AudioManager.ts`: impactos, explosiones, humo y sonido.

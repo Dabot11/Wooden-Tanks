@@ -4,7 +4,8 @@ import { GamepadTeam } from '../src/input/GamepadTeam.ts';
 import type { PadSnapshot } from '../src/input/GamepadController.ts';
 import { World } from '../src/game/World.ts';
 import { EnemyAI, findPath } from '../src/game/EnemyAI.ts';
-import { levels, demo } from '../src/game/LevelManager.ts';
+import { demo } from './fixtures/reference-level.ts';
+import { levels } from '../src/game/LevelManager.ts';
 import type { Level, Projectile } from '../src/game/types.ts';
 const pad = (index: number, overrides: Partial<PadSnapshot> = {}): PadSnapshot => ({
   index, id: 'Xbox Series Controller', connected: true, mapping: 'standard', axes: [0, 0, 0, 0],
@@ -61,7 +62,7 @@ test('unsupported controllers cannot start co-op', () => {
   assert.equal(team.startCoop('keyboard-pad', [pad(0, { mapping: '' })]), false);
   assert.equal(team.layout, null);
 });
-test('both tanks spawn safely with a reachable route in every mission and demo', () => {
+test('both tanks spawn safely with a reachable route in every mission and the regression fixture', () => {
   for (const l of [...levels, demo]) {
     const w = new World(l, 2); assert.equal(w.players.length, 2); assert.equal(w.enemies.length, l.enemies.length);
     const p = w.players[1]; assert.ok(w.canStand(p, p.radius, p.id), `mission ${l.id}`);
