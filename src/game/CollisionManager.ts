@@ -51,6 +51,9 @@ export function circleBox(p: Vec, radius: number, box: Rect): boolean {
   const y = Math.max(box.y, Math.min(box.y + box.h, p.y));
   return (p.x - x) ** 2 + (p.y - y) ** 2 < radius ** 2 - 0.001;
 }
+export function circleCircle(a: Vec, radiusA: number, b: Vec, radiusB: number): boolean {
+  return (a.x - b.x) ** 2 + (a.y - b.y) ** 2 < (radiusA + radiusB) ** 2 - 0.001;
+}
 export function lineClear(a: Vec, b: Vec, boxes: Rect[], radius = 3): boolean {
   return !boxes.some(box => sweepBox(a, { x: b.x - a.x, y: b.y - a.y }, box, radius));
 }

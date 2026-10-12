@@ -85,7 +85,7 @@ export class EnemyAI {
   private plans = new Map<number, { angle: number | null; move: Vec; reaction: number; stuck: number; cover: Vec | null; coverUntil: number }>();
   constructor(private random: () => number = Math.random) {}
   update(world: World, tank: Tank, dt: number) {
-    const player = world.player, solids = world.solids;
+    const player = world.player, solids = world.solids, movementSolids = world.movementSolids;
     let plan = this.plans.get(tank.id);
     if (!plan) { plan = { angle: null, move: { x: 0, y: 0 }, reaction: 0.7, stuck: 0, cover: null, coverUntil: 0 }; this.plans.set(tank.id, plan); }
     tank.think -= dt; tank.pathTime -= dt; plan.reaction -= dt;
@@ -122,7 +122,7 @@ export class EnemyAI {
         }
       }
       if (tank.pathTime <= 0) {
-        tank.path = findPath(tank, tank.goal, solids);
+        tank.path = findPath(tank, tank.goal, movementSolids);
         tank.pathTime = 0.9 + this.random() * 0.5;
       }
       const danger = world.projectiles.find(p => p.owner !== tank.id && sweepCircle(p, { x: p.vx * 0.6, y: p.vy * 0.6 }, tank, tank.radius + 12) !== null);
@@ -151,7 +151,7 @@ export class EnemyAI {
       if (plan.stuck > 0.7) {
         const n = this.random() * Math.PI * 2;
         tank.goal = { x: tank.x + Math.cos(n) * 110, y: tank.y + Math.sin(n) * 110 };
-        tank.path = findPath(tank, tank.goal, solids); tank.pathTime = 0.7; tank.think = 0; plan.stuck = 0;
+        tank.path = findPath(tank, tank.goal, movementSolids); tank.pathTime = 0.7; tank.think = 0; plan.stuck = 0;
       }
     } else plan.stuck = 0;
     if (plan.angle !== null) {

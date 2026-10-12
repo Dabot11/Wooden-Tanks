@@ -1,11 +1,11 @@
 import { ARENA, SHOT_LIMIT, SHOT_SPEED, TANK_SPEED, lerpAngle } from './types';
-import type { Tank, Projectile, Obstacle, Level, Vec, CombatEvent, Rect } from './types';
-import { circleBox, sweepBox, sweepCircle, reflect, lineClear } from './CollisionManager';
+import type { Tank, Projectile, Obstacle, Level, Vec, CombatEvent, Rect, Hole } from './types';
+import { circleBox, circleCircle, sweepBox, sweepCircle, reflect, lineClear } from './CollisionManager';
 import { createTank } from './Tank';
 import { EnemyAI } from './EnemyAI';
 function isObstacle(value: Rect): value is Obstacle { return 'destructible' in value; }
 export class World {
-  tanks: Tank[]; projectiles: Projectile[] = []; obstacles: Obstacle[];
+  holes: Hole[]; tanks: Tank[]; projectiles: Projectile[] = []; obstacles: Obstacle[];
   events: CombatEvent[] = []; elapsed = 0; ai = new EnemyAI(); private nextId = 100;
   walls: Rect[] = [
     { x: ARENA.x - 40, y: ARENA.y - 40, w: 40, h: ARENA.h + 80 },
@@ -14,14 +14,20 @@ export class World {
     { x: ARENA.x - 40, y: ARENA.y + ARENA.h, w: ARENA.w + 80, h: 40 },
   ];
   constructor(public level: Level) {
+    this.holes = (level.holes ?? []).map(hole => ({ ...hole }));
     this.tanks = [createTank(0, 'player', level.player), ...level.enemies.map((s, i) => createTank(i + 1, s.kind, s))];
     this.obstacles = level.obstacles.map((o, i) => ({ ...o, id: i, hp: 3, alive: true, destructible: !!o.destructible }));
   }
   get player() { return this.tanks[0]; }
   get enemies() { return this.tanks.filter(t => t.kind !== 'player' && t.alive); }
   get solids(): Rect[] { return [...this.walls, ...this.obstacles.filter(o => o.alive)]; }
+  // Navigation conservatively bounds circular pits; bullets and line of sight use solids only.
+  get movementSolids(): Rect[] {
+    return [...this.solids, ...this.holes.map(h => ({ x: h.x - h.radius, y: h.y - h.radius, w: h.radius * 2, h: h.radius * 2 }))];
+  }
   canStand(p: Vec, radius: number, except = -1): boolean {
     return !this.solids.some(box => circleBox(p, radius, box)) &&
+      !this.holes.some(hole => circleCircle(p, radius, hole, hole.radius)) &&
       !this.tanks.some(t => t.alive && t.id !== except && Math.hypot(t.x - p.x, t.y - p.y) < t.radius + radius);
   }
   move(tank: Tank, direction: Vec, speed: number, dt: number) {

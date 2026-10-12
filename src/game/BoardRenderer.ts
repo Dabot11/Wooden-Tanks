@@ -19,12 +19,8 @@ export class BoardRenderer {
     this.trails = scene.add.graphics().setDepth(25);
     this.cracks = scene.add.graphics().setDepth(12);
     const decor = scene.add.graphics().setDepth(2);
-    // Countersunk holes and chalk marks on the toy board.
-    for (const p of [{ x: 156, y: 415 }, { x: 198, y: 415 }, { x: 240, y: 415 }, { x: 562, y: 572 }, { x: 562, y: 604 }, { x: 1030, y: 342 }, { x: 1075, y: 342 }, { x: 1120, y: 342 }]) {
-      decor.fillStyle(0x624e2f, 0.38).fillEllipse(p.x, p.y, 30, 20);
-      decor.fillStyle(0x463c29, 0.27).fillEllipse(p.x, p.y + 3, 22, 12);
-      decor.lineStyle(2, 0xffe8ad, 0.6).beginPath().arc(p.x, p.y, 15, Math.PI, Math.PI * 2).strokePath();
-    }
+    for (const hole of world.holes) scene.add.image(hole.x, hole.y, 'hole').setScale(hole.radius / 15).setDepth(2);
+    // Chalk marks sit on the wooden surface.
     decor.lineStyle(5, 0xfff5d6, 0.8);
     for (const p of [{ x: 578, y: 90 }, { x: 660, y: 585 }]) { decor.lineBetween(p.x - 10, p.y - 8, p.x + 10, p.y + 8); decor.lineBetween(p.x + 10, p.y - 8, p.x - 10, p.y + 8); }
     // Rim made of separate wooden pieces, with rounded outer corner caps.
@@ -43,7 +39,7 @@ export class BoardRenderer {
       const t = i / 160 * Math.PI * 2;
       const x = 300 + path * 300 + Math.cos(t) * (170 - path * 20);
       const y = 310 + Math.sin(t) * 130 + Math.sin(t * 3) * 35;
-      if (!world.solids.some(b => x > b.x - 12 && x < b.x + b.w + 12 && y > b.y - 12 && y < b.y + b.h + 12)) this.marks.push({ x, y, angle: Math.atan2(Math.cos(t) * 130 + Math.cos(t * 3) * 105, -Math.sin(t) * (170 - path * 20)), alpha: 0.065 });
+      if (!world.movementSolids.some(b => x > b.x - 12 && x < b.x + b.w + 12 && y > b.y - 12 && y < b.y + b.h + 12)) this.marks.push({ x, y, angle: Math.atan2(Math.cos(t) * 130 + Math.cos(t * 3) * 105, -Math.sin(t) * (170 - path * 20)), alpha: 0.065 });
     }
     this.render(0);
   }

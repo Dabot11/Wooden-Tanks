@@ -3,16 +3,16 @@ import assert from 'node:assert/strict';
 import { demo, levels } from '../src/game/LevelManager.ts';
 import { World } from '../src/game/World.ts';
 import { findPath, bankAngle, chooseCover, EnemyAI } from '../src/game/EnemyAI.ts';
-import { lineClear, circleBox } from '../src/game/CollisionManager.ts';
+import { lineClear, circleBox, circleCircle } from '../src/game/CollisionManager.ts';
 import type { Projectile } from '../src/game/types.ts';
 for (const level of [...levels, demo]) {
   test(`mission ${level.id}: every spawn is clear and enemies have a path to the player`, () => {
     const world = new World(level);
     for (const tank of world.tanks) assert.ok(world.canStand(tank, tank.radius, tank.id), `${tank.kind} ${tank.id} is blocked`);
     for (const enemy of world.enemies) {
-      const path = findPath(enemy, world.player, world.solids);
+      const path = findPath(enemy, world.player, world.movementSolids);
       assert.ok(path.length > 0, `${enemy.kind} cannot reach the player`);
-      for (const point of path) assert.ok(world.solids.every(b => !circleBox(point, 21, b)));
+      for (const point of path) assert.ok(world.movementSolids.every(b => !circleBox(point, 21, b)));
     }
   });
 }
@@ -40,7 +40,10 @@ test('enemy AI moves and never enters solid geometry over sustained simulation',
     // Isolate navigation from combat outcomes, leaving real AI decisions enabled.
     for (const enemy of world.enemies) enemy.cooldown = 100;
     world.update(1 / 60, { move: { x: 0, y: 0 }, aim: { x: 388, y: 100 }, fire: false });
-    for (const enemy of world.enemies) assert.ok(!world.solids.some(b => circleBox(enemy, enemy.radius, b)));
+    for (const enemy of world.enemies) {
+      assert.ok(!world.solids.some(b => circleBox(enemy, enemy.radius, b)));
+      assert.ok(!world.holes.some(hole => circleCircle(enemy, enemy.radius, hole, hole.radius)));
+    }
   }
   assert.ok(world.enemies.some((t, i) => Math.hypot(t.x - positions[i].x, t.y - positions[i].y) > 40));
 });

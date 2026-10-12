@@ -49,6 +49,21 @@ export function createTextures(scene: Phaser.Scene) {
   const vignette = c.createRadialGradient(640, 330, 200, 640, 330, 740);
   vignette.addColorStop(0, 'rgba(76,44,15,0)'); vignette.addColorStop(1, 'rgba(76,44,15,.18)'); c.fillStyle = vignette; c.fillRect(0, 0, 1280, 720);
   scene.textures.addCanvas('floor', floor.canvas);
+  // A recessed opening: shadow at the upper inner lip, lit lower cut edge,
+  // and no cast shadow outside the opening (unlike a raised wooden block).
+  const hole = canvas(48, 48); const pit = hole.ctx;
+  pit.translate(24, 24);
+  pit.fillStyle = '#997b48'; pit.beginPath(); pit.arc(0, 0, 16, 0, Math.PI * 2); pit.fill();
+  pit.save(); pit.beginPath(); pit.arc(0, 0, 15, 0, Math.PI * 2); pit.clip();
+  const depth = pit.createLinearGradient(-5, -15, 5, 15);
+  depth.addColorStop(0, '#332b20'); depth.addColorStop(0.45, '#53422b'); depth.addColorStop(1, '#a68a56');
+  pit.fillStyle = depth; pit.fillRect(-16, -16, 32, 32);
+  pit.fillStyle = '#2a241cb3'; pit.beginPath(); pit.ellipse(-2, -4, 13, 9, -0.15, 0, Math.PI * 2); pit.fill();
+  pit.lineWidth = 5; pit.strokeStyle = '#b59a6555'; pit.beginPath(); pit.arc(0, -1, 14, 0.1, Math.PI - 0.1); pit.stroke();
+  pit.restore();
+  pit.lineWidth = 1.6; pit.strokeStyle = '#f3dda4'; pit.beginPath(); pit.arc(0, 0, 16, 0.15, Math.PI - 0.15); pit.stroke();
+  pit.lineWidth = 1.2; pit.strokeStyle = '#6d532f'; pit.beginPath(); pit.arc(0, 0, 15.5, Math.PI + 0.1, Math.PI * 2 - 0.1); pit.stroke();
+  scene.textures.addCanvas('hole', hole.canvas);
   const shadow = canvas(100, 100); const s = shadow.ctx;
   const grad = s.createRadialGradient(50, 50, 8, 50, 50, 49); grad.addColorStop(0, 'rgba(46,32,18,.5)'); grad.addColorStop(0.55, 'rgba(46,32,18,.25)'); grad.addColorStop(1, 'rgba(46,32,18,0)');
   s.fillStyle = grad; s.fillRect(0, 0, 100, 100); scene.textures.addCanvas('shadow', shadow.canvas);

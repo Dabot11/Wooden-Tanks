@@ -1,5 +1,6 @@
 export interface Vec { x: number; y: number }
 export interface Rect extends Vec { w: number; h: number }
+export interface Hole extends Vec { radius: number }
 export type TankKind = 'player' | 'basic' | 'patrol' | 'offensive' | 'tactical';
 export type AIState = 'Idle' | 'Patrol' | 'Chase' | 'Aim' | 'Shoot' | 'Evade' | 'Reposition';
 export interface Tank extends Vec {
@@ -13,7 +14,7 @@ export interface Projectile extends Vec {
 }
 export interface Obstacle extends Rect { id: number; destructible: boolean; hp: number; alive: boolean }
 export interface Spawn extends Vec { kind: Exclude<TankKind, 'player'> }
-export interface Level { id: number; name: string; subtitle: string; obstacles: (Rect & { destructible?: boolean })[]; player: Vec; enemies: Spawn[]; difficulty: number }
+export interface Level { id: number; name: string; subtitle: string; obstacles: (Rect & { destructible?: boolean })[]; holes?: Hole[]; player: Vec; enemies: Spawn[]; difficulty: number }
 export type CombatEvent =
   | { type: 'shot'; x: number; y: number; angle: number; player: boolean }
   | { type: 'bounce' | 'impact' | 'break'; x: number; y: number }

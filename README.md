@@ -37,7 +37,7 @@ La dirección prevista es `https://dabot11.github.io/Wooden-Tanks/`; estará dis
 | Esc | Pausar / reanudar |
 | M | Activar / silenciar audio |
 
-Cada tanque se destruye con un impacto. Tienes tres vidas, cinco proyectiles simultáneos y una recarga de 280 ms. Las balas rebotan hasta dos veces; el siguiente impacto sólido las elimina. Caducan a los siete segundos. **Tu propio proyectil también puede destruirte al regresar.** Los bloques de corcho se rompen tras tres impactos; los bloques de madera son indestructibles.
+Cada tanque se destruye con un impacto. Tienes tres vidas, cinco proyectiles simultáneos y una recarga de 280 ms. Las balas rebotan hasta dos veces; el siguiente impacto sólido las elimina. Caducan a los siete segundos. **Tu propio proyectil también puede destruirte al regresar.** Los huecos circulares son cavidades del suelo: bloquean a los tanques, la IA los rodea y los proyectiles pasan por encima. Los bloques de corcho se rompen tras tres impactos; los bloques de madera son indestructibles.
 
 Destruye todos los enemigos para pasar de misión. Completarla desbloquea la siguiente y otorga una bonificación de tiempo. Al morir se reinicia el tablero y la puntuación vuelve a la que tenías al entrar en esa misión. Reiniciar desde la pausa también restaura esa puntuación, sin consumir una vida. El récord, las misiones desbloqueadas, las campañas ganadas y la preferencia de sonido se guardan en LocalStorage. Si el almacenamiento no está disponible, la partida funciona igualmente durante la sesión.
 
@@ -105,7 +105,7 @@ Playwright arranca Vite automáticamente si no está activo. Comprueba una victo
 - `src/ui/`: HUD, ajustes del control y diálogos HTML, escalados con el tablero.
 - `src/input/`: normalización y estado puro del gamepad, adaptación de la Gamepad API y navegación de menús.
 
-La integración de gamepad no modifica `World.ts`, las colisiones, los niveles ni la inteligencia artificial.
+La integración de gamepad se limita a la entrada; los huecos forman parte de los datos del tablero y de la colisión y navegación de los tanques.
 
 La simulación limita el delta a 50 ms y usa colisión barrida para que las balas no atraviesen paredes. Un impacto consume el tiempo restante del fotograma después de reflejar la velocidad; una separación mínima evita rebotes repetidos sobre la misma cara. Los efectos y las marcas de orugas tienen límites para mantener estable la carga.
 

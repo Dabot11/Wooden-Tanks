@@ -1,7 +1,12 @@
-import type { Level, Rect, Spawn } from './types';
+import type { Level, Rect, Spawn, Hole } from './types';
 const block = (x: number, y: number, w = 44, h = 88, destructible = false) => ({ x, y, w, h, destructible });
+export const boardHoles: Hole[] = [
+  { x: 156, y: 415, radius: 15 }, { x: 198, y: 415, radius: 15 }, { x: 240, y: 415, radius: 15 },
+  { x: 562, y: 572, radius: 15 }, { x: 562, y: 604, radius: 15 },
+  { x: 1030, y: 342, radius: 15 }, { x: 1075, y: 342, radius: 15 }, { x: 1120, y: 342, radius: 15 },
+];
 export const demo: Level = {
-  id: 65, name: 'El taller', subtitle: 'El tablero de referencia', difficulty: 1.4,
+  id: 65, holes: boardHoles, name: 'El taller', subtitle: 'El tablero de referencia', difficulty: 1.4,
   player: { x: 388, y: 520 },
   enemies: [{ x: 610, y: 302, kind: 'basic' }, { x: 830, y: 220, kind: 'patrol' }, { x: 1040, y: 170, kind: 'patrol' }],
   obstacles: [
@@ -14,7 +19,7 @@ export const demo: Level = {
 };
 const enemy = (x: number, y: number, kind: Spawn['kind']): Spawn => ({ x, y, kind });
 const mission = (id: number, name: string, subtitle: string, obstacles: (Rect & { destructible?: boolean })[], enemies: Spawn[], difficulty: number): Level =>
-  ({ id, name, subtitle, obstacles, enemies, difficulty, player: { x: 180, y: 520 } });
+  ({ id, name, subtitle, obstacles, holes: boardHoles, enemies, difficulty, player: { x: 180, y: 520 } });
 export const levels: Level[] = [
   mission(1, 'Primeras huellas', 'Mueve el tanque. Encuentra tu ángulo.', [block(610, 265, 44, 150)], [enemy(1030, 170, 'basic')], 0.65),
   mission(2, 'Dos esquinas', 'La paciencia también es una estrategia.', [block(390, 200, 176, 44), block(780, 370, 176, 44)], [enemy(1050, 170, 'basic'), enemy(980, 530, 'basic')], 0.8),
