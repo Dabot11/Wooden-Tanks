@@ -17,7 +17,7 @@ test('every displayed board hole participates in movement collision in all missi
   }
 });
 test('player and every enemy type stop at the pit rim from all four sides', () => {
-  for (const kind of ['player', 'basic', 'patrol', 'offensive', 'tactical'] as TankKind[]) {
+  for (const kind of ['player', 'basic', 'patrol', 'tactical'] as TankKind[]) {
     for (const dir of [{ x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }]) {
       const world = new World(level); const tank = kind === 'player' ? world.player : world.enemies[0]; tank.kind = kind;
       tank.x = hole.x + dir.x * 80; tank.y = hole.y + dir.y * 80;

@@ -11,7 +11,7 @@ const pad = (index: number, overrides: Partial<PadSnapshot> = {}): PadSnapshot =
   index, id: 'Xbox Series Controller', connected: true, mapping: 'standard', axes: [0, 0, 0, 0],
   buttons: Array.from({ length: 17 }, () => ({ pressed: false, value: 0 })), ...overrides,
 });
-const level: Level = { id: 1, name: 'coop', subtitle: '', difficulty: 1, player: { x: 150, y: 400 }, enemies: [{ x: 1000, y: 400, kind: 'offensive' }], obstacles: [] };
+const level: Level = { id: 1, name: 'coop', subtitle: '', difficulty: 1, player: { x: 150, y: 400 }, enemies: [{ x: 1000, y: 400, kind: 'patrol' }], obstacles: [] };
 const idle = { move: { x: 0, y: 0 }, aim: { x: 150, y: 0 }, fire: false };
 const shell = (owner: number, x: number, y: number): Projectile => ({ id: 999, owner, x, y, vx: 430, vy: 0, age: 1, bounces: 0, alive: true });
 
@@ -64,13 +64,13 @@ test('unsupported controllers cannot start co-op', () => {
 });
 test('both tanks spawn safely with a reachable route in every mission and the regression fixture', () => {
   for (const l of [...levels, demo]) {
-    const w = new World(l, 2); assert.equal(w.players.length, 2); assert.equal(w.enemies.length, l.enemies.length);
+    const w = new World(l, 2); assert.equal(w.players.length, 2); assert.equal(w.enemies.length, l.enemies.length * 2);
     const p = w.players[1]; assert.ok(w.canStand(p, p.radius, p.id), `mission ${l.id}`);
-    assert.ok(findPath(w.player, p, w.movementSolids).length, `reachable mission ${l.id}`);
+    assert.ok(findPath(w.player, p, w.movementSolids, 20, w.arena).length, `reachable mission ${l.id}`);
   }
 });
 test('players move, aim and fire independently with identical speed, reload and ammo limits', () => {
-  const w = new World(level, 2), p2 = w.players[1]; p2.x = 300;
+  const w = new World(level, 2), p2 = w.players[1]; p2.x = 300; w.player.y = p2.y = 400;
   w.update(0.05, { ...idle, move: { x: 0, y: -1 }, aim: { x: 1000, y: 394 }, fire: true }, false,
     { move: { x: 0, y: 1 }, aim: { x: 300, y: 1000 }, fire: true });
   assert.ok(w.player.y < 400 && p2.y > 400); assert.ok(Math.abs(w.player.y + p2.y - 800) < 1e-8);
@@ -82,12 +82,12 @@ test('players move, aim and fire independently with identical speed, reload and 
   }
   assert.equal(w.projectiles.filter(p => p.owner === p2.id).length, 5);
 });
-test('teammates are immune to allied shells, including rebounds, but enemies still take damage', () => {
+test('teammates are killed by allied shells, including rebounds, but enemies still take damage', () => {
   for (const shooter of [0, -1]) {
     const w = new World(level, 2), target = w.players.find(t => t.id !== shooter)!;
     target.x = 500; target.y = 200;
     const p = shell(shooter, 455, 200); p.bounces = 1; w.stepProjectile(p, 0.2);
-    assert.equal(target.alive, true); assert.equal(p.alive, true);
+    assert.equal(target.alive, false); assert.equal(p.alive, false);
     const enemy = w.enemies[0], lethal = shell(shooter, enemy.x - 45, enemy.y);
     w.stepProjectile(lethal, 0.1); assert.equal(enemy.alive, false);
   }
@@ -103,7 +103,7 @@ test('enemies target P2 when nearer and keep fighting after P1 is destroyed', ()
   const w = new World(level, 2), p2 = w.players[1], enemy = w.enemies[0];
   w.ai = new EnemyAI(() => 0.5); p2.x = 700; p2.y = 200; enemy.think = 0;
   w.update(0.05, idle);
-  assert.deepEqual({ x: enemy.goal.x, y: enemy.goal.y }, { x: p2.x, y: p2.y });
+  assert.ok(enemy.turret < -Math.PI / 2, 'nearest P2 is above-left and rotates turret counterclockwise toward its bearing');
   w.player.alive = false; const before = enemy.distance;
   for (let i = 0; i < 20; i++) w.update(0.05, idle);
   assert.ok(enemy.distance > before); assert.equal(p2.alive, true);

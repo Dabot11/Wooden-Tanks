@@ -180,3 +180,16 @@ kbd { font-family: inherit; font-size: .85em; border: 1px solid #8f826150; borde
 .selector-modal .mission-choice strong { font-size: calc(22 * var(--unit)); }
 .selector-modal .mission-choice span { font-size: calc(9 * var(--unit)); min-height: calc(24 * var(--unit)); margin: calc(4 * var(--unit)) 0; line-height: 1.35; }
 .selector-modal .modal-actions { flex-shrink: 0; }
+.party-size { display: flex; gap: calc(8 * var(--unit)); margin: calc(12 * var(--unit)) 0; }
+.party-size button { flex: 1; padding: calc(10 * var(--unit)); border: 1px solid #bfa575; border-radius: calc(8 * var(--unit)); background: #efe0bf; color: #4b392a; font-weight: 700; }
+.party-size button[aria-pressed="true"] { color: #fff7df; background: #426979; border-color: #426979; }
+.party-size button:focus-visible { outline: 3px solid #258db2; outline-offset: 2px; }
+.coop-hud .ammo-wrap { display: grid; grid-template-columns: repeat(2, auto); gap: calc(2 * var(--unit)) calc(12 * var(--unit)); }
+.coop-hud .ammo-wrap > .label { grid-column: 1 / -1; }
+.coop-ammo-row [id^="ammo"] { display: flex; gap: calc(5 * var(--unit)); }
+.partner-ammo, .partner-id { color: #bc4240; }
+.player-3 { color: #31733b; }
+.player-4 { color: #8e751e; }
+.p2-tank { color: #a73534; background: linear-gradient(135deg, #f1b0a0, #d56759); }
+
+.coop-hud .player-id { background: #f2e3c2; border: 1px solid #ccb07b; }

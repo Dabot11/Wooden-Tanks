@@ -12,6 +12,12 @@ for (const level of [...levels, demo]) {
     for (const tank of world.tanks) assert.ok(world.canStand(tank, tank.radius, tank.id), `${tank.kind} ${tank.id} is blocked`);
     for (const enemy of world.enemies) {
       const path = findPath(enemy, world.player, world.movementSolids);
+      if (level.bankShotOnly) {
+        assert.equal(path.length, 0, 'gallery opponents are deliberately across a movement barrier');
+        assert.equal(lineClear(world.player, enemy, world.solids, 4), false);
+        assert.notEqual(bankAngle(world.player, enemy, world.solids), null);
+        continue;
+      }
       assert.ok(path.length > 0, `${enemy.kind} cannot reach the player`);
       for (const point of path) assert.ok(world.movementSolids.every(b => !circleBox(point, 21, b)));
     }
@@ -48,8 +54,8 @@ test('enemy AI moves and never enters solid geometry over sustained simulation',
   }
   assert.ok(world.enemies.some((t, i) => Math.hypot(t.x - positions[i].x, t.y - positions[i].y) > 40));
 });
-test('tactical enemies enter Evade when a shell threatens their position', () => {
-  const world = new World({ ...levels[0], obstacles: [], enemies: [{ x: 700, y: 300, kind: 'tactical' }] });
+test('patrol enemies enter Evade when a shell threatens their position', () => {
+  const world = new World({ ...levels[0], obstacles: [], enemies: [{ x: 700, y: 300, kind: 'patrol' }] });
   const tank = world.enemies[0]; tank.think = 0;
   const projectile: Projectile = { id: 10, owner: 0, x: 590, y: 300, vx: 430, vy: 0, age: 0.4, bounces: 0, alive: true };
   world.projectiles.push(projectile); world.ai = new EnemyAI(() => 0.1);

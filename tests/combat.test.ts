@@ -70,11 +70,11 @@ test('enemy fires only with an unobstructed direct line of sight', () => {
   world.update(0.05, input); assert.equal(world.projectiles.filter(p => p.owner === enemy.id).length, 0);
 });
 
-test('player and every enemy move at 75 percent of their previous speeds', () => {
+test('player and moving enemies retain the reduced movement speeds', () => {
   const world = new World(base);
   world.update(0.05, { ...input, move: { x: 1, y: 0 } }, false);
   assert.ok(Math.abs(world.player.x - 150 - 155 * 0.75 * 0.05) < 1e-8);
-  for (const [kind, previous] of [['basic', 36], ['patrol', 75], ['offensive', 90], ['tactical', 78]] as const) {
+  for (const [kind, previous] of [['basic', 36], ['patrol', 75]] as const) {
     const w = new World({ ...base, enemies: [{ x: 900, y: 500, kind }] });
     const enemy = w.enemies[0];
     enemy.think = 100; enemy.cooldown = 100; enemy.path = [{ x: 700, y: 500 }];

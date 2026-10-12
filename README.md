@@ -71,28 +71,27 @@ Si Chrome bloquea el audio al empezar exclusivamente con el mando, haz un clic e
 
 ## Cooperativo local
 
-En el menú, elige **Cooperativo local** y conecta los mandos por Bluetooth o USB. Chrome puede necesitar una pulsación en cada mando para mostrarlo.
+Elige **Cooperativo local**, selecciona 2, 3 o 4 jugadores y pulsa un botón en cada mando conectado por Bluetooth o USB para que Chrome lo detecte.
 
-- **Dos controles:** el usado en el menú se asigna a P1 (azul); el otro, a P2 (dorado). Cada uno usa LS para mover, RS para apuntar y RT para disparar.
-- **Teclado + control:** P1 conserva WASD, mouse y clic/espacio; el mando controla exclusivamente a P2.
-- Cada jugador tiene su propia recarga y cinco proyectiles. Ambos comparten puntuación y tres vidas.
-- No hay daño entre compañeros. Los propios disparos rebotados siguen siendo peligrosos y los misiles siguen destruyéndose al chocar entre sí.
-- Si cae un jugador, el otro puede terminar la misión. Ambos reaparecen al avanzar; si caen los dos, se pierde una vida compartida y se reinicia la misión.
-- MENÚ en cualquiera de los mandos o ESC pausa para ambos. A confirma y B regresa; una pulsación simultánea no activa dos opciones.
-- Una desconexión pausa la partida y conserva la asignación. Reconecta el mismo mando antes de reanudar; suelta sticks y gatillos para volver a jugar. Un tercer mando no sustituye automáticamente al ausente. Si Chrome le asigna otro índice al reconectarlo, vuelve al menú y asigna los controles de nuevo.
+- **Controles para todos:** el mando usado en el menú se asigna primero. LS mueve, RS apunta y RT dispara.
+- **Teclado + controles:** P1 usa WASD, mouse y clic/espacio; los restantes usan un mando cada uno.
+- P1 azul, P2 rojo, P3 verde y P4 amarillo. Cada jugador tiene recarga propia y cinco proyectiles; la puntuación y las tres vidas son compartidas.
+- **Fuego amigo activo:** cualquier proyectil puede matar a un compañero. Las colisiones entre misiles destruyen ambos y producen una explosión visual.
+- Los caídos esperan la siguiente misión. Si cae todo el equipo, se consume una vida y se reinicia la misión.
+- MENÚ en cualquier mando o ESC pausa para todos. A confirma y B regresa. Una desconexión pausa y conserva el puesto: ningún otro mando sustituye automáticamente al ausente. Suelta sticks y gatillos al reanudar. Si Chrome cambia el índice del dispositivo, vuelve al menú para reasignarlo.
+- Cada jugador adicional amplía ambos ejes del mapa un 20 % y añade una dotación completa de enemigos: cuatro jugadores tienen 1,6 veces el ancho/alto y cuatro veces los enemigos. La cámara muestra todo el terreno; el mouse se transforma a coordenadas del mundo y la mira permanece exactamente en el cursor.
 
-El modo de un jugador sigue disponible en **Un jugador**. Las pruebas simulan dos Xbox con el mismo nombre e índices independientes; la conexión física Bluetooth/USB en macOS debe comprobarse en la laptop.
-
-Las misiones 11–20 añaden rutas alternas, islas con cavidades, pasos estrechos y fortificaciones de corcho. La campaña termina en la misión 20. Si ya completaste la campaña original, la misión 11 queda disponible al cargar tu progreso; se conserva tu récord y tus preferencias.
+La campaña contiene veinte misiones con cobertura, corcho destructible, cavidades y rutas que exigen esquivas y rebotes. En la misión 16, Galería de rebotes, las cavidades encierran a los jugadores en una zona: la pared bloquea el tiro directo y los centinelas deben alcanzarse rebotando por abajo. El progreso, récord y preferencias existentes se conservan. Las pruebas simulan Xbox con nombres iguales e índices independientes; Bluetooth/USB físicos en macOS requieren comprobación en la laptop.
 
 ## Enemigos
 
-- **Gris · básico:** lento, defensivo; dispara con línea de visión y busca otro ángulo cuando pierde al jugador.
-- **Morado · patrullero:** recorre puntos del tablero, busca rutas libres y puede esquivar.
-- **Rojo · ofensivo:** persigue al jugador, acorta la distancia y dispara más rápido.
-- **Verde · táctico:** mantiene distancia, busca cobertura durante la recarga, se reposiciona, esquiva proyectiles y calcula ataques de un rebote mediante objetivos reflejados.
+Solo estos tres tipos aparecen en las veinte misiones:
 
-Los enemigos tienen tiempos de reacción, rotación gradual de torreta y un pequeño error al apuntar. La navegación usa una cuadrícula de paso seguro, pero las posiciones, el movimiento y las colisiones son continuos.
+- **Explorador gris (misión 1):** móvil y lento, un misil activo, sin rebotes.
+- **Patrullero violeta con franjas oscuras (misión 3):** móvil, puede esquivar, hasta dos misiles activos y un rebote por misil.
+- **Centinela marfil con negro/naranja (misión 7):** inmóvil; misil propulsado 80 % más rápido, un rebote y recarga de 3,4 segundos. Detecta amenazas próximas con línea de visión y dispara para interceptarlas. Ataque y defensa consumen la misma recarga; su giro limitado permite vencerlo con salvas o rebotes tardíos.
+
+Los jugadores conservan dos rebotes y la velocidad de movimiento previamente reducida. Los proyectiles registran su perfil al dispararse, incluso si su propietario muere. El centinela destruye amenazas mediante colisiones reales entre misiles, sin escudo invisible.
 
 ## Pruebas de navegador
 

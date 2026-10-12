@@ -2,7 +2,7 @@ export interface Vec { x: number; y: number }
 export interface PlayerInput { move: Vec; aim: Vec; fire: boolean }
 export interface Rect extends Vec { w: number; h: number }
 export interface Hole extends Vec { radius: number }
-export type TankKind = 'player' | 'basic' | 'patrol' | 'offensive' | 'tactical';
+export type TankKind = 'player' | 'basic' | 'patrol' | 'tactical';
 export type AIState = 'Idle' | 'Patrol' | 'Chase' | 'Aim' | 'Shoot' | 'Evade' | 'Reposition';
 export interface Tank extends Vec {
   id: number; kind: TankKind; alive: boolean; angle: number; turret: number;
@@ -11,11 +11,12 @@ export interface Tank extends Vec {
 }
 export interface Projectile extends Vec {
   id: number; owner: number; vx: number; vy: number; age: number;
-  bounces: number; alive: boolean;
+  bounces: number; alive: boolean; maxBounces?: number; propelled?: boolean;
 }
 export interface Obstacle extends Rect { id: number; destructible: boolean; hp: number; alive: boolean }
 export interface Spawn extends Vec { kind: Exclude<TankKind, 'player'> }
-export interface Level { id: number; name: string; subtitle: string; obstacles: (Rect & { destructible?: boolean })[]; holes?: Hole[]; player: Vec; enemies: Spawn[]; difficulty: number }
+export type PlayerCount = 1 | 2 | 3 | 4;
+export interface Level { bankShotOnly?: boolean; arena?: Rect; id: number; name: string; subtitle: string; obstacles: (Rect & { destructible?: boolean })[]; holes?: Hole[]; player: Vec; enemies: Spawn[]; difficulty: number }
 export type CombatEvent =
   | { type: 'shot'; x: number; y: number; angle: number; player: boolean }
   | { type: 'bounce' | 'impact' | 'break' | 'shellCollision'; x: number; y: number }

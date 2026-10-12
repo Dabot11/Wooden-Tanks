@@ -8,7 +8,7 @@ async function mockPads(page: Page, count = 2) {
 }
 async function start(page: Page, keyboard = false) {
   await page.goto('/'); await page.locator('#coop').click();
-  await page.getByRole('button', { name: keyboard ? 'Teclado + control →' : 'Dos controles →', exact: true }).click();
+  await page.getByRole('button', { name: keyboard ? 'Teclado + controles →' : 'Jugar con controles →', exact: true }).click();
   await expect.poll(() => page.evaluate(() => (window as any).__wooden?.status)).toBe('playing');
   await page.evaluate(() => { (window as any).__wooden.world.ai.update = () => {}; });
   await page.waitForTimeout(100);
@@ -28,6 +28,7 @@ async function press(page: Page, index: number, key: number) {
 }
 const state = (page: Page) => page.evaluate(() => {
   const s = (window as any).__wooden;
+  if (!s) return { status: 'transition', level: -1, lives: -1, score: -1, coop: undefined, players: [], player: { x: 0, y: 0, angle: 0, turret: 0, shots: 0 }, enemies: [] };
   return { status: s.status, level: s.session.level, coop: s.session.coop, lives: s.session.lives, score: s.session.score,
     players: s.world.players.map((p: any) => ({ x: p.x, y: p.y, turret: p.turret, alive: p.alive, shots: p.shots })) };
 });
@@ -81,7 +82,8 @@ test('keyboard and mouse control P1 while a single controller controls P2', asyn
   await expect(page.locator('.mouse-reticle')).toBeVisible();
   expect(after.players[0].y).toBeLessThan(before.players[0].y - 25);
   expect(after.players[1].y).toBeGreaterThan(before.players[1].y + 25);
-  const desired = Math.atan2(520 - after.players[0].y, 900 - after.players[0].x);
+  const mouse = await page.evaluate(() => (window as any).__wooden.cameras.main.getWorldPoint(900, 520));
+  const desired = Math.atan2(mouse.y - after.players[0].y, mouse.x - after.players[0].x);
   expect(Math.abs(after.players[0].turret - desired)).toBeLessThan(0.1);
   expect(Math.abs(Math.abs(after.players[1].turret) - Math.PI)).toBeLessThan(0.1);
   await page.keyboard.press('Space'); await button(page, 0, 7, 1); await page.waitForTimeout(100); await neutral(page);
@@ -96,7 +98,7 @@ test('disconnect pauses both players, reserves slots and safely reconnects witho
     window.dispatchEvent(new Event('gamepaddisconnected'));
   });
   await expect.poll(async () => (await state(page)).status).toBe('paused');
-  await expect(page.locator('.gamepad-status')).toContainText('Reconecta el control de P1');
+  await expect(page.locator('.gamepad-status')).toContainText('Reconecta P1');
   const before = await state(page);
   await page.getByRole('button', { name: 'Reanudar →', exact: true }).click(); expect((await state(page)).status).toBe('paused');
   await sticks(page, 1, [0, -1, 0, 0]); await page.waitForTimeout(200); expect((await state(page)).players).toEqual(before.players);
@@ -117,8 +119,8 @@ test('a survivor can win, both return next mission, and a team wipe costs only o
   await sticks(page, 1, [0, -1, 1, 0]); await page.waitForTimeout(250); await neutral(page); await button(page, 1, 7, 1); await page.waitForTimeout(100); await neutral(page);
   expect((await state(page)).players[1].shots).toBeGreaterThan(0);
   await page.evaluate(() => {
-    const w = (window as any).__wooden.world, p = w.enemies[0];
-    w.projectiles = [{ id: 90003, owner: -1, x: p.x, y: p.y, vx: 322.5, vy: 0, age: 1, bounces: 0, alive: true }];
+    const w = (window as any).__wooden.world;
+    w.projectiles = w.enemies.map((p: any, i: number) => ({ id: 90003 + i, owner: -1, x: p.x, y: p.y, vx: 322.5, vy: 0, age: 1, bounces: 0, alive: true }));
   });
   await expect.poll(async () => (await state(page)).level).toBe(1);
   await expect.poll(async () => (await state(page)).status).toBe('playing');
@@ -134,8 +136,8 @@ test('a survivor can win, both return next mission, and a team wipe costs only o
 });
 test('co-op setup requires the appropriate number of compatible controllers', async ({ page }) => {
   await page.goto('/'); await page.locator('#coop').click();
-  await expect(page.getByRole('button', { name: 'Dos controles →', exact: true })).toBeDisabled();
-  await expect(page.getByRole('button', { name: 'Teclado + control →', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Jugar con controles →', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Teclado + controles →', exact: true })).toBeDisabled();
   await expect(page.locator('.coop-detection')).toContainText('0 controles detectados');
   await page.getByRole('button', { name: 'Volver', exact: true }).click(); await expect(page.locator('#coop')).toBeFocused();
 });

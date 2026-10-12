@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 const state = (page: Page) => page.evaluate(() => {
   const scene = (window as any).__wooden;
+  if (!scene) return { status: 'transition', level: -1, lives: -1, score: -1, coop: undefined, players: [], player: { x: 0, y: 0, angle: 0, turret: 0, shots: 0 }, enemies: [] };
   return { level: scene.session.level, status: scene.status, lives: scene.session.lives, score: scene.session.score,
     player: { x: scene.world.player.x, y: scene.world.player.y, angle: scene.world.player.angle, turret: scene.world.player.turret, shots: scene.world.player.shots },
     enemies: scene.world.enemies.map((t: any) => ({ x: t.x, y: t.y })) };

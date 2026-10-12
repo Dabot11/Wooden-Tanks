@@ -14,7 +14,13 @@ export class BoardRenderer {
   private cracks: Phaser.GameObjects.Graphics;
   constructor(private scene: Phaser.Scene, private world: World) {
     createTextures(scene);
-    scene.add.image(640, 360, 'floor').setDepth(0);
+    const a = world.arena;
+    const scale = a.w / 1184;
+    scene.add.tileSprite(a.x + a.w / 2, a.y + a.h / 2, a.w + 96, a.h + 142, 'floor').setDepth(0);
+    // Keep the expanded arena in the same visible playfield, with fixed DOM HUD.
+    const camera = scene.cameras.main;
+    camera.setZoom(1 / scale);
+    camera.centerOn(a.x + a.w / 2, a.y + a.h / 2 + 27 * scale);
     this.tracks = scene.add.graphics().setDepth(1);
     this.trails = scene.add.graphics().setDepth(25);
     this.cracks = scene.add.graphics().setDepth(12);
@@ -24,13 +30,13 @@ export class BoardRenderer {
     decor.lineStyle(5, 0xfff5d6, 0.8);
     for (const p of [{ x: 578, y: 90 }, { x: 660, y: 585 }]) { decor.lineBetween(p.x - 10, p.y - 8, p.x + 10, p.y + 8); decor.lineBetween(p.x + 10, p.y - 8, p.x - 10, p.y + 8); }
     // Rim made of separate wooden pieces, with rounded outer corner caps.
-    for (let x = 10; x < 1270; x += 70) {
-      this.blockImage(x, 14, Math.min(70, 1270 - x), 30).setDepth(14);
-      this.blockImage(x, 622, Math.min(70, 1270 - x), 30).setDepth(14);
+    for (let x = a.x - 38; x < a.x + a.w + 38; x += 70) {
+      this.blockImage(x, a.y - 30, Math.min(70, a.x + a.w + 38 - x), 30).setDepth(14);
+      this.blockImage(x, a.y + a.h, Math.min(70, a.x + a.w + 38 - x), 30).setDepth(14);
     }
-    for (let y = 44; y < 622; y += 76) {
-      this.blockImage(10, y, 38, Math.min(76, 622 - y)).setDepth(14);
-      this.blockImage(1232, y, 38, Math.min(76, 622 - y)).setDepth(14);
+    for (let y = a.y; y < a.y + a.h; y += 76) {
+      this.blockImage(a.x - 38, y, 38, Math.min(76, a.y + a.h - y)).setDepth(14);
+      this.blockImage(a.x + a.w, y, 38, Math.min(76, a.y + a.h - y)).setDepth(14);
     }
     for (const obstacle of world.obstacles) this.blocks.set(obstacle.id, this.blockImage(obstacle.x, obstacle.y, obstacle.w, obstacle.h, obstacle.destructible));
     for (const tank of world.tanks) this.createTank(tank);
@@ -47,12 +53,12 @@ export class BoardRenderer {
     return this.scene.add.image(x - 24, y - 24, obstacleTexture(this.scene, w, h, destructible)).setOrigin(0).setDepth(10);
   }
   private createTank(tank: Tank) {
-    const texture = tank.kind === 'player' && tank.id === -1 ? 'partner' : tank.kind;
+    const texture = tank.kind === 'player' ? ['player', 'partner', 'third', 'fourth'][-tank.id] : tank.kind;
     this.tanks.set(tank.id, {
       shadow: this.scene.add.image(tank.x + 5, tank.y + 7, 'shadow').setScale(0.78, 0.64).setDepth(17),
       body: this.scene.add.image(tank.x, tank.y, `body-${texture}`).setDepth(20),
       turret: this.scene.add.image(tank.x, tank.y, `turret-${texture}`).setDepth(22), last: 0,
-      label: tank.kind === 'player' && this.world.players.length === 2 ? this.scene.add.text(tank.x, tank.y - 32, tank.id === 0 ? 'P1' : 'P2', { fontFamily: 'sans-serif', fontSize: '11px', fontStyle: 'bold', color: '#fff5d5', backgroundColor: tank.id === 0 ? '#24667b' : '#805b20', padding: { x: 4, y: 2 } }).setOrigin(0.5).setDepth(23) : undefined,
+      label: tank.kind === 'player' && this.world.players.length > 1 ? this.scene.add.text(tank.x, tank.y - 32, `P${1 - tank.id}`, { fontFamily: 'sans-serif', fontSize: '11px', fontStyle: 'bold', color: '#fff5d5', backgroundColor: ['#24667b', '#a03130', '#31733b', '#8e751e'][-tank.id], padding: { x: 4, y: 2 } }).setOrigin(0.5).setDepth(23) : undefined,
     });
   }
   render(dt: number) {
@@ -93,6 +99,13 @@ export class BoardRenderer {
       let sprite = this.shells.get(p.id);
       if (!sprite) { sprite = this.scene.add.image(p.x, p.y, 'shell').setDepth(30); this.shells.set(p.id, sprite); }
       sprite.setPosition(p.x, p.y).setRotation(Math.atan2(p.vy, p.vx));
+      if (p.propelled) {
+        sprite.setTint(0xffbb66);
+        const length = Math.hypot(p.vx, p.vy), flame = 20 + Math.sin(this.scene.time.now * 0.045 + p.id) * 7;
+        const dx = p.vx / length, dy = p.vy / length;
+        this.trails.lineStyle(7, 0xf07620, 0.65).lineBetween(p.x - dx * 8, p.y - dy * 8, p.x - dx * flame, p.y - dy * flame);
+        this.trails.lineStyle(3, 0xffed9d, 0.95).lineBetween(p.x - dx * 8, p.y - dy * 8, p.x - dx * (flame - 6), p.y - dy * (flame - 6));
+      }
       this.trails.lineStyle(2.2, 0xfff2bb, 0.45).lineBetween(p.x, p.y, p.x - p.vx * 0.028, p.y - p.vy * 0.028);
     }
     for (const [id, sprite] of this.shells) if (!this.world.projectiles.some(p => p.id === id)) { sprite.destroy(); this.shells.delete(id); }

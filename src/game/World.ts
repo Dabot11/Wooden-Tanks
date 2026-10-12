@@ -1,33 +1,54 @@
 import { ARENA, SHOT_LIMIT, SHOT_SPEED, TANK_SPEED, lerpAngle } from './types';
 import type { Tank, Projectile, Obstacle, Level, Vec, CombatEvent, Rect, Hole, PlayerInput } from './types';
 import { circleBox, circleCircle, sweepBox, sweepCircle, reflect, lineClear } from './CollisionManager';
+import { enemyProfile } from './EnemyProfiles';
+import type { PlayerCount } from './types';
 import { createTank } from './Tank';
 import { EnemyAI } from './EnemyAI';
 function isObstacle(value: Rect): value is Obstacle { return 'destructible' in value; }
 export class World {
   holes: Hole[]; tanks: Tank[]; projectiles: Projectile[] = []; obstacles: Obstacle[];
   events: CombatEvent[] = []; elapsed = 0; ai = new EnemyAI(); private nextId = 100;
-  walls: Rect[] = [
-    { x: ARENA.x - 40, y: ARENA.y - 40, w: 40, h: ARENA.h + 80 },
-    { x: ARENA.x + ARENA.w, y: ARENA.y - 40, w: 40, h: ARENA.h + 80 },
-    { x: ARENA.x - 40, y: ARENA.y - 40, w: ARENA.w + 80, h: 40 },
-    { x: ARENA.x - 40, y: ARENA.y + ARENA.h, w: ARENA.w + 80, h: 40 },
-  ];
-  constructor(public level: Level, playerCount: 1 | 2 = 1) {
+  arena: Rect;
+  walls: Rect[];
+  constructor(public level: Level, playerCount: PlayerCount = 1) {
+    const scale = 1 + (playerCount - 1) * 0.2;
+    const point = (p: Vec) => ({ x: ARENA.x + (p.x - ARENA.x) * scale, y: ARENA.y + (p.y - ARENA.y) * scale });
+    if (playerCount > 1) this.level = level = { ...level, arena: { ...ARENA, w: ARENA.w * scale, h: ARENA.h * scale }, player: point(level.player), enemies: level.enemies.map(e => ({ ...e, ...point(e) })), obstacles: level.obstacles.map(o => ({ ...o, ...point(o), w: o.w * scale, h: o.h * scale })), holes: level.holes?.map(h => ({ ...h, ...point(h) })) };
+    this.arena = level.arena ?? ARENA;
+    const bounds = this.arena;
+    this.walls = [
+    { x: bounds.x - 40, y: bounds.y - 40, w: 40, h: bounds.h + 80 },
+    { x: bounds.x + bounds.w, y: bounds.y - 40, w: 40, h: bounds.h + 80 },
+    { x: bounds.x - 40, y: bounds.y - 40, w: bounds.w + 80, h: 40 },
+    { x: bounds.x - 40, y: bounds.y + bounds.h, w: bounds.w + 80, h: 40 },
+    ];
+
     this.holes = (level.holes ?? []).map(hole => ({ ...hole }));
     this.tanks = [createTank(0, 'player', level.player), ...level.enemies.map((s, i) => createTank(i + 1, s.kind, s))];
     this.obstacles = level.obstacles.map((o, i) => ({ ...o, id: i, hp: 3, alive: true, destructible: !!o.destructible }));
-    if (playerCount === 2) this.tanks.push(createTank(-1, 'player', this.partnerSpawn()));
+    for (let slot = 1; slot < playerCount; slot++) this.tanks.push(createTank(-slot, 'player', this.partnerSpawn()));
+    // Add one complete wave per additional player; distribute it over free terrain.
+    const extra = level.enemies.length * (playerCount - 1);
+    for (let i = 0; i < extra; i++) {
+      const source = level.enemies[i % level.enemies.length];
+      let spawn: Vec | undefined;
+      for (let y = this.arena.y + 100 * scale; y < this.arena.y + this.arena.h - 40 && !spawn; y += 72)
+        for (let x = this.arena.x + this.arena.w - 60; x > this.arena.x + this.arena.w * 0.45; x -= 72)
+          if (this.canStand({ x, y }, 25) && this.players.every(p => Math.hypot(p.x - x, p.y - y) > 280)) { spawn = { x, y }; break; }
+      if (!spawn) throw new Error('No safe reinforcement spawn');
+      this.tanks.push(createTank(level.enemies.length + i + 1, source.kind, spawn));
+    }
   }
   get player() { return this.tanks[0]; }
   get players() { return this.tanks.filter(t => t.kind === 'player'); }
   get alivePlayers() { return this.players.filter(t => t.alive); }
   private partnerSpawn(): Vec {
     // Pick a nearby free spot with a clear route to P1, never across a wall or pit.
-    for (let distance = 52; distance < ARENA.w; distance += 16) for (let i = 0; i < 16; i++) {
+    for (let distance = 52; distance < this.arena.w; distance += 16) for (let i = 0; i < 16; i++) {
       const angle = i * Math.PI / 8;
       const p = { x: this.player.x + Math.cos(angle) * distance, y: this.player.y + Math.sin(angle) * distance };
-      if (p.x < ARENA.x + 19 || p.x > ARENA.x + ARENA.w - 19 || p.y < ARENA.y + 19 || p.y > ARENA.y + ARENA.h - 19) continue;
+      if (p.x < this.arena.x + 19 || p.x > this.arena.x + this.arena.w - 19 || p.y < this.arena.y + 19 || p.y > this.arena.y + this.arena.h - 19) continue;
       if (this.canStand(p, 19) && lineClear(this.player, p, this.movementSolids, 19)) return p;
     }
     throw new Error('No safe cooperative spawn on this board');
@@ -38,7 +59,7 @@ export class World {
   get movementSolids(): Rect[] {
     return [...this.solids, ...this.holes.map(h => ({ x: h.x - h.radius, y: h.y - h.radius, w: h.radius * 2, h: h.radius * 2 }))];
   }
-  canStand(p: Vec, radius: number, except = -1): boolean {
+  canStand(p: Vec, radius: number, except = Number.NaN): boolean {
     return !this.solids.some(box => circleBox(p, radius, box)) &&
       !this.holes.some(hole => circleCircle(p, radius, hole, hole.radius)) &&
       !this.tanks.some(t => t.alive && t.id !== except && Math.hypot(t.x - p.x, t.y - p.y) < t.radius + radius);
@@ -54,23 +75,25 @@ export class World {
     tank.distance += Math.hypot(tank.x - old.x, tank.y - old.y);
   }
   fire(tank: Tank): boolean {
-    if (!tank.alive || tank.cooldown > 0 || this.projectiles.filter(p => p.alive && p.owner === tank.id).length >= (tank.kind === 'player' ? SHOT_LIMIT : 2)) return false;
+    const profile = enemyProfile(tank.kind);
+    if (!tank.alive || tank.cooldown > 0 || this.projectiles.filter(p => p.alive && p.owner === tank.id).length >= (tank.kind === 'player' ? SHOT_LIMIT : profile.limit)) return false;
     const direction = { x: Math.cos(tank.turret), y: Math.sin(tank.turret) };
     const muzzle = { x: tank.x + direction.x * 32, y: tank.y + direction.y * 32 };
     if (!lineClear(tank, muzzle, this.solids, 4)) return false;
-    this.projectiles.push({ ...muzzle, id: this.nextId++, owner: tank.id, vx: direction.x * SHOT_SPEED,
-      vy: direction.y * SHOT_SPEED, age: 0, bounces: 0, alive: true });
-    tank.cooldown = tank.kind === 'player' ? 0.28 : tank.kind === 'offensive' ? 1.4 : 2.3;
+    const speed = tank.kind === 'player' ? SHOT_SPEED : profile.speed;
+    this.projectiles.push({ ...muzzle, id: this.nextId++, owner: tank.id, vx: direction.x * speed,
+      vy: direction.y * speed, age: 0, bounces: 0, alive: true, maxBounces: tank.kind === 'player' ? 2 : profile.bounces, propelled: tank.kind === 'tactical' });
+    tank.cooldown = tank.kind === 'player' ? 0.28 : profile.cooldown;
     tank.shots++;
     this.events.push({ type: 'shot', ...muzzle, angle: tank.turret, player: tank.kind === 'player' });
     return true;
   }
-  update(dt: number, input: PlayerInput, ai = true, secondInput?: PlayerInput) {
+  update(dt: number, input: PlayerInput, ai = true, secondInput?: PlayerInput | PlayerInput[]) {
     dt = Math.min(dt, 0.05);
     this.elapsed += dt;
     this.tanks.forEach(t => { t.cooldown = Math.max(0, t.cooldown - dt); });
     for (const [index, tank] of this.players.entries()) {
-      const controls = index === 0 ? input : secondInput;
+      const controls = index === 0 ? input : Array.isArray(secondInput) ? secondInput[index - 1] : secondInput;
       if (!tank.alive || !controls) continue;
       this.move(tank, controls.move, TANK_SPEED, dt);
       tank.turret = lerpAngle(tank.turret, Math.atan2(controls.aim.y - tank.y, controls.aim.x - tank.x), dt * 24);
@@ -99,7 +122,6 @@ export class World {
       let source: Projectile | null = null;
       let target: Tank | Obstacle | Rect | Projectile | null = null;
       let normal: Vec = { x: 0, y: 0 };
-      const playerIds = new Set(this.players.map(t => t.id));
       for (let i = 0; i < active.length; i++) {
         const p = active[i], delta = { x: p.vx * time, y: p.vy * time };
         for (const box of this.solids) {
@@ -107,7 +129,6 @@ export class World {
           if (hit && hit.t < first) { first = hit.t; normal = hit.normal; source = p; target = box; }
         }
         for (const tank of this.tanks) {
-          if (tank.kind === 'player' && tank.id !== p.owner && playerIds.has(p.owner)) continue;
           if (!tank.alive || (tank.id === p.owner && p.age < 0.12 && !p.bounces)) continue;
           const hit = sweepCircle(p, delta, tank, tank.radius + 3);
           if (hit !== null && hit < first) { first = hit; source = p; target = tank; }
@@ -140,7 +161,7 @@ export class World {
         source.vx = velocity.x; source.vy = velocity.y; source.bounces++;
         source.x += normal.x * 0.15; source.y += normal.y * 0.15;
         this.events.push({ type: 'bounce', x: source.x, y: source.y });
-        if (source.bounces > 2) source.alive = false;
+        if (source.bounces > (source.maxBounces ?? 2)) source.alive = false;
       }
     }
   }

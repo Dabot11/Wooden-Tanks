@@ -73,7 +73,7 @@ export function createTextures(scene: Phaser.Scene) {
   const chip = canvas(10, 6); rounded(chip.ctx, 0, 0, 10, 6, 1, '#b98a4b'); chip.ctx.fillStyle = '#f1c480'; chip.ctx.fillRect(0, 0, 9, 2); scene.textures.addCanvas('chip', chip.canvas);
   const shell = canvas(24, 12); const b = shell.ctx;
   rounded(b, 3, 3, 17, 7, 3, '#4d3924'); rounded(b, 4, 2, 16, 6, 3, '#c39c52'); rounded(b, 6, 2, 13, 3, 2, '#fff1b0'); b.fillStyle = '#6c5736'; b.fillRect(4, 3, 3, 5); scene.textures.addCanvas('shell', shell.canvas);
-  for (const [kind, color] of Object.entries({ ...TANK_COLORS, partner: 0xd9a13b })) {
+  for (const [kind, color] of Object.entries({ ...TANK_COLORS, partner: 0xd54b47, third: 0x53a65c, fourth: 0xe3bf38 })) {
     const body = canvas(90, 90), t = body.ctx;
     t.translate(45, 45);
     for (const y of [-21, 12]) {
@@ -87,6 +87,11 @@ export function createTextures(scene: Phaser.Scene) {
     t.fillStyle = '#151e1d99'; t.fillRect(-16, -10, 5, 18);
     for (const y of [-13, 9]) { t.fillStyle = '#f8e7b6'; t.fillRect(12, y, 4, 4); }
     t.fillStyle = '#d9c597'; for (const y of [-13, 10]) { t.beginPath(); t.arc(-16, y, 1.5, 0, Math.PI * 2); t.fill(); }
+    if (!['player', 'partner', 'third', 'fourth'].includes(kind)) {
+      t.fillStyle = '#20232a';
+      for (const x of [-9, 4]) { t.save(); t.translate(x, 0); t.rotate(-0.45); t.fillRect(-2, -17, 4, 30); t.restore(); }
+      if (kind === 'tactical') { t.fillStyle = '#e87929'; t.fillRect(-21, -15, 7, 27); t.fillRect(12, -15, 7, 27); }
+    }
     scene.textures.addCanvas(`body-${kind}`, body.canvas);
     const turret = canvas(90, 90), u = turret.ctx; u.translate(45, 45);
     rounded(u, -10, -9, 27, 23, 8, '#00000044');
@@ -95,6 +100,7 @@ export function createTextures(scene: Phaser.Scene) {
     const tg = u.createLinearGradient(0, -12, 0, 12); tg.addColorStop(0, '#ffffff66'); tg.addColorStop(0.5, '#ffffff00'); tg.addColorStop(1, '#00000066'); u.fillStyle = tg; u.beginPath(); u.roundRect(-12, -12, 27, 23, 7); u.fill();
     rounded(u, -7, -8, 15, 12, 4, '#18272088'); u.strokeStyle = '#ffffff55'; u.lineWidth = 1; u.beginPath(); u.roundRect(-7, -8, 15, 12, 4); u.stroke();
     u.fillStyle = '#ead7a0'; u.fillRect(-4, -9, 8, 2);
+    if (!['player', 'partner', 'third', 'fourth'].includes(kind)) { u.fillStyle = kind === 'tactical' ? '#eb7628' : '#25232d'; u.fillRect(-11, -3, 25, 4); }
     scene.textures.addCanvas(`turret-${kind}`, turret.canvas);
   }
 }

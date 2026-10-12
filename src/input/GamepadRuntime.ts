@@ -49,7 +49,7 @@ export class GamepadRuntime {
       this.disconnectedUntil = performance.now() + 3000;
       if (gamepad.layout || previous.some(f => f.mode === 'gamepad')) this.onDisconnect();
     }
-    const text = gamepad.layout ? (gamepad.ready ? `Cooperativo · P1 ${gamepad.layout === 'two-pads' ? 'control 1' : 'teclado / mouse'} · P2 control ${gamepad.layout === 'two-pads' ? '2' : '1'}` : `Reconecta el control de ${!gamepad.secondFrame.mapped ? 'P2' : 'P1'} para reanudar`) :
+    const text = gamepad.layout ? (gamepad.ready ? `Cooperativo · ${gamepad.playerCount} jugadores · fuego amigo` : `Reconecta ${gamepad.frames.slice(0, gamepad.playerCount).map((f, i) => !f.mapped && !(i === 0 && gamepad.layout === 'keyboard-pad') ? 'P' + (i + 1) : '').filter(Boolean).join(', ')} para reanudar`) :
       gamepad.connectedCount > 1 ? `${gamepad.connectedCount} controles conectados · A / B menús` :
       frame.connected ? (frame.mapped ? 'Control conectado · A / B menús' : 'Control detectado · mapeo no compatible') : 'Control desconectado · usa teclado / mouse';
     this.badge.hidden = !gamepad.layout && !frame.connected && performance.now() > this.disconnectedUntil;

@@ -7,28 +7,30 @@ import { progress } from '../game/Progress';
 import { audio } from '../game/AudioManager';
 import { HUD } from '../ui/HUD';
 import { showOverlay } from '../ui/Overlay';
+import type { PlayerCount } from '../game/types';
 import type { CoopLayout } from '../input/GamepadTeam';
 import { gamepad } from '../input/GamepadRuntime';
 import { showGamepadSettings } from '../ui/GamepadSettings';
-export interface Session { level: number; score: number; lives: number; missionStartScore: number; coop?: CoopLayout }
+export interface Session { level: number; score: number; lives: number; missionStartScore: number; coop?: CoopLayout; playerCount?: PlayerCount }
 export class GameScene extends Phaser.Scene {
   world!: World; session!: Session; status: 'intro' | 'playing' | 'paused' | 'won' | 'dead' | 'ended' = 'intro';
   private board!: BoardRenderer; private effects!: ParticleEffects; private hud!: HUD;
   private keys!: Record<string, Phaser.Input.Keyboard.Key>; private root!: HTMLElement;
   private queuedShot = false; private aimMode: 'default' | 'mouse' | 'gamepad' = 'default'; private padAim = { x: 0, y: -1 };
   private reticle!: HTMLElement; private mouseClient?: { x: number; y: number }; private mouseOnCanvas = false;
-  private secondAim = { x: 0, y: -1 };
+  private teamAims = Array.from({ length: 3 }, () => ({ x: 0, y: -1 }));
   private closePause?: () => void; private closePadSettings?: () => void;
   constructor() { super('Game'); }
   init(data: { session?: Session }) {
     this.session = { ...(data.session ?? { level: 0, score: 0, lives: 3, missionStartScore: 0 }) };
     this.mouseClient = undefined; this.mouseOnCanvas = false;
-    this.secondAim = { x: 0, y: -1 };
+    this.teamAims = Array.from({ length: 3 }, () => ({ x: 0, y: -1 }));
     this.status = 'intro'; this.queuedShot = false; this.aimMode = 'default'; this.padAim = { x: 0, y: -1 }; this.closePause = undefined; this.closePadSettings = undefined;
   }
   create() {
     gamepad.suppress();
-    this.world = new World(getLevel(this.session.level), this.session.coop ? 2 : 1);
+    if (this.session.coop && !this.session.playerCount) this.session.playerCount = gamepad.playerCount;
+    this.world = new World(getLevel(this.session.level), this.session.coop ? this.session.playerCount ?? 2 : 1);
     this.board = new BoardRenderer(this, this.world); this.effects = new ParticleEffects(this);
     this.root = document.querySelector<HTMLElement>('#ui')!;
     this.hud = new HUD(this.root, this.world, this.session, () => this.pauseGame());
@@ -72,7 +74,7 @@ export class GameScene extends Phaser.Scene {
     this.reticle.hidden = true;
     this.status = 'paused'; this.queuedShot = false; this.tweens.pauseAll(); this.time.paused = true;
     document.querySelector('#app')!.classList.remove('gameplay');
-    this.closePause = showOverlay(this.root, { eyebrow: `MISIÓN ${this.world.level.id}`, title: 'Una pequeña pausa', description: this.session.coop ? 'Pausa para ambos. Si un control se desconecta, reconéctalo antes de reanudar.' : 'El taller puede esperar. Vuelve cuando estés listo.', cancel: () => this.resumeGame(), symbol: '<span class="pause-icon" style="margin:auto;width:24px;height:26px"></span>', actions: [
+    this.closePause = showOverlay(this.root, { eyebrow: `MISIÓN ${this.world.level.id}`, title: 'Una pequeña pausa', description: this.session.coop ? 'Pausa para todo el equipo. Si un control se desconecta, reconéctalo antes de reanudar.' : 'El taller puede esperar. Vuelve cuando estés listo.', cancel: () => this.resumeGame(), symbol: '<span class="pause-icon" style="margin:auto;width:24px;height:26px"></span>', actions: [
       { text: 'Reanudar →', run: () => this.resumeGame() },
       { text: 'Reiniciar misión', secondary: true, run: () => this.restartMission() },
       { text: 'Volver al menú', secondary: true, run: () => this.menu() },
@@ -105,7 +107,7 @@ export class GameScene extends Phaser.Scene {
         this.status = 'ended';
         progress.data.wins++; progress.save();
         showOverlay(this.root, { eyebrow: 'CAMPAÑA COMPLETADA', title: 'Maestro del taller', description: `${String(this.session.score).padStart(6, '0')} puntos. Cada huella cuenta.`, symbol: '+', cancel: () => this.menu(), actions: [
-          { text: 'Una nueva partida →', run: () => this.scene.restart({ session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop } }) },
+          { text: 'Una nueva partida →', run: () => this.scene.restart({ session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop, playerCount: this.session.playerCount } }) },
           { text: 'Volver al menú', secondary: true, run: () => this.menu() },
         ] });
       } else this.scene.restart({ session: { ...this.session, level: this.session.level + 1, missionStartScore: this.session.score } });
@@ -120,7 +122,7 @@ export class GameScene extends Phaser.Scene {
       else {
         this.status = 'ended'; document.querySelector('#app')!.classList.remove('gameplay');
         showOverlay(this.root, { eyebrow: 'GAME OVER', title: 'Hasta la próxima batalla', description: `${String(this.session.score).padStart(6, '0')} puntos · Récord ${String(progress.data.best).padStart(6, '0')}`, cancel: () => this.menu(), actions: [
-          { text: 'Volver a intentarlo →', run: () => this.scene.restart({ session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop } }) },
+          { text: 'Volver a intentarlo →', run: () => this.scene.restart({ session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop, playerCount: this.session.playerCount } }) },
           { text: 'Volver al menú', secondary: true, run: () => this.menu() },
         ] });
       }
@@ -139,12 +141,15 @@ export class GameScene extends Phaser.Scene {
     }
     const player = this.world.player;
     const bounds = this.root.getBoundingClientRect();
-    const mouseAim = this.mouseClient ? { x: (this.mouseClient.x - bounds.left) * 1280 / bounds.width, y: (this.mouseClient.y - bounds.top) * 720 / bounds.height } : pointer;
-    const partner = this.world.players[1], second = gamepad.secondFrame;
-    if (Math.hypot(second.aim.x, second.aim.y)) {
+    const screen = this.mouseClient ? { x: (this.mouseClient.x - bounds.left) * 1280 / bounds.width, y: (this.mouseClient.y - bounds.top) * 720 / bounds.height } : pointer;
+    const mouseAim = this.cameras.main.getWorldPoint(screen.x, screen.y);
+    const partners = this.world.players.slice(1).map((partner, index) => {
+      const second = gamepad.frames[index + 1];
       const length = Math.hypot(second.aim.x, second.aim.y);
-      this.secondAim = { x: second.aim.x / length, y: second.aim.y / length };
-    }
+      if (length) this.teamAims[index] = { x: second.aim.x / length, y: second.aim.y / length };
+      const bearing = this.teamAims[index];
+      return { move: second.move, aim: { x: partner.x + bearing.x * 100000, y: partner.y + bearing.y * 100000 }, fire: second.fire };
+    });
     // A distant point expresses a bearing through World's existing point-based aim input.
     // This keeps the bearing stable as the tank moves, without changing the simulation.
     const aim = this.aimMode === 'gamepad' ? { x: player.x + this.padAim.x * 100000, y: player.y + this.padAim.y * 100000 } :
@@ -152,9 +157,7 @@ export class GameScene extends Phaser.Scene {
     this.world.update(delta / 1000, {
       move: usePad ? pad.move : { x: +!!(down('D') || down('RIGHT')) - +!!(down('A') || down('LEFT')), y: +!!(down('S') || down('DOWN')) - +!!(down('W') || down('UP')) },
       aim, fire: usePad ? pad.fire : this.queuedShot || pointer.leftButtonDown() || down('SPACE'),
-    }, true, partner ? {
-      move: second.move, aim: { x: partner.x + this.secondAim.x * 100000, y: partner.y + this.secondAim.y * 100000 }, fire: second.fire,
-    } : undefined);
+    }, true, partners);
     this.reticle.hidden = usePad || this.aimMode !== 'mouse' || !this.mouseOnCanvas || !this.mouseClient || !this.world.player.alive;
     if (!this.reticle.hidden && this.mouseClient) {
       this.reticle.style.left = `${this.mouseClient.x - bounds.left}px`; this.reticle.style.top = `${this.mouseClient.y - bounds.top}px`;
@@ -162,7 +165,7 @@ export class GameScene extends Phaser.Scene {
     this.queuedShot = false;
     for (const event of this.world.events) {
       this.effects.event(event);
-      if (event.type === 'destroy' && !event.player) this.session.score += 100 + ({ basic: 0, patrol: 50, offensive: 75, tactical: 100, player: 0 }[event.kind]);
+      if (event.type === 'destroy' && !event.player) this.session.score += 100 + ({ basic: 0, patrol: 50, tactical: 100, player: 0 }[event.kind]);
     }
     this.world.events.length = 0;
     this.board.render(delta / 1000); this.hud.update(this.world, this.session);
