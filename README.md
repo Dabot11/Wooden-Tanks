@@ -83,6 +83,16 @@ Elige **Cooperativo local**, selecciona 2, 3 o 4 jugadores y pulsa un botón en 
 
 La campaña contiene veinte misiones con cobertura, corcho destructible, cavidades y rutas que exigen esquivas y rebotes. En la misión 16, Galería de rebotes, las cavidades encierran a los jugadores en una zona: la pared bloquea el tiro directo y los centinelas deben alcanzarse rebotando por abajo. El progreso, récord y preferencias existentes se conservan. Las pruebas simulan Xbox con nombres iguales e índices independientes; Bluetooth/USB físicos en macOS requieren comprobación en la laptop.
 
+## Sala de jugadores y duelo
+
+Cooperativo y Duelo comparten una sala para 2, 3 o 4 jugadores. Primero elige cantidad y esquema de entrada. Cada puesto muestra su número, color y dispositivo: Xbox, Nintendo, PlayStation, control genérico o teclado/mouse. Los mandos se identifican por el nombre que comunica el navegador y requieren mapeo estándar de Gamepad API.
+
+Cada mando confirma con el botón inferior: A en Xbox, B en Nintendo o ✕ en PlayStation. P1 con teclado/mouse confirma con Enter. La partida comienza cuando todos estén listos; vuelve a pulsar para retirar la confirmación. Si faltan dispositivos aparece la cantidad pendiente. Una desconexión conserva el puesto y exige confirmar de nuevo al reconectar.
+
+Duelo es todos contra todos, sin enemigos de IA. El último tanque vivo gana la ronda; tres victorias ganan la partida. Si todos caen en el mismo intercambio se repite la ronda sin puntos. Tres arenas alternan cobertura y corcho, con apariciones separadas. La revancha conserva los dispositivos y reinicia los resultados; no modifica el récord ni los desbloqueos de campaña.
+
+**P**, Esc o Menú pausan y reanudan tanto campaña como duelo. Mantener la tecla no alterna repetidamente la pausa.
+
 ## Enemigos
 
 Solo estos tres tipos aparecen en las veinte misiones:

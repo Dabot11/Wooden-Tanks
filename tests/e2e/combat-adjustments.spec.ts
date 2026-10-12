@@ -73,6 +73,7 @@ test('initial menu has clear mode choices, keyboard navigation and no reference 
   await expect(page.getByRole('button', { name: 'Cooperativo local', exact: false })).toBeVisible();
   await expect(page.locator('#play')).toBeFocused();
   await page.keyboard.press('ArrowDown'); await expect(page.locator('#coop')).toBeFocused();
+  await page.keyboard.press('ArrowDown'); await expect(page.locator('#duel')).toBeFocused();
   await page.keyboard.press('ArrowDown'); await expect(page.locator('#select')).toBeFocused();
   await page.keyboard.press('Enter'); await expect(page.getByRole('heading', { name: 'Elige tu batalla' })).toBeVisible();
   await page.keyboard.press('Escape'); await expect(page.locator('#select')).toBeFocused();

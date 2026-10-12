@@ -10,6 +10,10 @@ export class GamepadMenus {
     const current = document.activeElement as HTMLElement;
     let index = controls.indexOf(current);
     if (index < 0) { index = 0; controls[index].focus(); }
+    if (scope.classList.contains('player-lobby') && frame.confirm) {
+      if (scope.dataset.configure === 'true') { scope.dataset.configure = 'false'; scope.dataset.consumeReady = 'true'; if (current instanceof HTMLButtonElement && !current.classList.contains('keyboard-ready')) current.click(); }
+      return true;
+    }
     if (frame.cancel) {
       scope.dispatchEvent(new Event('gamepad-cancel'));
       return true;
@@ -22,6 +26,7 @@ export class GamepadMenus {
       focused.value = String(Math.max(Number(focused.min), Math.min(Number(focused.max), Number(focused.value) + x * step)));
       focused.dispatchEvent(new Event('input', { bubbles: true }));
     } else if (x || y) {
+      if (scope.classList.contains('player-lobby')) scope.dataset.configure = 'true';
       const grid = focused.closest('.mission-grid');
       const step = grid && y ? 5 * y : (y || x);
       index = Math.max(0, Math.min(controls.length - 1, index + step));

@@ -1,6 +1,6 @@
 import { tankIcon } from './HUD';
 export interface Action { text: string; run: () => void; secondary?: boolean }
-export function showOverlay(root: HTMLElement, options: { eyebrow: string; title: string; description: string; actions: Action[]; symbol?: string; cancel?: () => void }) {
+export function showOverlay(root: HTMLElement, options: { eyebrow: string; title: string; description: string; actions: Action[]; symbol?: string; pauseKey?: boolean; cancel?: () => void }) {
   const overlay = document.createElement('div'); overlay.className = 'overlay';
   const card = document.createElement('section'); card.className = 'modal'; card.setAttribute('role', 'dialog'); card.setAttribute('aria-modal', 'true');
   card.innerHTML = `<div class="modal-symbol">${options.symbol ?? tankIcon}</div><span class="eyebrow">${options.eyebrow}</span><h2>${options.title}</h2><p>${options.description}</p><div class="modal-actions"></div>`;
@@ -12,6 +12,7 @@ export function showOverlay(root: HTMLElement, options: { eyebrow: string; title
   overlay.append(card); root.append(overlay);
   (card.querySelector('button') as HTMLButtonElement | null)?.focus();
   card.addEventListener('keydown', e => {
+    if (e.key.toLowerCase() === 'p' && options.pauseKey) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) options.cancel?.(); return; }
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (!e.repeat) options.cancel?.(); return; }
     if (e.key !== 'Tab') return;
     const buttons = Array.from(card.querySelectorAll<HTMLElement>('button:not(:disabled), input[type="range"]'));

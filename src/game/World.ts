@@ -3,6 +3,7 @@ import type { Tank, Projectile, Obstacle, Level, Vec, CombatEvent, Rect, Hole, P
 import { circleBox, circleCircle, sweepBox, sweepCircle, reflect, lineClear } from './CollisionManager';
 import { enemyProfile } from './EnemyProfiles';
 import type { PlayerCount } from './types';
+import { duelSpawns } from './Duel';
 import { createTank } from './Tank';
 import { EnemyAI } from './EnemyAI';
 function isObstacle(value: Rect): value is Obstacle { return 'destructible' in value; }
@@ -11,7 +12,7 @@ export class World {
   events: CombatEvent[] = []; elapsed = 0; ai = new EnemyAI(); private nextId = 100;
   arena: Rect;
   walls: Rect[];
-  constructor(public level: Level, playerCount: PlayerCount = 1) {
+  constructor(public level: Level, playerCount: PlayerCount = 1, mode: 'campaign' | 'duel' = 'campaign') {
     const scale = 1 + (playerCount - 1) * 0.2;
     const point = (p: Vec) => ({ x: ARENA.x + (p.x - ARENA.x) * scale, y: ARENA.y + (p.y - ARENA.y) * scale });
     if (playerCount > 1) this.level = level = { ...level, arena: { ...ARENA, w: ARENA.w * scale, h: ARENA.h * scale }, player: point(level.player), enemies: level.enemies.map(e => ({ ...e, ...point(e) })), obstacles: level.obstacles.map(o => ({ ...o, ...point(o), w: o.w * scale, h: o.h * scale })), holes: level.holes?.map(h => ({ ...h, ...point(h) })) };
@@ -27,7 +28,9 @@ export class World {
     this.holes = (level.holes ?? []).map(hole => ({ ...hole }));
     this.tanks = [createTank(0, 'player', level.player), ...level.enemies.map((s, i) => createTank(i + 1, s.kind, s))];
     this.obstacles = level.obstacles.map((o, i) => ({ ...o, id: i, hp: 3, alive: true, destructible: !!o.destructible }));
-    for (let slot = 1; slot < playerCount; slot++) this.tanks.push(createTank(-slot, 'player', this.partnerSpawn()));
+    const spawns = mode === 'duel' ? duelSpawns(playerCount).map(point) : undefined;
+    if (spawns) Object.assign(this.player, spawns[0]);
+    for (let slot = 1; slot < playerCount; slot++) this.tanks.push(createTank(-slot, 'player', spawns?.[slot] ?? this.partnerSpawn()));
     // Add one complete wave per additional player; distribute it over free terrain.
     const extra = level.enemies.length * (playerCount - 1);
     for (let i = 0; i < extra; i++) {

@@ -106,7 +106,7 @@ test('Xbox twin-stick, retained aim, held RT, keyboard/mouse switching, pause ga
 test('gamepad navigates mission selector, settings and pause without repeated confirmations', async ({ page }) => {
   test.setTimeout(90000);
   await mockAPI(page); await page.goto('/'); await connect(page); await neutral(page);
-  await press(page, 13); await press(page, 13); // Un jugador -> Cooperativo -> Misiones.
+  await press(page, 13); await press(page, 13); await press(page, 13); // Un jugador -> Cooperativo -> Duelo -> Misiones.
   await expect(page.locator('#select')).toBeFocused();
   await button(page, 0, true);
   await expect(page.getByRole('heading', { name: 'Elige tu batalla' })).toBeVisible();
@@ -126,6 +126,7 @@ test('gamepad navigates mission selector, settings and pause without repeated co
   await page.getByRole('button', { name: 'Listo' }).click();
   await connect(page); await neutral(page);
   // Left stick navigates once per deflection; A starts the solo campaign.
+  await axes(page, [0, -1, 0, 0]); await page.waitForTimeout(200); await neutral(page);
   await axes(page, [0, -1, 0, 0]); await page.waitForTimeout(200); await neutral(page);
   await axes(page, [0, -1, 0, 0]); await page.waitForTimeout(200); await neutral(page);
   await axes(page, [0, -1, 0, 0]); await page.waitForTimeout(200); await neutral(page);

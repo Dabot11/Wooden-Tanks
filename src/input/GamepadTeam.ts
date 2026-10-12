@@ -24,11 +24,11 @@ export class GamepadTeam {
   configure(config: Partial<GamepadConfig>) { this.controllers.forEach(c => c.configure(config)); }
   suppress() { this.controllers.forEach(c => c.suppress()); }
   keyboardMouse() { if (!this.layout) this.controllers[0].keyboardMouse(); }
-  startCoop(layout: CoopLayout, pads: readonly (PadSnapshot | null)[], playerCount: PlayerCount = 2): boolean {
+  startCoop(layout: CoopLayout, pads: readonly (PadSnapshot | null)[], playerCount: PlayerCount = 2, preserveOrder = false): boolean {
     const mapped = pads.filter((p): p is PadSnapshot => !!p && p.connected && isMapped(p));
     if (mapped.length < (layout === 'two-pads' ? playerCount : playerCount - 1)) return false;
     // Keep the controller already used in menus as P1 when playing with two pads.
-    const first = mapped.find(p => p.index === this.frame.index && p.id === this.frame.id) ?? mapped[0];
+    const first = (preserveOrder ? mapped[0] : mapped.find(p => p.index === this.frame.index && p.id === this.frame.id)) ?? mapped[0];
     const ordered = [first, ...mapped.filter(p => p.index !== first.index)];
     this.playerCount = playerCount;
     this.assignments = Array.from({ length: 4 }, (_, slot) => {

@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { duelLevel, duelResult, DUEL_TARGET } from '../game/Duel';
 import { World } from '../game/World';
 import { getLevel, levels } from '../game/LevelManager';
 import { BoardRenderer } from '../game/BoardRenderer';
@@ -11,7 +12,7 @@ import type { PlayerCount } from '../game/types';
 import type { CoopLayout } from '../input/GamepadTeam';
 import { gamepad } from '../input/GamepadRuntime';
 import { showGamepadSettings } from '../ui/GamepadSettings';
-export interface Session { level: number; score: number; lives: number; missionStartScore: number; coop?: CoopLayout; playerCount?: PlayerCount }
+export interface Session { level: number; score: number; lives: number; missionStartScore: number; coop?: CoopLayout; playerCount?: PlayerCount; mode?: 'duel'; round?: number; wins?: number[] }
 export class GameScene extends Phaser.Scene {
   world!: World; session!: Session; status: 'intro' | 'playing' | 'paused' | 'won' | 'dead' | 'ended' = 'intro';
   private board!: BoardRenderer; private effects!: ParticleEffects; private hud!: HUD;
@@ -30,7 +31,7 @@ export class GameScene extends Phaser.Scene {
   create() {
     gamepad.suppress();
     if (this.session.coop && !this.session.playerCount) this.session.playerCount = gamepad.playerCount;
-    this.world = new World(getLevel(this.session.level), this.session.coop ? this.session.playerCount ?? 2 : 1);
+    this.world = new World(this.session.mode === 'duel' ? duelLevel(this.session.round ?? 1) : getLevel(this.session.level), this.session.coop ? this.session.playerCount ?? 2 : 1, this.session.mode === 'duel' ? 'duel' : 'campaign');
     this.board = new BoardRenderer(this, this.world); this.effects = new ParticleEffects(this);
     this.root = document.querySelector<HTMLElement>('#ui')!;
     this.hud = new HUD(this.root, this.world, this.session, () => this.pauseGame());
@@ -42,12 +43,13 @@ export class GameScene extends Phaser.Scene {
     };
     window.addEventListener('pointermove', trackMouse); window.addEventListener('pointerdown', trackMouse);
     this.events.once('shutdown', () => { window.removeEventListener('pointermove', trackMouse); window.removeEventListener('pointerdown', trackMouse); this.reticle.remove(); });
-    this.keys = this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SPACE,ESC,M') as Record<string, Phaser.Input.Keyboard.Key>;
-    this.input.keyboard!.addCapture(['UP', 'DOWN', 'LEFT', 'RIGHT', 'SPACE', 'ESC']);
-    this.input.keyboard!.on('keydown-ESC', (event: KeyboardEvent) => {
+    this.keys = this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SPACE,ESC,P,M') as Record<string, Phaser.Input.Keyboard.Key>;
+    this.input.keyboard!.addCapture(['UP', 'DOWN', 'LEFT', 'RIGHT', 'SPACE', 'ESC', 'P']);
+    const togglePause = (event: KeyboardEvent) => {
       if (event.repeat) return;
       if (this.status === 'paused') this.resumeGame(); else this.pauseGame();
-    });
+    };
+    this.input.keyboard!.on('keydown-ESC', togglePause); this.input.keyboard!.on('keydown-P', togglePause);
     this.input.keyboard!.on('keydown-M', (event: KeyboardEvent) => { if (!event.repeat) this.hud.toggleSound(); });
     this.input.keyboard!.on('keydown-SPACE', (event: KeyboardEvent) => {
       if (!event.repeat && this.status === 'playing') this.queuedShot = true;
@@ -63,7 +65,7 @@ export class GameScene extends Phaser.Scene {
       if (import.meta.env.DEV) delete (window as any).__wooden;
     });
     const intro = document.createElement('div'); intro.className = 'mission-intro';
-    intro.innerHTML = `<span class="eyebrow">PREPARA TU ESTRATEGIA</span><strong>Misión ${String(this.world.level.id).padStart(2, '0')}</strong><span>${this.world.level.subtitle}</span>`;
+    intro.innerHTML = `<span class="eyebrow">PREPARA TU ESTRATEGIA</span><strong>${this.session.mode === 'duel' ? 'Ronda ' + this.session.round : 'Misión ' + String(this.world.level.id).padStart(2, '0')}</strong><span>${this.world.level.subtitle}</span>`;
     this.root.append(intro);
     this.time.delayedCall(1500, () => { intro.remove(); gamepad.suppress(); this.status = 'playing'; document.querySelector('#app')!.classList.add('gameplay'); });
     if (import.meta.env.DEV) (window as any).__wooden = this;
@@ -74,9 +76,9 @@ export class GameScene extends Phaser.Scene {
     this.reticle.hidden = true;
     this.status = 'paused'; this.queuedShot = false; this.tweens.pauseAll(); this.time.paused = true;
     document.querySelector('#app')!.classList.remove('gameplay');
-    this.closePause = showOverlay(this.root, { eyebrow: `MISIÓN ${this.world.level.id}`, title: 'Una pequeña pausa', description: this.session.coop ? 'Pausa para todo el equipo. Si un control se desconecta, reconéctalo antes de reanudar.' : 'El taller puede esperar. Vuelve cuando estés listo.', cancel: () => this.resumeGame(), symbol: '<span class="pause-icon" style="margin:auto;width:24px;height:26px"></span>', actions: [
+    this.closePause = showOverlay(this.root, { eyebrow: `${this.session.mode === 'duel' ? 'RONDA' : 'MISIÓN'} ${this.world.level.id}`, title: 'Una pequeña pausa', pauseKey: true, description: this.session.coop ? 'Pausa para todos los jugadores. Si un control se desconecta, reconéctalo antes de reanudar.' : 'El taller puede esperar. Vuelve cuando estés listo.', cancel: () => this.resumeGame(), symbol: '<span class="pause-icon" style="margin:auto;width:24px;height:26px"></span>', actions: [
       { text: 'Reanudar →', run: () => this.resumeGame() },
-      { text: 'Reiniciar misión', secondary: true, run: () => this.restartMission() },
+      { text: this.session.mode === 'duel' ? 'Reiniciar ronda' : 'Reiniciar misión', secondary: true, run: () => this.restartMission() },
       { text: 'Volver al menú', secondary: true, run: () => this.menu() },
       { text: 'Ajustes del control', secondary: true, run: () => { this.closePadSettings = showGamepadSettings(this.root); } },
     ] });
@@ -90,7 +92,24 @@ export class GameScene extends Phaser.Scene {
     document.querySelector('#app')!.classList.add('gameplay'); (document.activeElement as HTMLElement)?.blur();
   }
   private restartMission() { this.time.paused = false; this.scene.restart({ session: { ...this.session, score: this.session.missionStartScore } }); }
-  private menu() { progress.record(this.session.score); this.time.paused = false; this.scene.start('Menu'); }
+  private menu() { if (this.session.mode !== 'duel') progress.record(this.session.score); this.time.paused = false; this.scene.start('Menu'); }
+  private finishDuel(result: number | null) {
+    this.status = 'won'; gamepad.suppress(); this.reticle.hidden = true; this.queuedShot = false;
+    document.querySelector('#app')!.classList.remove('gameplay');
+    const wins = [...(this.session.wins ?? [0, 0, 0, 0])];
+    if (result !== null) wins[result]++;
+    this.session.wins = wins; this.hud.update(this.world, this.session);
+    const champion = result !== null && wins[result] >= DUEL_TARGET;
+    const round = this.session.round ?? 1;
+    this.time.delayedCall(900, () => {
+      this.status = 'ended';
+      showOverlay(this.root, { eyebrow: champion ? 'DUELO TERMINADO' : `RONDA ${round}`, title: result === null ? 'Empate' : `P${result + 1} ${champion ? 'gana el duelo' : 'gana la ronda'}`,
+        description: wins.slice(0, this.world.players.length).map((w, i) => `P${i + 1}: ${w} / ${DUEL_TARGET}`).join(' · '), cancel: () => this.menu(), actions: [
+          { text: champion ? 'Revancha →' : result === null ? 'Repetir ronda →' : 'Siguiente ronda →', run: () => this.scene.restart({ session: { ...this.session, round: champion ? 1 : result === null ? round : round + 1, wins: champion ? [0, 0, 0, 0] : wins } }) },
+          { text: 'Volver al menú', secondary: true, run: () => this.menu() },
+        ] });
+    });
+  }
   private win() {
     gamepad.suppress();
     this.reticle.hidden = true;
@@ -169,6 +188,7 @@ export class GameScene extends Phaser.Scene {
     }
     this.world.events.length = 0;
     this.board.render(delta / 1000); this.hud.update(this.world, this.session);
-    if (!this.world.alivePlayers.length) this.loseLife(); else if (!this.world.enemies.length) this.win();
+    if (this.session.mode === 'duel') { const result = duelResult(this.world.players); if (result !== undefined) this.finishDuel(result); }
+    else if (!this.world.alivePlayers.length) this.loseLife(); else if (!this.world.enemies.length) this.win();
   }
 }

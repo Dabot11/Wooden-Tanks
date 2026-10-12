@@ -9,6 +9,11 @@ async function mockPads(page: Page, count = 2) {
 async function start(page: Page, keyboard = false) {
   await page.goto('/'); await page.locator('#coop').click();
   await page.getByRole('button', { name: keyboard ? 'Teclado + controles →' : 'Jugar con controles →', exact: true }).click();
+  await page.waitForTimeout(150);
+  if (keyboard) await page.keyboard.press('Enter');
+  await page.evaluate(() => (window as any).__testPads.forEach((p: any) => p.buttons[0] = { pressed: true, value: 1 }));
+  await page.waitForTimeout(150);
+  await page.evaluate(() => (window as any).__testPads.forEach((p: any) => p.buttons[0] = { pressed: false, value: 0 }));
   await expect.poll(() => page.evaluate(() => (window as any).__wooden?.status)).toBe('playing');
   await page.evaluate(() => { (window as any).__wooden.world.ai.update = () => {}; });
   await page.waitForTimeout(100);
@@ -136,8 +141,9 @@ test('a survivor can win, both return next mission, and a team wipe costs only o
 });
 test('co-op setup requires the appropriate number of compatible controllers', async ({ page }) => {
   await page.goto('/'); await page.locator('#coop').click();
-  await expect(page.getByRole('button', { name: 'Jugar con controles →', exact: true })).toBeDisabled();
-  await expect(page.getByRole('button', { name: 'Teclado + controles →', exact: true })).toBeDisabled();
+  await expect(page.locator('.coop-detection')).toContainText('Falta agregar 2 controles');
+  await page.getByRole('button', { name: 'Teclado + controles →', exact: true }).click();
+  await expect(page.locator('.coop-detection')).toContainText('Falta agregar 1 control');
   await expect(page.locator('.coop-detection')).toContainText('0 controles detectados');
   await page.getByRole('button', { name: 'Volver', exact: true }).click(); await expect(page.locator('#coop')).toBeFocused();
 });
