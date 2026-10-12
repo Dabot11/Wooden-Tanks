@@ -67,6 +67,20 @@ Se utiliza la **Gamepad API** y el mapeo `standard` del navegador (A=0, B=1, RT=
 
 Si Chrome bloquea el audio al empezar exclusivamente con el mando, haz un clic en el juego para autorizarlo. Las pruebas automatizadas simulan un Xbox a través de `navigator.getGamepads()`; no sustituyen una prueba física en Mac con Bluetooth/USB.
 
+## Cooperativo local
+
+En el menú, elige **Cooperativo · 2 jugadores** y conecta los mandos por Bluetooth o USB. Chrome puede necesitar una pulsación en cada mando para mostrarlo.
+
+- **Dos controles:** el usado en el menú se asigna a P1 (azul); el otro, a P2 (dorado). Cada uno usa LS para mover, RS para apuntar y RT para disparar.
+- **Teclado + control:** P1 conserva WASD, mouse y clic/espacio; el mando controla exclusivamente a P2.
+- Cada jugador tiene su propia recarga y cinco proyectiles. Ambos comparten puntuación y tres vidas.
+- No hay daño entre compañeros. Los propios disparos rebotados siguen siendo peligrosos y los misiles siguen destruyéndose al chocar entre sí.
+- Si cae un jugador, el otro puede terminar la misión. Ambos reaparecen al avanzar; si caen los dos, se pierde una vida compartida y se reinicia la misión.
+- MENÚ en cualquiera de los mandos o ESC pausa para ambos. A confirma y B regresa; una pulsación simultánea no activa dos opciones.
+- Una desconexión pausa la partida y conserva la asignación. Reconecta el mismo mando antes de reanudar; suelta sticks y gatillos para volver a jugar. Un tercer mando no sustituye automáticamente al ausente. Si Chrome le asigna otro índice al reconectarlo, vuelve al menú y asigna los controles de nuevo.
+
+El modo de un jugador sigue disponible en **Jugar campaña**. Las pruebas simulan dos Xbox con el mismo nombre e índices independientes; la conexión física Bluetooth/USB en macOS debe comprobarse en la laptop.
+
 ## Enemigos
 
 - **Gris · básico:** lento, defensivo; dispara con línea de visión y busca otro ángulo cuando pierde al jugador.

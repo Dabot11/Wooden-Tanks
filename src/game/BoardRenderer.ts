@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import type { Tank, Vec } from './types';
 import type { World } from './World';
 import { createTextures, obstacleTexture } from './TextureFactory';
-interface TankSprite { body: Phaser.GameObjects.Image; turret: Phaser.GameObjects.Image; shadow: Phaser.GameObjects.Image; last: number }
+interface TankSprite { body: Phaser.GameObjects.Image; turret: Phaser.GameObjects.Image; shadow: Phaser.GameObjects.Image; last: number; label?: Phaser.GameObjects.Text }
 interface Mark extends Vec { angle: number; alpha: number }
 export class BoardRenderer {
   private tanks = new Map<number, TankSprite>();
@@ -47,16 +47,19 @@ export class BoardRenderer {
     return this.scene.add.image(x - 24, y - 24, obstacleTexture(this.scene, w, h, destructible)).setOrigin(0).setDepth(10);
   }
   private createTank(tank: Tank) {
+    const texture = tank.kind === 'player' && tank.id === -1 ? 'partner' : tank.kind;
     this.tanks.set(tank.id, {
       shadow: this.scene.add.image(tank.x + 5, tank.y + 7, 'shadow').setScale(0.78, 0.64).setDepth(17),
-      body: this.scene.add.image(tank.x, tank.y, `body-${tank.kind}`).setDepth(20),
-      turret: this.scene.add.image(tank.x, tank.y, `turret-${tank.kind}`).setDepth(22), last: 0,
+      body: this.scene.add.image(tank.x, tank.y, `body-${texture}`).setDepth(20),
+      turret: this.scene.add.image(tank.x, tank.y, `turret-${texture}`).setDepth(22), last: 0,
+      label: tank.kind === 'player' && this.world.players.length === 2 ? this.scene.add.text(tank.x, tank.y - 32, tank.id === 0 ? 'P1' : 'P2', { fontFamily: 'sans-serif', fontSize: '11px', fontStyle: 'bold', color: '#fff5d5', backgroundColor: tank.id === 0 ? '#24667b' : '#805b20', padding: { x: 4, y: 2 } }).setOrigin(0.5).setDepth(23) : undefined,
     });
   }
   render(dt: number) {
     let dirty = false;
     for (const tank of this.world.tanks) {
       const sprite = this.tanks.get(tank.id)!;
+      sprite.label?.setVisible(tank.alive).setPosition(tank.x, tank.y - 32);
       sprite.body.setVisible(tank.alive).setPosition(tank.x, tank.y).setRotation(tank.angle);
       sprite.turret.setVisible(tank.alive).setPosition(tank.x, tank.y).setRotation(tank.turret);
       sprite.shadow.setVisible(tank.alive).setPosition(tank.x + 5, tank.y + 7);

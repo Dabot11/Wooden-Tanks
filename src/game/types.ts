@@ -1,4 +1,5 @@
 export interface Vec { x: number; y: number }
+export interface PlayerInput { move: Vec; aim: Vec; fire: boolean }
 export interface Rect extends Vec { w: number; h: number }
 export interface Hole extends Vec { radius: number }
 export type TankKind = 'player' | 'basic' | 'patrol' | 'offensive' | 'tactical';

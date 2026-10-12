@@ -114,3 +114,24 @@ kbd { font-family: inherit; font-size: .85em; border: 1px solid #8f826150; borde
 .gamepad-settings output { font-family: ui-monospace, monospace; color: #9d5037; }
 .gamepad-settings input { width: 100%; accent-color: #9d5037; cursor: pointer; }
 .gamepad-settings small { color: #8a7962; font-size: calc(9 * var(--unit)); line-height: 1.7; margin-top: calc(8 * var(--unit)); }
+
+/* Local co-op keeps the shared board and separates each player's ammunition. */
+.menu-links { flex-wrap: wrap; }
+#coop { flex-basis: 100%; text-align: left; }
+.coop-modal { width: calc(510 * var(--unit)); }
+.coop-modal p { margin-bottom: calc(14 * var(--unit)); }
+.coop-detection { font-size: calc(11 * var(--unit)) !important; }
+.team-status { font-size: calc(10 * var(--unit)); color: #65563d; margin-left: auto; }
+.coop-hud .player-score { width: calc(275 * var(--unit)); }
+.coop-hud .player-id { display: flex; gap: calc(10 * var(--unit)); padding: calc(8 * var(--unit)); font-size: calc(18 * var(--unit)); }
+.partner-id { color: #ffe3a5; border-left: 1px solid #ffffff55; padding-left: calc(8 * var(--unit)); }
+.coop-hud .combat-stats { width: calc(285 * var(--unit)); }
+.coop-hud .ammo-wrap { gap: calc(3 * var(--unit)) !important; }
+.coop-ammo-row { display: flex; align-items: center; gap: calc(6 * var(--unit)); font-size: calc(9 * var(--unit)); color: #24667b; }
+.coop-ammo-row .ammo { height: calc(10 * var(--unit)); }
+.coop-ammo-row #ammo, #ammo-p2 { display: flex; gap: calc(5 * var(--unit)); }
+.partner-ammo { color: #805b20; }
+.menu-links { row-gap: 0; }
+.menu-description { margin-bottom: calc(18 * var(--unit)); }
+.menu-actions .button { padding-top: calc(11 * var(--unit)); padding-bottom: calc(11 * var(--unit)); }
+.menu-record { margin-top: calc(10 * var(--unit)); }

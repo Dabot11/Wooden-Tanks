@@ -7,23 +7,26 @@ import { progress } from '../game/Progress';
 import { audio } from '../game/AudioManager';
 import { HUD } from '../ui/HUD';
 import { showOverlay } from '../ui/Overlay';
+import type { CoopLayout } from '../input/GamepadTeam';
 import { gamepad } from '../input/GamepadRuntime';
 import { showGamepadSettings } from '../ui/GamepadSettings';
-export interface Session { level: number; score: number; lives: number; missionStartScore: number }
+export interface Session { level: number; score: number; lives: number; missionStartScore: number; coop?: CoopLayout }
 export class GameScene extends Phaser.Scene {
   world!: World; session!: Session; status: 'intro' | 'playing' | 'paused' | 'won' | 'dead' | 'ended' = 'intro';
   private board!: BoardRenderer; private effects!: ParticleEffects; private hud!: HUD;
   private keys!: Record<string, Phaser.Input.Keyboard.Key>; private root!: HTMLElement;
   private queuedShot = false; private aimMode: 'default' | 'mouse' | 'gamepad' = 'default'; private padAim = { x: 0, y: -1 };
+  private secondAim = { x: 0, y: -1 };
   private closePause?: () => void; private closePadSettings?: () => void;
   constructor() { super('Game'); }
   init(data: { session?: Session }) {
     this.session = { ...(data.session ?? { level: 0, score: 0, lives: 3, missionStartScore: 0 }) };
+    this.secondAim = { x: 0, y: -1 };
     this.status = 'intro'; this.queuedShot = false; this.aimMode = 'default'; this.padAim = { x: 0, y: -1 }; this.closePause = undefined; this.closePadSettings = undefined;
   }
   create() {
     gamepad.suppress();
-    this.world = new World(getLevel(this.session.level));
+    this.world = new World(getLevel(this.session.level), this.session.coop ? 2 : 1);
     this.board = new BoardRenderer(this, this.world); this.effects = new ParticleEffects(this);
     this.root = document.querySelector<HTMLElement>('#ui')!;
     this.hud = new HUD(this.root, this.world, this.session, () => this.pauseGame());
@@ -38,8 +41,8 @@ export class GameScene extends Phaser.Scene {
       if (!event.repeat && this.status === 'playing') this.queuedShot = true;
     });
     this.input.mouse!.disableContextMenu();
-    this.input.on('pointermove', () => { this.aimMode = 'mouse'; });
-    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => { audio.unlock(); if (pointer.leftButtonDown() && this.status === 'playing') { this.queuedShot = true; this.aimMode = 'mouse'; } });
+    this.input.on('pointermove', () => { if (this.session.coop !== 'two-pads') this.aimMode = 'mouse'; });
+    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => { audio.unlock(); if (this.session.coop !== 'two-pads' && pointer.leftButtonDown() && this.status === 'playing') { this.queuedShot = true; this.aimMode = 'mouse'; } });
     const blur = () => { if (this.status === 'playing') this.pauseGame(); };
     this.game.events.on(Phaser.Core.Events.BLUR, blur);
     this.events.once('shutdown', () => {
@@ -58,7 +61,7 @@ export class GameScene extends Phaser.Scene {
     gamepad.suppress();
     this.status = 'paused'; this.queuedShot = false; this.tweens.pauseAll(); this.time.paused = true;
     document.querySelector('#app')!.classList.remove('gameplay');
-    this.closePause = showOverlay(this.root, { eyebrow: `MISIÓN ${this.world.level.id}`, title: 'Una pequeña pausa', description: 'El taller puede esperar. Vuelve cuando estés listo.', cancel: () => this.resumeGame(), symbol: '<span class="pause-icon" style="margin:auto;width:24px;height:26px"></span>', actions: [
+    this.closePause = showOverlay(this.root, { eyebrow: `MISIÓN ${this.world.level.id}`, title: 'Una pequeña pausa', description: this.session.coop ? 'Pausa para ambos. Si un control se desconecta, reconéctalo antes de reanudar.' : 'El taller puede esperar. Vuelve cuando estés listo.', cancel: () => this.resumeGame(), symbol: '<span class="pause-icon" style="margin:auto;width:24px;height:26px"></span>', actions: [
       { text: 'Reanudar →', run: () => this.resumeGame() },
       { text: 'Reiniciar misión', secondary: true, run: () => this.restartMission() },
       { text: 'Volver al menú', secondary: true, run: () => this.menu() },
@@ -66,7 +69,7 @@ export class GameScene extends Phaser.Scene {
     ] });
   }
   resumeGame() {
-    if (this.status !== 'paused') return;
+    if (this.status !== 'paused' || (this.session.coop && !gamepad.ready)) return;
     gamepad.suppress();
     this.closePadSettings?.(); this.closePadSettings = undefined;
     this.closePause?.(); this.closePause = undefined; this.status = 'playing'; this.queuedShot = false;
@@ -90,7 +93,7 @@ export class GameScene extends Phaser.Scene {
         this.status = 'ended';
         if (this.session.level !== -1) { progress.data.wins++; progress.save(); }
         showOverlay(this.root, { eyebrow: this.session.level === -1 ? 'DEMOSTRACIÓN COMPLETADA' : 'CAMPAÑA COMPLETADA', title: this.session.level === -1 ? 'El taller es tuyo' : 'Maestro del taller', description: `${String(this.session.score).padStart(6, '0')} puntos. Cada huella cuenta.`, symbol: '+', cancel: () => this.menu(), actions: [
-          { text: this.session.level === -1 ? 'Jugar campaña →' : 'Una nueva partida →', run: () => this.scene.restart({ session: { level: 0, score: 0, lives: 3, missionStartScore: 0 } }) },
+          { text: this.session.level === -1 ? 'Jugar campaña →' : 'Una nueva partida →', run: () => this.scene.restart({ session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop } }) },
           { text: 'Volver al menú', secondary: true, run: () => this.menu() },
         ] });
       } else this.scene.restart({ session: { ...this.session, level: this.session.level + 1, missionStartScore: this.session.score } });
@@ -104,7 +107,7 @@ export class GameScene extends Phaser.Scene {
       else {
         this.status = 'ended'; document.querySelector('#app')!.classList.remove('gameplay');
         showOverlay(this.root, { eyebrow: 'GAME OVER', title: 'Hasta la próxima batalla', description: `${String(this.session.score).padStart(6, '0')} puntos · Récord ${String(progress.data.best).padStart(6, '0')}`, cancel: () => this.menu(), actions: [
-          { text: 'Volver a intentarlo →', run: () => this.scene.restart({ session: { level: this.session.level === -1 ? -1 : 0, score: 0, lives: 3, missionStartScore: 0 } }) },
+          { text: 'Volver a intentarlo →', run: () => this.scene.restart({ session: { level: this.session.level === -1 ? -1 : 0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop } }) },
           { text: 'Volver al menú', secondary: true, run: () => this.menu() },
         ] });
       }
@@ -113,14 +116,20 @@ export class GameScene extends Phaser.Scene {
   update(_time: number, delta: number) {
     if (!this.world || !this.keys) return;
     if (this.status !== 'playing') return;
+    if (this.session.coop && !gamepad.ready) { this.pauseGame(); return; }
     const down = (key: string) => this.keys[key].isDown, pointer = this.input.activePointer;
     const pad = gamepad.frame;
-    const usePad = pad.connected && pad.mapped && pad.mode === 'gamepad';
+    const usePad = this.session.coop ? this.session.coop === 'two-pads' : pad.connected && pad.mapped && pad.mode === 'gamepad';
     if (usePad && Math.hypot(pad.aim.x, pad.aim.y)) {
       const length = Math.hypot(pad.aim.x, pad.aim.y);
       this.padAim = { x: pad.aim.x / length, y: pad.aim.y / length }; this.aimMode = 'gamepad';
     }
     const player = this.world.player;
+    const partner = this.world.players[1], second = gamepad.secondFrame;
+    if (Math.hypot(second.aim.x, second.aim.y)) {
+      const length = Math.hypot(second.aim.x, second.aim.y);
+      this.secondAim = { x: second.aim.x / length, y: second.aim.y / length };
+    }
     // A distant point expresses a bearing through World's existing point-based aim input.
     // This keeps the bearing stable as the tank moves, without changing the simulation.
     const aim = this.aimMode === 'gamepad' ? { x: player.x + this.padAim.x * 100000, y: player.y + this.padAim.y * 100000 } :
@@ -128,7 +137,9 @@ export class GameScene extends Phaser.Scene {
     this.world.update(delta / 1000, {
       move: usePad ? pad.move : { x: +!!(down('D') || down('RIGHT')) - +!!(down('A') || down('LEFT')), y: +!!(down('S') || down('DOWN')) - +!!(down('W') || down('UP')) },
       aim, fire: usePad ? pad.fire : this.queuedShot || pointer.leftButtonDown() || down('SPACE'),
-    });
+    }, true, partner ? {
+      move: second.move, aim: { x: partner.x + this.secondAim.x * 100000, y: partner.y + this.secondAim.y * 100000 }, fire: second.fire,
+    } : undefined);
     this.queuedShot = false;
     for (const event of this.world.events) {
       this.effects.event(event);
@@ -136,6 +147,6 @@ export class GameScene extends Phaser.Scene {
     }
     this.world.events.length = 0;
     this.board.render(delta / 1000); this.hud.update(this.world, this.session);
-    if (!this.world.player.alive) this.loseLife(); else if (!this.world.enemies.length) this.win();
+    if (!this.world.alivePlayers.length) this.loseLife(); else if (!this.world.enemies.length) this.win();
   }
 }

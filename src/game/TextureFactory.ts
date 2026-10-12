@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import { TANK_COLORS } from './Tank';
-import type { TankKind } from './types';
 type Ctx = CanvasRenderingContext2D;
 function random(seed: number) { return () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }; }
 function canvas(w: number, h: number) { const c = document.createElement('canvas'); c.width = w; c.height = h; return { canvas: c, ctx: c.getContext('2d')! }; }
@@ -74,14 +73,14 @@ export function createTextures(scene: Phaser.Scene) {
   const chip = canvas(10, 6); rounded(chip.ctx, 0, 0, 10, 6, 1, '#b98a4b'); chip.ctx.fillStyle = '#f1c480'; chip.ctx.fillRect(0, 0, 9, 2); scene.textures.addCanvas('chip', chip.canvas);
   const shell = canvas(24, 12); const b = shell.ctx;
   rounded(b, 3, 3, 17, 7, 3, '#4d3924'); rounded(b, 4, 2, 16, 6, 3, '#c39c52'); rounded(b, 6, 2, 13, 3, 2, '#fff1b0'); b.fillStyle = '#6c5736'; b.fillRect(4, 3, 3, 5); scene.textures.addCanvas('shell', shell.canvas);
-  for (const kind of Object.keys(TANK_COLORS) as TankKind[]) {
+  for (const [kind, color] of Object.entries({ ...TANK_COLORS, partner: 0xd9a13b })) {
     const body = canvas(90, 90), t = body.ctx;
     t.translate(45, 45);
     for (const y of [-21, 12]) {
       rounded(t, -23, y, 45, 10, 4, '#292c27'); rounded(t, -21, y + 1, 41, 3, 2, '#656559');
       for (let x = -18; x <= 18; x += 6) { t.fillStyle = '#ada588'; t.fillRect(x, y + 2, 2, 6); t.fillStyle = '#181c18'; t.fillRect(x + 2, y + 3, 3, 4); }
     }
-    rounded(t, -20, -16, 40, 33, 6, '#222d29'); rounded(t, -21, -18, 40, 32, 5, hex(TANK_COLORS[kind]));
+    rounded(t, -20, -16, 40, 33, 6, '#222d29'); rounded(t, -21, -18, 40, 32, 5, hex(color));
     const hull = t.createLinearGradient(-20, -18, 20, 14); hull.addColorStop(0, '#ffffff55'); hull.addColorStop(0.45, '#ffffff08'); hull.addColorStop(1, '#00000055');
     t.fillStyle = hull; t.beginPath(); t.roundRect(-21, -18, 40, 32, 5); t.fill();
     t.strokeStyle = '#ffffff55'; t.lineWidth = 1.5; t.strokeRect(-16, -14, 28, 22);
@@ -92,7 +91,7 @@ export function createTextures(scene: Phaser.Scene) {
     const turret = canvas(90, 90), u = turret.ctx; u.translate(45, 45);
     rounded(u, -10, -9, 27, 23, 8, '#00000044');
     rounded(u, 4, -3, 30, 7, 2, '#4c3d28'); rounded(u, 4, -5, 29, 6, 2, '#dcc189'); u.fillStyle = '#f7e3ae'; u.fillRect(6, -5, 25, 2); u.fillStyle = '#2e2a21'; u.fillRect(31, -4, 3, 4);
-    rounded(u, -12, -12, 27, 23, 7, hex(TANK_COLORS[kind]));
+    rounded(u, -12, -12, 27, 23, 7, hex(color));
     const tg = u.createLinearGradient(0, -12, 0, 12); tg.addColorStop(0, '#ffffff66'); tg.addColorStop(0.5, '#ffffff00'); tg.addColorStop(1, '#00000066'); u.fillStyle = tg; u.beginPath(); u.roundRect(-12, -12, 27, 23, 7); u.fill();
     rounded(u, -7, -8, 15, 12, 4, '#18272088'); u.strokeStyle = '#ffffff55'; u.lineWidth = 1; u.beginPath(); u.roundRect(-7, -8, 15, 12, 4); u.stroke();
     u.fillStyle = '#ead7a0'; u.fillRect(-4, -9, 8, 2);

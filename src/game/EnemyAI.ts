@@ -82,12 +82,15 @@ export function chooseCover(from: Vec, target: Vec, boxes: Rect[]): Vec | null {
   return result;
 }
 export class EnemyAI {
-  private plans = new Map<number, { angle: number | null; move: Vec; reaction: number; stuck: number; cover: Vec | null; coverUntil: number }>();
+  private plans = new Map<number, { angle: number | null; move: Vec; reaction: number; stuck: number; cover: Vec | null; coverUntil: number; targetId: number }>();
   constructor(private random: () => number = Math.random) {}
   update(world: World, tank: Tank, dt: number) {
-    const player = world.player, solids = world.solids, movementSolids = world.movementSolids;
+    const player = world.alivePlayers.reduce<Tank | null>((nearest, candidate) => !nearest || Math.hypot(candidate.x - tank.x, candidate.y - tank.y) < Math.hypot(nearest.x - tank.x, nearest.y - tank.y) ? candidate : nearest, null);
+    if (!player) return;
+    const solids = world.solids, movementSolids = world.movementSolids;
     let plan = this.plans.get(tank.id);
-    if (!plan) { plan = { angle: null, move: { x: 0, y: 0 }, reaction: 0.7, stuck: 0, cover: null, coverUntil: 0 }; this.plans.set(tank.id, plan); }
+    if (!plan) { plan = { angle: null, move: { x: 0, y: 0 }, reaction: 0.7, stuck: 0, cover: null, coverUntil: 0, targetId: player.id }; this.plans.set(tank.id, plan); }
+    if (plan.targetId !== player.id) { plan.targetId = player.id; tank.think = 0; tank.pathTime = 0; plan.cover = null; }
     tank.think -= dt; tank.pathTime -= dt; plan.reaction -= dt;
     const distance = Math.hypot(player.x - tank.x, player.y - tank.y);
     if (tank.think <= 0) {
