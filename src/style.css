@@ -103,3 +103,14 @@ kbd { font-family: inherit; font-size: .85em; border: 1px solid #8f826150; borde
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; } }
 
 .pause-icon { display: block; width: calc(11 * var(--unit)); height: calc(13 * var(--unit)); border-left: calc(3 * var(--unit)) solid #655b44; border-right: calc(3 * var(--unit)) solid #655b44; }
+
+.menu-links { display: flex; gap: calc(15 * var(--unit)); width: calc(306 * var(--unit)); }
+.menu-links .text-button { flex: 1; width: auto; font-size: calc(10 * var(--unit)); gap: calc(5 * var(--unit)); white-space: nowrap; }
+.gamepad-status { position: absolute; top: calc(96 * var(--unit)); right: calc(65 * var(--unit)); max-width: calc(300 * var(--unit)); border: 1px solid #8e785033; background: #f7eddaeb; color: #716344; padding: calc(5 * var(--unit)) calc(9 * var(--unit)); border-radius: calc(4 * var(--unit)); font-size: calc(8 * var(--unit)); letter-spacing: .04em; pointer-events: none; }
+.gamepad-status[hidden] { display: none; }
+#ui button:focus-visible, #ui input:focus-visible, #ui .gamepad-focused { outline: calc(3 * var(--unit)) solid #368e9a; outline-offset: calc(3 * var(--unit)); }
+.gamepad-settings { text-align: left; display: grid; gap: calc(10 * var(--unit)); margin: calc(20 * var(--unit)) 0 calc(25 * var(--unit)); }
+.gamepad-settings label { display: flex; justify-content: space-between; font-size: calc(12 * var(--unit)); }
+.gamepad-settings output { font-family: ui-monospace, monospace; color: #9d5037; }
+.gamepad-settings input { width: 100%; accent-color: #9d5037; cursor: pointer; }
+.gamepad-settings small { color: #8a7962; font-size: calc(9 * var(--unit)); line-height: 1.7; margin-top: calc(8 * var(--unit)); }
