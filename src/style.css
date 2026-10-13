@@ -225,3 +225,13 @@ kbd { font-family: inherit; font-size: .85em; border: 1px solid #8f826150; borde
 .duel-hud .mission-plaque #lives { font-size: calc(11 * var(--unit)); }
 
 .keyboard-ready { padding: calc(4 * var(--unit)) calc(7 * var(--unit)); margin-top: calc(5 * var(--unit)); border: 1px solid #426979; border-radius: calc(4 * var(--unit)); font-size: calc(9 * var(--unit)); color: #426979; background: #f4f1df; }
+.mission-briefing { width: calc(580 * var(--unit)); max-height: calc(650 * var(--unit)); overflow-y: auto; padding: calc(28 * var(--unit)); }
+.mission-briefing h2 { font-size: calc(32 * var(--unit)); }
+.enemy-brief { display: grid; gap: calc(10 * var(--unit)); margin: calc(20 * var(--unit)) 0; }
+.enemy-brief-row { display: flex; align-items: center; text-align: left; gap: calc(14 * var(--unit)); padding: calc(12 * var(--unit)); background: #fff8e9; border: 1px solid #cebd9d; border-radius: calc(7 * var(--unit)); }
+.brief-tank { width: calc(42 * var(--unit)); flex-shrink: 0; }
+.brief-tank svg { width: 100%; fill: currentColor; }
+.enemy-brief-row div { flex: 1; }
+.enemy-brief-row strong { display: block; font-size: calc(14 * var(--unit)); }
+.enemy-brief-row small { display: block; margin-top: calc(4 * var(--unit)); font-size: calc(10 * var(--unit)); color: #817765; }
+.enemy-brief-row > b { font-size: calc(24 * var(--unit)); }

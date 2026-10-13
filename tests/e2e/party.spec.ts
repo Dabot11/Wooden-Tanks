@@ -1,3 +1,4 @@
+import { waitForPlaying } from './mission-flow';
 import { test, expect, type Page } from '@playwright/test';
 async function setup(page: Page, count: number, keyboard = false) {
   await page.addInitScript(count => {
@@ -12,7 +13,7 @@ async function setup(page: Page, count: number, keyboard = false) {
   await page.evaluate(() => (window as any).__pads.forEach((p: any) => p.buttons[0] = { pressed: true, value: 1 }));
   await page.waitForTimeout(150);
   await page.evaluate(() => (window as any).__pads.forEach((p: any) => p.buttons[0] = { pressed: false, value: 0 }));
-  await expect.poll(() => page.evaluate(() => (window as any).__wooden?.status)).toBe('playing');
+  await waitForPlaying(page);
   await page.evaluate(() => (window as any).__wooden.world.ai.update = () => {});
   await page.waitForTimeout(150);
 }
@@ -34,7 +35,7 @@ for (const count of [3, 4]) test(`${count} controllers drive independent players
   await expect.poll(() => page.evaluate(() => (window as any).__wooden.status)).toBe('paused');
   await page.evaluate(count => (window as any).__pads[count - 1].buttons[9] = { pressed: false, value: 0 }, count);
   await page.getByRole('button', { name: 'Reiniciar misión', exact: true }).click();
-  await expect.poll(() => page.evaluate(() => (window as any).__wooden.status)).toBe('playing');
+  await waitForPlaying(page);
   expect(await page.evaluate(() => (window as any).__wooden.world.players.length)).toBe(count);
   await expect(page.locator(`#ammo-p${count} .ammo`)).toHaveCount(5);
   await page.screenshot({ path: `.playwright/party-${count}.png` });
@@ -63,7 +64,7 @@ test('four-player mixed input keeps the mouse exact under zoom; friendly fire an
 test('gallery shows the restricted zone and a mouse-fired bank shot reaches a protected sentinel', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('wooden-tanks-v1', JSON.stringify({ unlocked: 20, best: 0, muted: true, wins: 0 })));
   await page.goto('/'); await page.locator('#select').click(); await page.locator('.mission-choice').nth(15).click();
-  await expect.poll(() => page.evaluate(() => (window as any).__wooden?.status)).toBe('playing');
+  await waitForPlaying(page);
   const aim = await page.evaluate(() => {
     const w = (window as any).__wooden.world;
     w.ai.update = () => {};

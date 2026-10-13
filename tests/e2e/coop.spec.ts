@@ -1,3 +1,4 @@
+import { waitForPlaying } from './mission-flow';
 import { test, expect, type Page } from '@playwright/test';
 async function mockPads(page: Page, count = 2) {
   await page.addInitScript(count => {
@@ -14,7 +15,7 @@ async function start(page: Page, keyboard = false) {
   await page.evaluate(() => (window as any).__testPads.forEach((p: any) => p.buttons[0] = { pressed: true, value: 1 }));
   await page.waitForTimeout(150);
   await page.evaluate(() => (window as any).__testPads.forEach((p: any) => p.buttons[0] = { pressed: false, value: 0 }));
-  await expect.poll(() => page.evaluate(() => (window as any).__wooden?.status)).toBe('playing');
+  await waitForPlaying(page);
   await page.evaluate(() => { (window as any).__wooden.world.ai.update = () => {}; });
   await page.waitForTimeout(100);
 }
@@ -128,16 +129,16 @@ test('a survivor can win, both return next mission, and a team wipe costs only o
     w.projectiles = w.enemies.map((p: any, i: number) => ({ id: 90003 + i, owner: -1, x: p.x, y: p.y, vx: 322.5, vy: 0, age: 1, bounces: 0, alive: true }));
   });
   await expect.poll(async () => (await state(page)).level).toBe(1);
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   expect((await state(page)).coop).toBe('two-pads'); expect((await state(page)).players.every(p => p.alive)).toBe(true);
   await page.evaluate(() => { (window as any).__wooden.world.ai.update = () => {}; });
   await kill(page, 0); await expect.poll(async () => (await state(page)).players[0].alive).toBe(false);
   await kill(page, 1); await expect.poll(async () => (await state(page)).lives).toBe(2);
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   expect((await state(page)).players.every(p => p.alive)).toBe(true); expect((await state(page)).level).toBe(1);
   await press(page, 0, 9); await page.getByRole('button', { name: 'Volver al menú', exact: true }).click();
   await expect(page.locator('#play')).toBeVisible(); await page.locator('#play').click();
-  await expect.poll(async () => (await state(page)).status).toBe('playing'); expect((await state(page)).players).toHaveLength(1);
+  await waitForPlaying(page); expect((await state(page)).players).toHaveLength(1);
 });
 test('co-op setup requires the appropriate number of compatible controllers', async ({ page }) => {
   await page.goto('/'); await page.locator('#coop').click();
@@ -157,20 +158,21 @@ test('Game Over retry and campaign victory replay preserve both players and cont
       w.projectiles = w.players.map((p: any, i: number) => ({ id: 91000 + i, owner: w.enemies[0].id, x: p.x, y: p.y, vx: 322.5, vy: 0, age: 1, bounces: 0, alive: true }));
     });
     await expect.poll(async () => (await state(page)).lives).toBe(lives);
+    if (lives) await waitForPlaying(page);
     await expect.poll(async () => (await state(page)).status).toBe(lives ? 'playing' : 'ended');
   }
   await expect(page.getByRole('heading', { name: 'Hasta la próxima batalla' })).toBeVisible();
   await neutral(page); await press(page, 1, 0);
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   expect((await state(page)).coop).toBe('two-pads'); expect((await state(page)).players).toHaveLength(2);
   expect((await state(page)).lives).toBe(3);
   // Start the real final mission, then produce its lethal impacts with controlled shells.
   await page.evaluate(() => {
     const s = (window as any).__wooden;
-    s.scene.restart({ session: { ...s.session, level: 19 } });
+    s.scene.restart({ session: { ...s.session, level: 29 } });
   });
-  await expect.poll(async () => (await state(page)).level).toBe(19);
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await expect.poll(async () => (await state(page)).level).toBe(29);
+  await waitForPlaying(page);
   await page.evaluate(() => {
     const w = (window as any).__wooden.world;
     w.projectiles = w.enemies.map((p: any, i: number) => ({ id: 92000 + i, owner: -1, x: p.x, y: p.y, vx: 322.5, vy: 0, age: 1, bounces: 0, alive: true }));
@@ -178,7 +180,7 @@ test('Game Over retry and campaign victory replay preserve both players and cont
   await expect(page.getByRole('heading', { name: 'Maestro del taller' })).toBeVisible();
   await neutral(page); await press(page, 1, 0);
   await expect.poll(async () => (await state(page)).level).toBe(0);
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   expect((await state(page)).coop).toBe('two-pads'); expect((await state(page)).players.every(p => p.alive)).toBe(true);
   await page.evaluate(() => { (window as any).__wooden.world.ai.update = () => {}; });
   const before = await state(page); await neutral(page); await sticks(page, 1, [0, -1, 0, 0]); await page.waitForTimeout(250); await neutral(page);

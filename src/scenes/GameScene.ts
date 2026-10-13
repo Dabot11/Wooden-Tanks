@@ -7,6 +7,7 @@ import { ParticleEffects } from '../game/ParticleEffects';
 import { progress } from '../game/Progress';
 import { audio } from '../game/AudioManager';
 import { HUD } from '../ui/HUD';
+import { showMissionBriefing } from '../ui/MissionBriefing';
 import { showOverlay } from '../ui/Overlay';
 import type { PlayerCount } from '../game/types';
 import type { CoopLayout } from '../input/GamepadTeam';
@@ -20,6 +21,7 @@ export class GameScene extends Phaser.Scene {
   private queuedShot = false; private aimMode: 'default' | 'mouse' | 'gamepad' = 'default'; private padAim = { x: 0, y: -1 };
   private reticle!: HTMLElement; private mouseClient?: { x: number; y: number }; private mouseOnCanvas = false;
   private teamAims = Array.from({ length: 3 }, () => ({ x: 0, y: -1 }));
+  private closeBriefing?: () => void;
   private closePause?: () => void; private closePadSettings?: () => void;
   constructor() { super('Game'); }
   init(data: { session?: Session }) {
@@ -60,21 +62,33 @@ export class GameScene extends Phaser.Scene {
     const blur = () => { if (this.status === 'playing') this.pauseGame(); };
     this.game.events.on(Phaser.Core.Events.BLUR, blur);
     this.events.once('shutdown', () => {
-      this.game.events.off(Phaser.Core.Events.BLUR, blur); this.closePadSettings?.(); this.closePause?.(); this.time.paused = false;
+      this.game.events.off(Phaser.Core.Events.BLUR, blur); this.closeBriefing?.(); this.closeBriefing = undefined; audio.setScene('silent'); this.closePadSettings?.(); this.closePause?.(); this.time.paused = false;
       document.querySelector('#app')!.classList.remove('gameplay');
       if (import.meta.env.DEV) delete (window as any).__wooden;
     });
-    const intro = document.createElement('div'); intro.className = 'mission-intro';
-    intro.innerHTML = `<span class="eyebrow">PREPARA TU ESTRATEGIA</span><strong>${this.session.mode === 'duel' ? 'Ronda ' + this.session.round : 'Misión ' + String(this.world.level.id).padStart(2, '0')}</strong><span>${this.world.level.subtitle}</span>`;
-    this.root.append(intro);
-    this.time.delayedCall(1500, () => { intro.remove(); gamepad.suppress(); this.status = 'playing'; document.querySelector('#app')!.classList.add('gameplay'); });
+    if (this.session.mode === 'duel') {
+      const intro = document.createElement('div'); intro.className = 'mission-intro';
+      intro.innerHTML = `<span class="eyebrow">DUELO LOCAL</span><strong>Ronda ${this.session.round}</strong><span>${this.world.level.subtitle}</span>`;
+      this.root.append(intro); audio.setScene('briefing');
+      this.time.delayedCall(1500, () => { intro.remove(); this.beginBattle(); });
+    } else {
+      audio.setScene('briefing');
+      this.closeBriefing = showMissionBriefing(this.root, this.world, () => {
+        if (this.status !== 'intro' || (this.session.coop && !gamepad.ready)) return;
+        this.closeBriefing?.(); this.closeBriefing = undefined; this.beginBattle();
+      }, () => this.menu());
+    }
     if (import.meta.env.DEV) (window as any).__wooden = this;
+  }
+  get audioState() { return audio.state; }
+  private beginBattle() {
+    audio.unlock(); audio.setScene('battle'); gamepad.suppress(); this.input.keyboard!.resetKeys(); this.queuedShot = false; this.status = 'playing'; document.querySelector('#app')!.classList.add('gameplay'); (document.activeElement as HTMLElement)?.blur();
   }
   pauseGame() {
     if (this.status !== 'playing') return;
     gamepad.suppress();
     this.reticle.hidden = true;
-    this.status = 'paused'; this.queuedShot = false; this.tweens.pauseAll(); this.time.paused = true;
+    audio.setScene('silent'); this.status = 'paused'; this.queuedShot = false; this.tweens.pauseAll(); this.time.paused = true;
     document.querySelector('#app')!.classList.remove('gameplay');
     this.closePause = showOverlay(this.root, { eyebrow: `${this.session.mode === 'duel' ? 'RONDA' : 'MISIÓN'} ${this.world.level.id}`, title: 'Una pequeña pausa', pauseKey: true, description: this.session.coop ? 'Pausa para todos los jugadores. Si un control se desconecta, reconéctalo antes de reanudar.' : 'El taller puede esperar. Vuelve cuando estés listo.', cancel: () => this.resumeGame(), symbol: '<span class="pause-icon" style="margin:auto;width:24px;height:26px"></span>', actions: [
       { text: 'Reanudar →', run: () => this.resumeGame() },
@@ -87,14 +101,14 @@ export class GameScene extends Phaser.Scene {
     if (this.status !== 'paused' || (this.session.coop && !gamepad.ready)) return;
     gamepad.suppress();
     this.closePadSettings?.(); this.closePadSettings = undefined;
-    this.closePause?.(); this.closePause = undefined; this.status = 'playing'; this.queuedShot = false;
+    this.closePause?.(); this.closePause = undefined; audio.unlock(); audio.setScene('battle'); this.status = 'playing'; this.queuedShot = false;
     this.input.keyboard!.resetKeys(); this.tweens.resumeAll(); this.time.paused = false;
     document.querySelector('#app')!.classList.add('gameplay'); (document.activeElement as HTMLElement)?.blur();
   }
   private restartMission() { this.time.paused = false; this.scene.restart({ session: { ...this.session, score: this.session.missionStartScore } }); }
   private menu() { if (this.session.mode !== 'duel') progress.record(this.session.score); this.time.paused = false; this.scene.start('Menu'); }
   private finishDuel(result: number | null) {
-    this.status = 'won'; gamepad.suppress(); this.reticle.hidden = true; this.queuedShot = false;
+    audio.setScene('briefing'); this.status = 'won'; gamepad.suppress(); this.reticle.hidden = true; this.queuedShot = false;
     document.querySelector('#app')!.classList.remove('gameplay');
     const wins = [...(this.session.wins ?? [0, 0, 0, 0])];
     if (result !== null) wins[result]++;
@@ -113,7 +127,7 @@ export class GameScene extends Phaser.Scene {
   private win() {
     gamepad.suppress();
     this.reticle.hidden = true;
-    this.status = 'won'; document.querySelector('#app')!.classList.remove('gameplay');
+    audio.setScene('briefing'); this.status = 'won'; document.querySelector('#app')!.classList.remove('gameplay');
     const bonus = Math.max(100, Math.round(500 - this.world.elapsed * 3)); this.session.score += bonus;
     progress.record(this.session.score); audio.play('win'); this.hud.update(this.world, this.session);
     const final = this.session.level === levels.length - 1;
@@ -135,7 +149,7 @@ export class GameScene extends Phaser.Scene {
   private loseLife() {
     gamepad.suppress();
     this.reticle.hidden = true;
-    this.status = 'dead'; this.session.lives--; progress.record(this.session.score); this.hud.update(this.world, this.session);
+    audio.setScene('silent'); this.status = 'dead'; this.session.lives--; progress.record(this.session.score); this.hud.update(this.world, this.session);
     this.time.delayedCall(1300, () => {
       if (this.session.lives > 0) this.restartMission();
       else {
@@ -173,10 +187,12 @@ export class GameScene extends Phaser.Scene {
     // This keeps the bearing stable as the tank moves, without changing the simulation.
     const aim = this.aimMode === 'gamepad' ? { x: player.x + this.padAim.x * 100000, y: player.y + this.padAim.y * 100000 } :
       this.aimMode === 'mouse' ? mouseAim : { x: player.x, y: player.y - 100 };
+    const beforeMovement = this.world.players.map(p => p.distance);
     this.world.update(delta / 1000, {
       move: usePad ? pad.move : { x: +!!(down('D') || down('RIGHT')) - +!!(down('A') || down('LEFT')), y: +!!(down('S') || down('DOWN')) - +!!(down('W') || down('UP')) },
       aim, fire: usePad ? pad.fire : this.queuedShot || pointer.leftButtonDown() || down('SPACE'),
     }, true, partners);
+    audio.movement(Math.max(0, ...this.world.players.map((p, i) => p.distance - beforeMovement[i])));
     this.reticle.hidden = usePad || this.aimMode !== 'mouse' || !this.mouseOnCanvas || !this.mouseClient || !this.world.player.alive;
     if (!this.reticle.hidden && this.mouseClient) {
       this.reticle.style.left = `${this.mouseClient.x - bounds.left}px`; this.reticle.style.top = `${this.mouseClient.y - bounds.top}px`;

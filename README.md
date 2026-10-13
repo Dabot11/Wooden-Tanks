@@ -1,6 +1,6 @@
 # Wooden Tanks
 
-Juego de combate táctico para navegador, construido con **TypeScript, Phaser 3 y Vite**. Veinte misiones de campaña, jugables en solitario o en cooperativo local. Todos los gráficos se generan localmente con Canvas; el audio se sintetiza con Web Audio. No necesita cuentas, claves ni servicios externos.
+Juego de combate táctico para navegador, construido con **TypeScript, Phaser 3 y Vite**. Treinta misiones de campaña, jugables en solitario o en cooperativo local. Todos los gráficos se generan localmente con Canvas; el audio se sintetiza con Web Audio. No necesita cuentas, claves ni servicios externos.
 
 ## Ejecutar
 
@@ -81,7 +81,7 @@ Elige **Cooperativo local**, selecciona 2, 3 o 4 jugadores y pulsa un botón en 
 - MENÚ en cualquier mando o ESC pausa para todos. A confirma y B regresa. Una desconexión pausa y conserva el puesto: ningún otro mando sustituye automáticamente al ausente. Suelta sticks y gatillos al reanudar. Si Chrome cambia el índice del dispositivo, vuelve al menú para reasignarlo.
 - Cada jugador adicional amplía ambos ejes del mapa un 20 % y añade una dotación completa de enemigos: cuatro jugadores tienen 1,6 veces el ancho/alto y cuatro veces los enemigos. La cámara muestra todo el terreno; el mouse se transforma a coordenadas del mundo y la mira permanece exactamente en el cursor.
 
-La campaña contiene veinte misiones con cobertura, corcho destructible, cavidades y rutas que exigen esquivas y rebotes. En la misión 16, Galería de rebotes, las cavidades encierran a los jugadores en una zona: la pared bloquea el tiro directo y los centinelas deben alcanzarse rebotando por abajo. El progreso, récord y preferencias existentes se conservan. Las pruebas simulan Xbox con nombres iguales e índices independientes; Bluetooth/USB físicos en macOS requieren comprobación en la laptop.
+La campaña contiene treinta misiones con cobertura, corcho destructible, cavidades y rutas que exigen esquivas y rebotes. En la misión 16, Galería de rebotes, las cavidades encierran a los jugadores en una zona: la pared bloquea el tiro directo y los centinelas deben alcanzarse rebotando por abajo. El progreso, récord y preferencias existentes se conservan. Las pruebas simulan Xbox con nombres iguales e índices independientes; Bluetooth/USB físicos en macOS requieren comprobación en la laptop.
 
 ## Sala de jugadores y duelo
 
@@ -95,7 +95,7 @@ Duelo es todos contra todos, sin enemigos de IA. El último tanque vivo gana la 
 
 ## Enemigos
 
-Solo estos tres tipos aparecen en las veinte misiones:
+Solo estos tres tipos aparecen en las treinta misiones:
 
 - **Explorador gris (misión 1):** móvil y lento, un misil activo, sin rebotes.
 - **Patrullero violeta con franjas oscuras (misión 3):** móvil, puede esquivar, hasta dos misiles activos y un rebote por misil.
@@ -116,7 +116,7 @@ Para reutilizar Chromium instalado en el sistema:
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e
 ```
 
-Playwright arranca Vite automáticamente si no está activo. Comprueba una victoria con controles reales, movimiento y apuntado, disparos, pausa, reinicio, pérdida de vidas, Game Over, las veinte transiciones de campaña, victoria final, persistencia y proporción 16:9. También comprueba twin-stick, RT, retención de apuntado, conexión/desconexión, alternancia de dispositivos, menús con A/B y zonas muertas guardadas. Las pruebas de pérdida de vidas y de transiciones usan proyectiles de prueba para producir colisiones controladas. El acceso de diagnóstico `window.__wooden` solo existe en modo desarrollo; no forma parte de la compilación de producción.
+Playwright arranca Vite automáticamente si no está activo. Comprueba una victoria con controles reales, movimiento y apuntado, disparos, pausa, reinicio, pérdida de vidas, Game Over, las treinta transiciones de campaña, victoria final, persistencia y proporción 16:9. También comprueba twin-stick, RT, retención de apuntado, conexión/desconexión, alternancia de dispositivos, menús con A/B y zonas muertas guardadas. Las pruebas de pérdida de vidas y de transiciones usan proyectiles de prueba para producir colisiones controladas. El acceso de diagnóstico `window.__wooden` solo existe en modo desarrollo; no forma parte de la compilación de producción.
 
 ## Arquitectura
 
@@ -137,3 +137,11 @@ La integración de gamepad se limita a la entrada; los huecos forman parte de lo
 La simulación limita el delta a 50 ms y usa colisión barrida para que las balas no atraviesen paredes. Un impacto consume el tiempo restante del fotograma después de reflejar la velocidad; una separación mínima evita rebotes repetidos sobre la misma cara. Los efectos y las marcas de orugas tienen límites para mantener estable la carga.
 
 El juego está diseñado para computadora con teclado/mouse o gamepad estándar. El tablero conserva 16:9 y añade márgenes cuando la ventana tiene otra proporción. No incluye controles táctiles.
+
+## Preparación y audio
+
+La campaña tiene 30 misiones. Las partidas que terminaron el capítulo de veinte misiones desbloquean la misión 21 y conservan el récord y el sonido. Antes de cada misión y cada reintento aparece su nombre, objetivo y cantidad real de exploradores, patrulleros y centinelas, incluidos los refuerzos del cooperativo. La simulación espera a **Continuar** (clic, Enter o A del mando). Los duelos conservan su introducción de ronda.
+
+Una marcha original de 112 BPM combina melodía de juguete, bajo y percusión. Los efectos se sintetizan con Web Audio: disparos con chasquido y golpe grave, resonancias cortas de madera para rebotes, crujidos para destrucciones y orugas sincronizadas con el desplazamiento real. El volumen de la música deja espacio a los efectos; un compresor y límites de voces controlan las salvas grandes.
+
+El sonido se activa tras una interacción del navegador. **M** o el botón de sonido silencian música y efectos y guardan la preferencia. La pausa y el cambio de pestaña detienen el audio; al reanudar vuelve la música. No se descargan archivos musicales ni se requiere un servicio externo.

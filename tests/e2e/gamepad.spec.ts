@@ -1,3 +1,4 @@
+import { waitForPlaying } from './mission-flow';
 import { test, expect, type Page } from '@playwright/test';
 
 async function mockAPI(page: Page) {
@@ -47,7 +48,7 @@ test('Xbox twin-stick, retained aim, held RT, keyboard/mouse switching, pause ga
   await connect(page, [1, 0, 0, 1], [0, 7]);
   await page.waitForTimeout(200); await expect(page.locator('#play')).toBeVisible();
   await neutral(page); await press(page, 0);
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   await neutral(page); await isolate(page);
   const beforeSmallTilt = await state(page);
   await page.mouse.move(950, 180); await expect(page.locator('.mouse-reticle')).toBeVisible(); // Give ownership back to keyboard/mouse first.
@@ -86,7 +87,7 @@ test('Xbox twin-stick, retained aim, held RT, keyboard/mouse switching, pause ga
   expect((await state(page)).status).toBe('paused'); expect((await state(page)).x).toBe(paused.x);
   // Resume with RT held: the trigger must be released before another shot is allowed.
   await neutral(page); await button(page, 7, true); await button(page, 9, true);
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   await page.waitForTimeout(350); expect((await state(page)).shots).toBe(paused.shots);
   await neutral(page); await button(page, 7, true); await page.waitForTimeout(100); await button(page, 7, false);
   expect((await state(page)).shots).toBeGreaterThan(paused.shots); await isolate(page);
@@ -96,7 +97,7 @@ test('Xbox twin-stick, retained aim, held RT, keyboard/mouse switching, pause ga
   await expect(page.locator('.gamepad-status')).toContainText('desconectado');
   // Reconnection while RT is held also requires full release and preserves lives/mission.
   await connect(page, [1, 0, 0, 0], [7]); await page.keyboard.press('Escape');
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   const reconnected = await state(page); await page.waitForTimeout(180);
   expect((await state(page)).shots).toBe(reconnected.shots); expect((await state(page)).x).toBe(reconnected.x);
   expect((await state(page)).lives).toBe(3); expect((await state(page)).level).toBe(0);
@@ -131,7 +132,7 @@ test('gamepad navigates mission selector, settings and pause without repeated co
   await axes(page, [0, -1, 0, 0]); await page.waitForTimeout(200); await neutral(page);
   await axes(page, [0, -1, 0, 0]); await page.waitForTimeout(200); await neutral(page);
   await expect(page.locator('#play')).toBeFocused(); await press(page, 0);
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   expect((await state(page)).level).toBe(0); await isolate(page); await neutral(page);
   await press(page, 9); await expect.poll(async () => (await state(page)).status).toBe('paused');
   // Configure within pause, and Menu closes both dialogs before resuming gameplay.
@@ -139,18 +140,18 @@ test('gamepad navigates mission selector, settings and pause without repeated co
   await expect(page.getByRole('button', { name: 'Ajustes del control' })).toBeFocused(); await press(page, 0);
   await expect(page.getByRole('heading', { name: 'Tu control, tu zona' })).toBeVisible();
   expect((await state(page)).status).toBe('paused');
-  await press(page, 9); await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await press(page, 9); await waitForPlaying(page);
   await expect(page.locator('.modal')).toHaveCount(0);
-  await press(page, 9); await press(page, 1); await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await press(page, 9); await press(page, 1); await waitForPlaying(page);
   await press(page, 9); await press(page, 13); await expect(page.getByRole('button', { name: 'Reiniciar misión' })).toBeFocused();
-  await press(page, 0); await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await press(page, 0); await waitForPlaying(page);
   expect((await state(page)).shots).toBe(0); expect((await state(page)).lives).toBe(3);
 });
 
 test('unsupported/missing Gamepad API keeps keyboard and mouse fully playable', async ({ page }) => {
   await page.addInitScript(() => Object.defineProperty(navigator, 'getGamepads', { configurable: true, value: undefined }));
   await page.goto('/'); await page.locator('#play').click();
-  await expect.poll(async () => (await state(page)).status).toBe('playing'); await isolate(page);
+  await waitForPlaying(page); await isolate(page);
   const initial = await state(page); await page.keyboard.down('d'); await page.waitForTimeout(220); await page.keyboard.up('d');
   expect((await state(page)).x).toBeGreaterThan(initial.x + 15);
   await page.mouse.click(950, 400); await expect.poll(async () => (await state(page)).shots).toBeGreaterThan(0);
@@ -160,25 +161,25 @@ test('unsupported/missing Gamepad API keeps keyboard and mouse fully playable', 
 test('A confirms and B returns from Game Over and victory screens', async ({ page }) => {
   test.setTimeout(90000);
   await mockAPI(page); await page.goto('/'); await connect(page); await neutral(page); await press(page, 0);
-  await expect.poll(async () => (await state(page)).status).toBe('playing'); await neutral(page);
+  await waitForPlaying(page); await neutral(page);
   for (let lives = 2; lives >= 0; lives--) {
     await page.evaluate(() => {
       const w = (window as any).__wooden.world; w.enemies.forEach((t: any) => { t.cooldown = 1000; });
       w.projectiles.push({ id: 9999, owner: 1, x: w.player.x - 45, y: w.player.y, vx: 430, vy: 0, age: 1, bounces: 0, alive: true });
     });
     await expect.poll(async () => (await state(page)).lives).toBe(lives);
-    if (lives) await expect.poll(async () => (await state(page)).status).toBe('playing');
+    if (lives) await waitForPlaying(page);
   }
   await expect(page.getByRole('heading', { name: 'Hasta la próxima batalla' })).toBeVisible();
   await neutral(page); await press(page, 0);
-  await expect.poll(async () => (await state(page)).status).toBe('playing'); expect((await state(page)).lives).toBe(3);
+  await waitForPlaying(page); expect((await state(page)).lives).toBe(3);
   await neutral(page); await press(page, 9); await press(page, 13); await press(page, 13); await press(page, 0);
   await expect(page.locator('#play')).toBeVisible();
   await press(page, 0);
-  await expect.poll(async () => (await state(page)).status).toBe('playing'); await neutral(page);
-  await page.evaluate(() => { const s = (window as any).__wooden; s.scene.restart({ session: { ...s.session, level: 19 } }); });
-  await expect.poll(async () => (await state(page)).level).toBe(19);
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page); await neutral(page);
+  await page.evaluate(() => { const s = (window as any).__wooden; s.scene.restart({ session: { ...s.session, level: 29 } }); });
+  await expect.poll(async () => (await state(page)).level).toBe(29);
+  await waitForPlaying(page);
   await page.evaluate(() => {
     const w = (window as any).__wooden.world;
     w.enemies.forEach((t: any, i: number) => { t.cooldown = 1000; w.projectiles.push({ id: 8000 + i, owner: 0, x: t.x - 28, y: t.y, vx: 430, vy: 0, age: 1, bounces: 0, alive: true }); });

@@ -1,3 +1,4 @@
+import { waitForPlaying } from './mission-flow';
 import { test, expect, type Page } from '@playwright/test';
 const state = (page: Page) => page.evaluate(() => {
   const scene = (window as any).__wooden;
@@ -8,7 +9,7 @@ const state = (page: Page) => page.evaluate(() => {
 });
 async function start(page: Page) {
   await page.goto('/'); await page.locator('#play').click();
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
 }
 async function fixtureHitPlayer(page: Page) {
   await page.evaluate(() => {
@@ -61,13 +62,13 @@ test('four directions, independent turret, short click, space, pause, restart an
   const paused = await state(page); await page.waitForTimeout(250);
   expect((await state(page)).player).toEqual(paused.player);
   await page.getByRole('button', { name: 'Reanudar' }).click();
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   await page.locator('.sound-button').click();
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('wooden-tanks-v1')!).muted)).toBe(true);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('heading', { name: 'Una pequeña pausa' })).toBeVisible();
   await page.getByRole('button', { name: 'Reiniciar misión' }).click();
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   expect((await state(page)).player.x).toBe(180);
   await page.mouse.move(900, 520); await page.keyboard.press('Space');
   await expect.poll(async () => (await state(page)).player.shots).toBeGreaterThan(0);
@@ -79,22 +80,22 @@ test('projectile impacts consume lives, reset the mission, show Game Over and al
     await fixtureHitPlayer(page);
     await expect.poll(async () => (await state(page)).lives).toBe(lives);
     if (lives) {
-      await expect.poll(async () => (await state(page)).status).toBe('playing');
+      await waitForPlaying(page);
       expect((await state(page)).player.x).toBe(180);
     }
   }
   await expect(page.getByRole('heading', { name: 'Hasta la próxima batalla' })).toBeVisible();
   await page.getByRole('button', { name: 'Volver a intentarlo' }).click();
-  await expect.poll(async () => (await state(page)).status).toBe('playing');
+  await waitForPlaying(page);
   expect((await state(page)).lives).toBe(3);
 });
 test('all campaign transitions and final victory handle actual collision outcomes', async ({ page }) => {
   test.setTimeout(120000);
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
   await start(page);
-  for (let level = 0; level < 20; level++) {
+  for (let level = 0; level < 30; level++) {
     await expect.poll(async () => (await state(page)).level).toBe(level);
-    await expect.poll(async () => (await state(page)).status).toBe('playing');
+    await waitForPlaying(page);
     // Controlled projectile fixtures exercise collisions and the complete scene lifecycle.
     // The separate first-mission test uses only real user input to win a battle.
     await page.evaluate(() => {
@@ -108,7 +109,7 @@ test('all campaign transitions and final victory handle actual collision outcome
   }
   await expect(page.getByRole('heading', { name: 'Maestro del taller' })).toBeVisible();
   const save = await page.evaluate(() => JSON.parse(localStorage.getItem('wooden-tanks-v1')!));
-  expect(save.unlocked).toBe(20); expect(save.wins).toBe(1);
+  expect(save.unlocked).toBe(30); expect(save.wins).toBe(1);
   await page.getByRole('button', { name: 'Volver al menú' }).click();
   await expect(page.locator('#play')).toBeVisible(); expect(errors).toEqual([]);
 });

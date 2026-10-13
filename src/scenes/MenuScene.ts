@@ -11,7 +11,7 @@ import { showGamepadSettings } from '../ui/GamepadSettings';
 export class MenuScene extends Phaser.Scene {
   constructor() { super('Menu'); }
   create() {
-    gamepad.endCoop();
+    gamepad.endCoop(); audio.muted = progress.data.muted; audio.setScene('menu');
     createTextures(this); this.add.image(640, 360, 'floor');
     const root = document.querySelector<HTMLElement>('#ui')!;
     root.innerHTML = `<div class="menu"><header class="menu-header"><span class="mini-brand">WOODEN <b>TANKS</b><span class="brand-dot"></span></span><span class="edition">COMBATE TÁCTICO LOCAL</span><button class="menu-sound icon-button" aria-label="Activar o silenciar sonido">${progress.data.muted ? '♪̸' : '♪'}</button></header>
@@ -34,8 +34,8 @@ export class MenuScene extends Phaser.Scene {
     this.events.once('shutdown', () => window.removeEventListener('keydown', navigate));
     root.querySelector<HTMLElement>('#play')!.focus({ preventScroll: true });
     const start = (index: number) => { audio.unlock(); audio.muted = progress.data.muted; this.scene.start('Game', { session: { level: index, score: 0, lives: 3, missionStartScore: 0 } }); };
-    root.querySelector('#coop')!.addEventListener('click', () => showCoopSetup(root, coop => { audio.unlock(); audio.muted = progress.data.muted; this.scene.start('Game', { session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop } }); }));
-    root.querySelector('#duel')!.addEventListener('click', () => showCoopSetup(root, coop => { audio.unlock(); audio.muted = progress.data.muted; this.scene.start('Game', { session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop, mode: 'duel', round: 1, wins: [0, 0, 0, 0] } }); }, 'duel'));
+    root.querySelector('#coop')!.addEventListener('click', () => { audio.unlock(); showCoopSetup(root, coop => { audio.unlock(); audio.muted = progress.data.muted; this.scene.start('Game', { session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop } }); }); });
+    root.querySelector('#duel')!.addEventListener('click', () => { audio.unlock(); showCoopSetup(root, coop => { audio.unlock(); audio.muted = progress.data.muted; this.scene.start('Game', { session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop, mode: 'duel', round: 1, wins: [0, 0, 0, 0] } }); }, 'duel'); });
     root.querySelector('#play')!.addEventListener('click', () => start(0));
     root.querySelector('.menu-sound')!.addEventListener('click', e => { audio.unlock(); audio.muted = !progress.data.muted; progress.data.muted = audio.muted; progress.save(); (e.currentTarget as HTMLElement).textContent = audio.muted ? '♪̸' : '♪'; });
     root.querySelector('#gamepad-settings')!.addEventListener('click', () => showGamepadSettings(root));

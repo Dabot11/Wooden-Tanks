@@ -1,12 +1,13 @@
+import { waitForPlaying } from './mission-flow';
 import { test, expect } from '@playwright/test';
 
-test('original campaign winners can select mission 11 and the twenty-mission grid stays inside the screen', async ({ page }) => {
+test('original campaign winners can select mission 11 and the thirty-mission grid stays inside the screen', async ({ page }) => {
   await page.addInitScript(() => {
     if (!localStorage.getItem('wooden-tanks-v1')) localStorage.setItem('wooden-tanks-v1', JSON.stringify({ unlocked: 10, wins: 1, best: 9000, muted: true }));
   });
-  await page.goto('/'); await expect(page.locator('.menu-record')).toContainText('11 / 20');
+  await page.goto('/'); await expect(page.locator('.menu-record')).toContainText('11 / 30');
   await page.locator('#select').click();
-  const missions = page.locator('.mission-choice'); await expect(missions).toHaveCount(20);
+  const missions = page.locator('.mission-choice'); await expect(missions).toHaveCount(30);
   await expect(missions.nth(10)).toBeEnabled(); await expect(missions.nth(11)).toBeDisabled();
   for (const size of [{ width: 1280, height: 720 }, { width: 1000, height: 800 }]) {
     await page.setViewportSize(size);
@@ -16,10 +17,10 @@ test('original campaign winners can select mission 11 and the twenty-mission gri
     await expect(page.getByRole('button', { name: 'Volver al taller' })).toBeInViewport();
     await missions.last().scrollIntoViewIfNeeded(); await expect(missions.last()).toBeInViewport();
   }
-  await page.screenshot({ path: '.playwright/twenty-mission-selector.png' });
+  await page.screenshot({ path: '.playwright/thirty-mission-selector.png' });
   await missions.nth(10).click();
-  await expect.poll(() => page.evaluate(() => (window as any).__wooden?.status)).toBe('playing');
+  await waitForPlaying(page);
   expect(await page.evaluate(() => (window as any).__wooden.world.level.id)).toBe(11);
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('wooden-tanks-v1')!).best)).toBe(9000);
-  await page.reload(); await expect(page.locator('.menu-record')).toContainText('11 / 20');
+  await page.reload(); await expect(page.locator('.menu-record')).toContainText('11 / 30');
 });

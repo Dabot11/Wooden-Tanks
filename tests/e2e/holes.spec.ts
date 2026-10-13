@@ -1,8 +1,9 @@
+import { waitForPlaying } from './mission-flow';
 import { test, expect } from '@playwright/test';
 
 test('player cannot drive into a floor pit and can maneuver around the row', async ({ page }) => {
   await page.goto('/'); await page.locator('#play').click();
-  await expect.poll(() => page.evaluate(() => (window as any).__wooden?.status)).toBe('playing');
+  await waitForPlaying(page);
   await page.evaluate(() => {
     const w = (window as any).__wooden.world;
     w.player.x = 156; w.player.y = 480; w.enemies.forEach((t: any) => { t.cooldown = 1000; });

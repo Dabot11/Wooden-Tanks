@@ -1,8 +1,9 @@
+import { waitForPlaying } from './mission-flow';
 import { test, expect } from '@playwright/test';
 
 test('missile collisions animate an explosion without costing lives or awarding points', async ({ page }) => {
   await page.goto('/'); await page.locator('#play').click();
-  await expect.poll(() => page.evaluate(() => (window as any).__wooden?.status)).toBe('playing');
+  await waitForPlaying(page);
   await page.evaluate(() => { (window as any).__wooden.world.ai.update = () => {}; });
   await page.mouse.move(1100, 560);
   const clip = { x: 475, y: 510, width: 80, height: 80 };
@@ -36,7 +37,7 @@ test('missile collisions animate an explosion without costing lives or awarding 
 
 test('mouse sight is centered on the cursor, follows it at different scales and hides during pause', async ({ page }) => {
   await page.goto('/'); await page.locator('#play').click();
-  await expect.poll(() => page.evaluate(() => (window as any).__wooden?.status)).toBe('playing');
+  await waitForPlaying(page);
   await page.evaluate(() => { (window as any).__wooden.world.ai.update = () => {}; });
   for (const viewport of [{ width: 1280, height: 720 }, { width: 1000, height: 800 }, { width: 1500, height: 760 }]) {
     await page.setViewportSize(viewport);
@@ -81,6 +82,6 @@ test('initial menu has clear mode choices, keyboard navigation and no reference 
   await page.keyboard.press('Enter'); await expect(page.getByRole('heading', { name: 'Tu control, tu zona' })).toBeVisible();
   await page.keyboard.press('Escape'); await expect(page.locator('#gamepad-settings')).toBeFocused();
   await page.keyboard.press('ArrowDown'); await expect(page.locator('#play')).toBeFocused();
-  await page.keyboard.press('Enter'); await expect.poll(() => page.evaluate(() => (window as any).__wooden?.status)).toBe('playing');
+  await page.keyboard.press('Enter'); await waitForPlaying(page);
   expect(await page.evaluate(() => (window as any).__wooden.world.level.id)).toBe(1);
 });

@@ -21,15 +21,24 @@ test('an unfinished original campaign must still complete mission 10', t => {
   const p = new Progress(); assert.equal(p.data.unlocked, 10);
   p.unlock(11); assert.equal(p.data.unlocked, 11);
 });
-test('new campaign progress persists beyond mission 10 and caps at mission 20', t => {
+test('new campaign progress persists beyond mission 10 and caps at mission 30', t => {
   const saved = storage(t, { unlocked: 17, wins: 0, best: 14000, muted: false });
   const p = new Progress(); assert.equal(p.data.unlocked, 17);
-  p.unlock(20); assert.equal(saved().unlocked, 20);
-  assert.equal(new Progress().data.unlocked, 20);
-  p.unlock(999); assert.equal(p.data.unlocked, 20);
-  p.unlock(11); assert.equal(p.data.unlocked, 20);
+  p.unlock(30); assert.equal(saved().unlocked, 30);
+  assert.equal(new Progress().data.unlocked, 30);
+  p.unlock(999); assert.equal(p.data.unlocked, 30);
+  p.unlock(11); assert.equal(p.data.unlocked, 30);
 });
 test('corrupt saved data does not unlock the new chapter or prevent playing', t => {
   storage(t, '{broken');
   assert.deepEqual(new Progress().data, { unlocked: 1, wins: 0, best: 0, muted: false });
+});
+
+test('a completed twenty-mission save unlocks mission 21 without losing preferences', t => {
+  storage(t, { unlocked: 20, wins: 1, best: 22000, muted: true });
+  assert.deepEqual(new Progress().data, { unlocked: 21, wins: 1, best: 22000, muted: true });
+});
+test('an unfinished mission 20 still has to be won', t => {
+  storage(t, { unlocked: 20, wins: 0, best: 9000 });
+  assert.equal(new Progress().data.unlocked, 20);
 });

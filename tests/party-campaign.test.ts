@@ -9,7 +9,7 @@ import type { Level, PlayerCount } from '../src/game/types.ts';
 const idle = { move: { x: 0, y: 0 }, aim: { x: 100, y: 0 }, fire: false };
 const fixture: Level = { id: 1, name: '', subtitle: '', difficulty: 1, obstacles: [], holes: [], player: { x: 150, y: 300 }, enemies: [{ x: 650, y: 300, kind: 'tactical' }] };
 const pad = (index: number): PadSnapshot => ({ index, id: 'Xbox Series Controller', mapping: 'standard', connected: true, axes: [0, 0, 0, 0], buttons: Array.from({ length: 17 }, () => ({ pressed: false, value: 0 })) });
-for (const count of [1, 2, 3, 4] as const) test(`${count} players: all twenty missions have free spawns, expanded bounds and proportional forces`, () => {
+for (const count of [1, 2, 3, 4] as const) test(`${count} players: all thirty missions have free spawns, expanded bounds and proportional forces`, () => {
   for (const level of levels) {
     const original = structuredClone(level);
     const w = new World(level, count);

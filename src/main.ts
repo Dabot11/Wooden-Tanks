@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { GameScene } from './scenes/GameScene';
 import { MenuScene } from './scenes/MenuScene';
 import './style.css';
+import { audio } from './game/AudioManager';
 import { GamepadRuntime } from './input/GamepadRuntime';
 const app = document.querySelector<HTMLElement>('#app')!;
 function fit() {
@@ -10,6 +11,11 @@ function fit() {
   app.style.setProperty('--unit', `${width / 1280}px`);
 }
 window.addEventListener('resize', fit); fit();
+const audioVisibility = () => audio.setHidden(document.hidden);
+document.addEventListener('visibilitychange', audioVisibility);
+const audioBlur = () => audio.setHidden(true), audioFocus = () => audio.setHidden(document.hidden), unlockAudio = () => audio.unlock();
+window.addEventListener('blur', audioBlur); window.addEventListener('focus', audioFocus);
+window.addEventListener('pointerdown', unlockAudio); window.addEventListener('keydown', unlockAudio);
 const game = new Phaser.Game({ type: Phaser.AUTO, parent: 'game', width: 1280, height: 720,
   backgroundColor: '#e6c885', scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   scene: [MenuScene, GameScene], render: { antialias: true, roundPixels: false },
@@ -24,5 +30,5 @@ const controller = new GamepadRuntime(app,
     if (scene.status === 'paused') scene.resumeGame(); else scene.pauseGame();
   });
 game.events.on(Phaser.Core.Events.PRE_STEP, () => controller.update());
-game.events.once(Phaser.Core.Events.DESTROY, () => controller.destroy());
+game.events.once(Phaser.Core.Events.DESTROY, () => { controller.destroy(); audio.dispose(); document.removeEventListener('visibilitychange', audioVisibility); window.removeEventListener('blur', audioBlur); window.removeEventListener('focus', audioFocus); window.removeEventListener('pointerdown', unlockAudio); window.removeEventListener('keydown', unlockAudio); });
 if (import.meta.hot) import.meta.hot.dispose(() => game.destroy(true));
