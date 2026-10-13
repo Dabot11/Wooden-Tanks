@@ -1,3 +1,4 @@
+import { levels } from '../src/game/LevelManager.ts';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { Progress } from '../src/game/Progress.ts';
@@ -21,13 +22,13 @@ test('an unfinished original campaign must still complete mission 10', t => {
   const p = new Progress(); assert.equal(p.data.unlocked, 10);
   p.unlock(11); assert.equal(p.data.unlocked, 11);
 });
-test('new campaign progress persists beyond mission 10 and caps at mission 30', t => {
+test('new campaign progress persists beyond mission 10 and caps at the published mission count', t => {
   const saved = storage(t, { unlocked: 17, wins: 0, best: 14000, muted: false });
   const p = new Progress(); assert.equal(p.data.unlocked, 17);
-  p.unlock(30); assert.equal(saved().unlocked, 30);
-  assert.equal(new Progress().data.unlocked, 30);
-  p.unlock(999); assert.equal(p.data.unlocked, 30);
-  p.unlock(11); assert.equal(p.data.unlocked, 30);
+  p.unlock(levels.length); assert.equal(saved().unlocked, levels.length);
+  assert.equal(new Progress().data.unlocked, levels.length);
+  p.unlock(999); assert.equal(p.data.unlocked, levels.length);
+  p.unlock(11); assert.equal(p.data.unlocked, levels.length);
 });
 test('corrupt saved data does not unlock the new chapter or prevent playing', t => {
   storage(t, '{broken');
@@ -41,4 +42,19 @@ test('a completed twenty-mission save unlocks mission 21 without losing preferen
 test('an unfinished mission 20 still has to be won', t => {
   storage(t, { unlocked: 20, wins: 0, best: 9000 });
   assert.equal(new Progress().data.unlocked, 20);
+});
+
+test('a completed thirty-mission legacy save unlocks mission 31 and preserves preferences', t => {
+  storage(t, { unlocked: 30, wins: 1, best: 35000, muted: true });
+  const p = new Progress(); assert.equal(p.data.unlocked, 31); assert.equal(p.data.best, 35000); assert.equal(p.data.muted, true);
+});
+test('completion is stored independently from unlocks and survives campaign extensions of any size', t => {
+  const saved = storage(t, { unlocked: 30, wins: 1, completedThrough: 29 });
+  const p = new Progress(); assert.equal(p.data.unlocked, 30, 'an old campaign win cannot skip a later unfinished mission');
+  p.complete(30); assert.equal(saved().completedThrough, 30); assert.equal(new Progress().data.unlocked, 31);
+  p.complete(levels.length); assert.equal(saved().completedThrough, levels.length); assert.equal(p.data.unlocked, levels.length);
+});
+test('future saves retain completion beyond 100 missions while showing only available missions', t => {
+  storage(t, { unlocked: 120, wins: 2, completedThrough: 119, best: 80000 });
+  const p = new Progress(); assert.equal(p.data.completedThrough, 119); assert.equal(p.data.unlocked, Math.min(120, levels.length));
 });

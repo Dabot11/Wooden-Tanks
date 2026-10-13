@@ -1,3 +1,4 @@
+import { levels } from '../../src/game/LevelManager';
 import { waitForPlaying } from './mission-flow';
 import { test, expect, type Page } from '@playwright/test';
 async function mockPads(page: Page, count = 2) {
@@ -167,11 +168,11 @@ test('Game Over retry and campaign victory replay preserve both players and cont
   expect((await state(page)).coop).toBe('two-pads'); expect((await state(page)).players).toHaveLength(2);
   expect((await state(page)).lives).toBe(3);
   // Start the real final mission, then produce its lethal impacts with controlled shells.
-  await page.evaluate(() => {
+  await page.evaluate(last => {
     const s = (window as any).__wooden;
-    s.scene.restart({ session: { ...s.session, level: 29 } });
-  });
-  await expect.poll(async () => (await state(page)).level).toBe(29);
+    s.scene.restart({ session: { ...s.session, level: last } });
+  }, levels.length - 1);
+  await expect.poll(async () => (await state(page)).level).toBe(levels.length - 1);
   await waitForPlaying(page);
   await page.evaluate(() => {
     const w = (window as any).__wooden.world;

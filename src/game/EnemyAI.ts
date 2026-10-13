@@ -1,3 +1,4 @@
+import { enemyReloadScale } from './Campaign';
 import { enemyProfile } from './EnemyProfiles';
 import { ARENA, SPEED_SCALE, lerpAngle, wrapAngle } from './types';
 import type { Tank, Vec, Rect } from './types';
@@ -171,7 +172,7 @@ export class EnemyAI {
         const count = world.projectiles.filter(p => p.owner === tank.id).length;
         if (count < enemyProfile(tank.kind).limit) {
           const saved = tank.turret; tank.turret += (this.random() - 0.5) * 0.06;
-          if (world.fire(tank)) { tank.state = 'Shoot'; tank.cooldown /= Math.min(1.35, Math.max(0.65, world.level.difficulty)); plan.reaction = 0.35 + this.random() * 0.45; }
+          if (world.fire(tank)) { tank.state = 'Shoot'; tank.cooldown /= enemyReloadScale(world.level.difficulty); plan.reaction = 0.35 + this.random() * 0.45; }
           tank.turret = saved;
         }
       }

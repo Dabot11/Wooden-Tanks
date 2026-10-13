@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { CHAPTER_SIZE } from '../game/Campaign';
 import { levels } from '../game/LevelManager';
 import { createTextures } from '../game/TextureFactory';
 import { progress } from '../game/Progress';
@@ -45,6 +46,11 @@ export class MenuScene extends Phaser.Scene {
       const remove = showOverlay(root, { cancel: close, eyebrow: 'TU CAMPAÑA', title: 'Elige tu batalla', description: 'Completa una misión para desbloquear la siguiente.', actions: [{ text: 'Volver al taller', secondary: true, run: close }] });
       const grid = document.createElement('div'); grid.className = 'mission-grid';
       for (const level of levels) {
+        if ((level.id - 1) % CHAPTER_SIZE === 0) {
+          const heading = document.createElement('h3'); heading.className = 'mission-chapter';
+          heading.textContent = `Capítulo ${Math.ceil(level.id / CHAPTER_SIZE)} · Misiones ${level.id}–${Math.min(level.id + CHAPTER_SIZE - 1, levels.length)}`;
+          grid.append(heading);
+        }
         const button = document.createElement('button'); button.className = 'mission-choice'; button.disabled = level.id > progress.data.unlocked;
         button.innerHTML = `<strong>${String(level.id).padStart(2, '0')}</strong><span>${level.name}</span><small>${button.disabled ? 'BLOQUEADA' : 'JUGAR →'}</small>`;
         button.onclick = () => { remove(); start(level.id - 1); }; grid.append(button);

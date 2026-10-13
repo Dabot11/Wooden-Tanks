@@ -131,7 +131,7 @@ export class GameScene extends Phaser.Scene {
     const bonus = Math.max(100, Math.round(500 - this.world.elapsed * 3)); this.session.score += bonus;
     progress.record(this.session.score); this.hud.update(this.world, this.session);
     const final = this.session.level === levels.length - 1;
-    progress.unlock(this.session.level + 2);
+    progress.complete(this.session.level + 1);
     this.time.delayedCall(DEATH_SETTLE_MS, () => {
       audio.play('win');
       const banner = document.createElement('div'); banner.className = 'mission-intro victory-toast';

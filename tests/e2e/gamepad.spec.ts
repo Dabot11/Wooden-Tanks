@@ -1,3 +1,4 @@
+import { levels } from '../../src/game/LevelManager';
 import { waitForPlaying } from './mission-flow';
 import { test, expect, type Page } from '@playwright/test';
 
@@ -177,8 +178,8 @@ test('A confirms and B returns from Game Over and victory screens', async ({ pag
   await expect(page.locator('#play')).toBeVisible();
   await press(page, 0);
   await waitForPlaying(page); await neutral(page);
-  await page.evaluate(() => { const s = (window as any).__wooden; s.scene.restart({ session: { ...s.session, level: 29 } }); });
-  await expect.poll(async () => (await state(page)).level).toBe(29);
+  await page.evaluate(last => { const s = (window as any).__wooden; s.scene.restart({ session: { ...s.session, level: last } }); }, levels.length - 1);
+  await expect.poll(async () => (await state(page)).level).toBe(levels.length - 1);
   await waitForPlaying(page);
   await page.evaluate(() => {
     const w = (window as any).__wooden.world;

@@ -173,7 +173,7 @@ kbd { font-family: inherit; font-size: .85em; border: 1px solid #8f826150; borde
 .mouse-reticle::after { content: ''; position: absolute; left: 50%; top: 50%; width: calc(3 * var(--unit)); height: calc(3 * var(--unit)); background: #fff4cf; border-radius: 50%; transform: translate(-50%, -50%); }
 .mouse-reticle[hidden] { display: none; }
 
-/* Twenty missions remain reachable without clipping the dialog. */
+/* Any number of campaign chapters remains reachable inside the dialog. */
 .selector-modal { max-height: calc(650 * var(--unit)); display: flex; flex-direction: column; }
 .selector-modal .mission-grid { min-height: 0; overflow-y: auto; overscroll-behavior: contain; margin: calc(16 * var(--unit)) 0; }
 .selector-modal .mission-choice { min-height: calc(82 * var(--unit)); padding: calc(10 * var(--unit)); flex-shrink: 0; }
@@ -235,3 +235,5 @@ kbd { font-family: inherit; font-size: .85em; border: 1px solid #8f826150; borde
 .enemy-brief-row strong { display: block; font-size: calc(14 * var(--unit)); }
 .enemy-brief-row small { display: block; margin-top: calc(4 * var(--unit)); font-size: calc(10 * var(--unit)); color: #817765; }
 .enemy-brief-row > b { font-size: calc(24 * var(--unit)); }
+
+.mission-chapter { grid-column: 1 / -1; text-align: left; margin: calc(8 * var(--unit)) 0 0; font-size: calc(11 * var(--unit)); color: #8a573d; letter-spacing: .06em; }

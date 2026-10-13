@@ -1,3 +1,4 @@
+import { levels } from '../../src/game/LevelManager';
 import { waitForPlaying } from './mission-flow';
 import { test, expect, type Page } from '@playwright/test';
 const state = (page: Page) => page.evaluate(() => {
@@ -90,10 +91,10 @@ test('projectile impacts consume lives, reset the mission, show Game Over and al
   expect((await state(page)).lives).toBe(3);
 });
 test('all campaign transitions and final victory handle actual collision outcomes', async ({ page }) => {
-  test.setTimeout(180000);
+  test.setTimeout(levels.length * 5000 + 45000);
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
   await start(page);
-  for (let level = 0; level < 30; level++) {
+  for (let level = 0; level < levels.length; level++) {
     await expect.poll(async () => (await state(page)).level).toBe(level);
     await waitForPlaying(page);
     // Controlled projectile fixtures exercise collisions and the complete scene lifecycle.
@@ -109,7 +110,7 @@ test('all campaign transitions and final victory handle actual collision outcome
   }
   await expect(page.getByRole('heading', { name: 'Maestro del taller' })).toBeVisible();
   const save = await page.evaluate(() => JSON.parse(localStorage.getItem('wooden-tanks-v1')!));
-  expect(save.unlocked).toBe(30); expect(save.wins).toBe(1);
+  expect(save.unlocked).toBe(levels.length); expect(save.wins).toBe(1);
   await page.getByRole('button', { name: 'Volver al menú' }).click();
   await expect(page.locator('#play')).toBeVisible(); expect(errors).toEqual([]);
 });

@@ -1,3 +1,4 @@
+import { levels } from '../../src/game/LevelManager';
 import { test, expect } from '@playwright/test';
 test('briefing waits indefinitely, displays the roster, continues and returns before the next mission', async ({ page }) => {
   await page.goto('/'); await page.locator('#play').click();
@@ -16,9 +17,9 @@ test('briefing waits indefinitely, displays the roster, continues and returns be
   await page.screenshot({path:'.playwright/mission-briefing.png'});
   await page.keyboard.press('Enter'); await expect.poll(()=>page.evaluate(()=>(window as any).__wooden.status)).toBe('playing');
 });
-test('new campaign saves unlock 21 and the selector contains thirty missions', async({page})=>{
+test('new campaign saves unlock 21 and the selector contains every published mission', async({page})=>{
   await page.addInitScript(()=>localStorage.setItem('wooden-tanks-v1',JSON.stringify({unlocked:20,wins:1,best:24000,muted:true})));
-  await page.goto('/');await page.locator('#select').click();await expect(page.locator('.mission-choice')).toHaveCount(30);
+  await page.goto('/');await page.locator('#select').click();await expect(page.locator('.mission-choice')).toHaveCount(levels.length);
   await expect(page.locator('.mission-choice').nth(20)).toBeEnabled();await expect(page.locator('.mission-choice').nth(21)).toBeDisabled();
   await page.locator('.mission-choice').nth(20).click();await expect(page.getByRole('heading',{name:'El aserradero',exact:true})).toBeVisible();
   await expect(page.locator('.brief-total')).toContainText('7 tanques enemigos');
@@ -62,7 +63,7 @@ test('music and tread effects obey actual movement, pause, mute and resume',asyn
   await page.keyboard.press('m');await expect.poll(()=>page.evaluate(()=>(window as any).__wooden.audioState.musicScheduled)).toBe(true);
   await expect.poll(()=>page.evaluate(()=>(window as any).__wooden.audioState.voices)).toBeLessThan(90);expect(errors).toEqual([]);
 });
-test('four-player final briefing includes all reinforcements and accepts Continue from P4',async({page})=>{
+test('four-player chapter briefing includes all reinforcements and accepts Continue from P4',async({page})=>{
   await page.addInitScript(()=>{
     (window as any).__briefPads=Array.from({length:4},(_,index)=>({index,id:'Xbox Series Controller',mapping:'standard',connected:true,axes:[0,0,0,0],buttons:Array.from({length:17},()=>({pressed:false,value:0}))}));
     Object.defineProperty(navigator,'getGamepads',{value:()=>(window as any).__briefPads});
