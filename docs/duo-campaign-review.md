@@ -36,7 +36,7 @@ G / P / C / H = exploradores grises / patrulleros / centinelas / cazadores. Dist
 | 18. Doble fortaleza | 2 / 5 / 2 / 0 | 406 | 0 / 0 | Elijan una fortaleza para concentrar el fuego; el compañero conserva el camino hacia la otra. |
 | 19. Último cerco | 2 / 5 / 2 / 0 | 418 | 2 / 0 | Dividan la vigilancia de los puestos y cambien el señuelo tras cada salva rápida. |
 | 20. Leyenda del taller | 2 / 5 / 3 / 0 | 429 | 2 / 1 | Alternen avance y cobertura en cada sector; reagrúpense antes de romper la última puerta. |
-| 21. El aserradero | 2 / 0 / 0 / 1 | 425 | 1 / 1 | Uno atrae al cazador; el otro vigila su flanco. Ataquen cuando se detenga para cargar. |
+| 21. El aserradero | 2 / 0 / 0 / 1 | 425 | 1 / 1 | Uno provoca la esquiva o el contratiro del cazador; el otro ataca desde su flanco durante la recuperación. |
 | 22. Cajas apiladas | 2 / 6 / 2 / 0 | 448 | 0 / 0 | Avancen de caja en caja con un carril cada uno; esperen al compañero antes del último cruce. |
 | 23. Paso de sierra | 2 / 6 / 2 / 0 | 413 | 0 / 1 | Usen carriles alternados; el jugador del borde sostiene la salida del zigzag. |
 | 24. La bisagra | 2 / 5 / 3 / 0 | 460 | 0 / 1 | P1 controla el giro alto y P2 el bajo. Abran la bisagra solo cuando puedan vigilar ambos lados. |
@@ -533,7 +533,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 3.13 segu
 
 **Identidad compartida:** Una pieza central divide dos líneas de corte en sectores norte y sur.
 
-**Objetivo:** Uno atrae al cazador; el otro vigila su flanco. Ataquen cuando se detenga para cargar.
+**Objetivo:** Uno provoca la esquiva o el contratiro del cazador; el otro ataca desde su flanco durante la recuperación.
 
 **Decisión de diseño:** Un cazador y dos exploradores sustituyen nueve enemigos. Los flancos y el refugio de enlace enseñan el relevo de señuelo con fuego amigo.
 

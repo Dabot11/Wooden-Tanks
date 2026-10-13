@@ -3,7 +3,7 @@ export interface PlayerInput { move: Vec; aim: Vec; fire: boolean }
 export interface Rect extends Vec { w: number; h: number }
 export interface Hole extends Vec { radius: number }
 export type TankKind = 'player' | 'basic' | 'patrol' | 'tactical' | 'hunter';
-export type AIState = 'Idle' | 'Patrol' | 'Chase' | 'Aim' | 'Shoot' | 'Evade' | 'Reposition' | 'Observe' | 'Flank' | 'Windup' | 'Recover' | 'Search';
+export type AIState = 'Idle' | 'Patrol' | 'Chase' | 'Aim' | 'Shoot' | 'Evade' | 'Reposition' | 'Observe' | 'Flank' | 'Windup' | 'Guard' | 'Recover' | 'Search';
 export interface HunterStatus { targetId: number | null; lastSeen?: Vec; memory: number; charge: number }
 export interface Tank extends Vec {
   id: number; kind: TankKind; alive: boolean; angle: number; turret: number;

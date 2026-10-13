@@ -5,7 +5,7 @@ export const ENEMY_BRIEF = [
   { kind: 'basic', name: 'Explorador gris', details: 'Móvil · un misil · sin rebotes', color: '#81868a' },
   { kind: 'patrol', name: 'Patrullero violeta', details: 'Móvil · un rebote · puede esquivar', color: '#82659b' },
   { kind: 'tactical', name: 'Centinela', details: 'Inmóvil · un rebote · misiles rápidos · intercepta', color: '#b97835' },
-  { kind: 'hunter', name: 'Cazador cobrizo', details: 'Flanquea rápido · misil veloz · un rebote · se detiene para cargar', color: '#a66d48' },
+  { kind: 'hunter', name: 'Cazador cobrizo', details: 'Flanquea y esquiva · contratiro · misil veloz · un rebote', color: '#a66d48' },
 ] as const;
 export function showMissionBriefing(root: HTMLElement, world: World, proceed: () => void, cancel: () => void) {
   const remove = showOverlay(root, { eyebrow: `MISIÓN ${String(world.level.id).padStart(2, '0')}`, title: world.level.name,

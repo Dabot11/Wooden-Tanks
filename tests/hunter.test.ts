@@ -58,7 +58,7 @@ test('target commitment prevents rapid switches and a fallen target releases the
  other.x=600;other.y=300;step(w,.8);assert.equal(h.hunter!.targetId,chosen);
  w.players.find(p=>p.id===chosen)!.alive=false;step(w,.1);assert.equal(h.hunter!.targetId,other.id);
 });
-test('hunter remains vulnerable to a single real missile while charging and never intercepts',()=>{
+test('a point-blank shot arrives before the hunter can react and prepare a countershot',()=>{
  const w=new World(fixture),h=charging(w);
  const d=Math.hypot(h.x-w.player.x,h.y-w.player.y),vx=(h.x-w.player.x)/d,vy=(h.y-w.player.y)/d;
  // Move to a clear firing post so flight time fits inside the telegraphed preparation.

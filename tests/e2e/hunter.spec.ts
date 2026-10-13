@@ -48,9 +48,11 @@ for(const count of [2,3,4])test(`${count} controllers can enter hunter practice,
  await expect(page.locator('.brief-total')).toContainText(`1 tanque enemigo · ${count} jugadores`);
  await expect(page.getByRole('button',{name:'Continuar →',exact:true})).toBeInViewport();
  expect(await page.evaluate(()=>{const w=(window as any).__wooden.world;return {players:w.players.length,hunters:w.enemies.filter((e:any)=>e.kind==='hunter').length,obstacles:w.obstacles.length};})).toEqual({players:count,hunters:1,obstacles:2});
- await page.evaluate(()=>{(window as any).__wooden.world.ai.update=()=>{};});await waitForPlaying(page);await page.waitForTimeout(150);
+ await page.evaluate(()=>{(window as any).__wooden.world.ai.update=()=>{};});await waitForPlaying(page);
+ await page.waitForFunction(()=>(window as any).__wooden.world.elapsed>.2);
  const before=await page.evaluate(()=>(window as any).__wooden.world.players.map((p:any)=>p.x));
- await page.evaluate(()=>(window as any).__hunterPads.forEach((p:any)=>p.axes=[1,0,0,0]));await page.waitForTimeout(200);
+ await page.evaluate(()=>(window as any).__hunterPads.forEach((p:any)=>p.axes=[1,0,0,0]));
+ await page.waitForFunction(before=>(window as any).__wooden.world.players.every((p:any,i:number)=>p.x>before[i]+10),before,{timeout:2000});
  await page.evaluate(()=>(window as any).__hunterPads.forEach((p:any)=>p.axes=[0,0,0,0]));
  const after=await page.evaluate(()=>(window as any).__wooden.world.players.map((p:any)=>p.x));after.forEach((x:number,i:number)=>expect(x).toBeGreaterThan(before[i]+10));
  await page.evaluate(()=>(window as any).__hunterPads.at(-1).buttons[9]={pressed:true,value:1});await page.getByRole('button',{name:'Reanudar →',exact:true}).waitFor();
@@ -75,4 +77,34 @@ test('practice defeat finishes the animation and retries the same trial without 
  await expect(page.getByRole('button',{name:'Reintentar misión →',exact:true})).toHaveCount(0);
  await page.getByRole('button',{name:'Reintentar misión →',exact:true}).click();await page.getByRole('heading',{name:'Encuentro con el cazador',exact:true}).waitFor();
  expect(await page.evaluate(()=>localStorage.getItem('wooden-tanks-v1'))).toBe(save);expect(await page.evaluate(()=>(window as any).__wooden.session.practice)).toBe(true);
+});
+for(const scenario of [{count:1,block:false},{count:1,block:true},{count:4,block:true}])test(`${scenario.count} players: hunter ${scenario.block?'blocks':'evades'} a real input shot with its defensive AI active`,async({page})=>{
+ await seed(page,scenario.count===1?0:scenario.count);await trial(page,scenario.count);await waitForPlaying(page);
+ await page.waitForFunction(()=>{
+   const s=(window as any).__wooden,h=s?.world.enemies[0];
+   if(h?.state!=='Windup'||h.hunter.charge>.1)return false;
+   // Hold the fixture while arranging the shot; resume the ordinary loop with its AI intact below.
+   s.status='intro';return true;
+ },null,{timeout:15000});
+ const setup=await page.evaluate(block=>{
+   const s=(window as any).__wooden,w=s.world,h=w.enemies[0],p=w.player,c=s.cameras.main;
+   const angle=Math.atan2(h.y-p.y,h.x-p.x);p.x=h.x-Math.cos(angle)*250;p.y=h.y-Math.sin(angle)*250;p.turret=angle;
+   h.turret=angle+Math.PI;h.cooldown=block?0:10;
+   return {x:(h.x-c.scrollX)*c.zoom,y:(h.y-c.scrollY)*c.zoom,axisX:Math.cos(angle),axisY:Math.sin(angle),elapsed:w.elapsed};
+ },scenario.block);
+ if(scenario.count===1){await page.mouse.move(setup.x,setup.y);await page.keyboard.down('Space');}
+ else await page.evaluate(({axisX,axisY})=>{const p=(window as any).__hunterPads[0];p.axes=[0,0,axisX,axisY];p.buttons[7]={pressed:true,value:1};},setup);
+ await page.evaluate(()=>{(window as any).__wooden.status='playing';});
+ const state=scenario.block?'Guard':'Evade';
+ await page.waitForFunction(state=>(window as any).__wooden.world.enemies[0]?.state===state,state,{timeout:2000});
+ if(scenario.count===1)await page.keyboard.up('Space');
+ else await page.evaluate(()=>{(window as any).__hunterPads[0].buttons[7]={pressed:false,value:0};});
+ if(scenario.block){
+   expect(await page.evaluate(()=>{const s=(window as any).__wooden;return s.children.list.some((o:any)=>o.getData?.('hunter-charge')&&o.commandBuffer?.includes(0xa7d4d6));})).toBe(true);
+   await page.waitForFunction(()=>(window as any).__wooden.children.list.some((o:any)=>o.getData?.('shell-explosion')),null,{timeout:2000});
+   expect(await page.evaluate(()=>{const h=(window as any).__wooden.world.enemies[0];return {shots:h.shots,alive:h.alive,state:h.state};})).toEqual({shots:1,alive:true,state:'Recover'});
+   expect(await page.evaluate(()=>(window as any).__wooden.children.list.some((o:any)=>o.getData?.('shell-explosion')))).toBe(true);
+ }else{
+   await page.waitForTimeout(850);expect(await page.evaluate(()=>{const h=(window as any).__wooden.world.enemies[0];return {alive:h.alive,shots:h.shots};})).toEqual({alive:true,shots:0});
+ }
 });

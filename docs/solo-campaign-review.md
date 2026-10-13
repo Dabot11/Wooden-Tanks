@@ -36,7 +36,7 @@ G / P / C / H = exploradores grises / patrulleros / centinelas / cazadores.
 | 18. Doble fortaleza | Terreno y fortificaciones | 1 / 3 / 2 / 0 | 0 | 361 | Ataca una fortaleza por fuera y conserva la ruta hacia la otra. |
 | 19. Último cerco | Terreno y fortificaciones | 1 / 3 / 2 / 0 | 0 | 507 | Un cerco se rompe por un sector. No entres al centro sin reservar una salida. |
 | 20. Leyenda del taller | Terreno y fortificaciones | 1 / 3 / 3 / 0 | 0 | 480 | Recupera terreno detrás de cada compuerta y derrota las tres defensas por turnos. |
-| 21. El aserradero | Combate por sectores | 2 / 0 / 0 / 1 | 0 | 760 | El cazador busca tu flanco. Cambia de esquina y ataca cuando se detenga para cargar. |
+| 21. El aserradero | Combate por sectores | 2 / 0 / 0 / 1 | 0 | 760 | El cazador busca tu flanco. Cambia de esquina, provoca su contratiro y ataca mientras recarga. |
 | 22. Cajas apiladas | Combate por sectores | 1 / 4 / 2 / 0 | 0 | 380 | Una caja permite cortar la línea de tiro, pero no cubre la siguiente esquina. |
 | 23. Paso de sierra | Combate por sectores | 1 / 4 / 2 / 0 | 0 | 300 | Lee los pasillos en zigzag y cambia de carril antes de que llegue la siguiente salva. |
 | 24. La bisagra | Combate por sectores | 1 / 3 / 3 / 0 | 0 | 367 | La bisagra central abre diagonales para ambos bandos. Gira por los bordes antes de romperla. |
@@ -389,11 +389,11 @@ Presión inicial, tres semillas de IA y jugador inmóvil: 4.47 segundos hasta la
 
 ## 21 · El aserradero
 
-**Objetivo:** El cazador busca tu flanco. Cambia de esquina y ataca cuando se detenga para cargar.
+**Objetivo:** El cazador busca tu flanco. Cambia de esquina, provoca su contratiro y ataca mientras recarga.
 
 **Identidad que conservar al adaptar jugadores:** Una pieza central divide dos líneas de corte en sectores norte y sur.
 
-**Ajustes:** Debut del cazador con dos exploradores de escolta: los bordes permiten reconocer su rodeo y contraatacar durante la preparación.
+**Ajustes:** Debut del cazador con dos exploradores de escolta: los bordes permiten reconocer su rodeo, cambiar el ángulo de ataque y aprovechar su recuperación.
 
 Despliegue: (180, 320); enemigos G/P/C/H: 2 / 0 / 0 / 1. 0 líneas directas iniciales; 8 direcciones libres de escape.
 

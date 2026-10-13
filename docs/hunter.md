@@ -13,11 +13,21 @@ La campaña incorpora al cazador únicamente en la misión 21, «Líneas de cort
 
 Ve a través de líneas despejadas. Tras perder la visión recuerda la última posición durante dos segundos, sin actualizar las coordenadas del jugador oculto. Puede intentar un rebote hacia esa posición conocida. Cuando pierde la memoria busca terreno mediante un circuito de reconocimiento; no dispara contra alguien que nunca ha visto. Recupera rutas si se atasca durante 0,7 segundos.
 
-Se mueve a 162,75 unidades por segundo, un 40 % más rápido que el jugador actual y un 75 % más rápido que su primera versión (93). El aumento de velocidad exige cambiar de esquina antes del flanqueo; el aviso de disparo y la recuperación conservan sus 0,65 segundos para permitir esquiva y contraataque. Muere con un impacto, puede sufrir fuego amigo y no intercepta proyectiles. Las velocidades, cadencia, físicas y comportamientos de los enemigos anteriores se conservan.
+Se mueve a 162,75 unidades por segundo, un 40 % más rápido que el jugador actual y un 75 % más rápido que su primera versión (93). El aviso ofensivo y la recuperación conservan sus 0,65 segundos. Muere con un impacto y puede sufrir fuego amigo. Las velocidades, cadencia, físicas y comportamientos de los enemigos anteriores se conservan.
+
+## Evasión y contratiro
+
+Detecta misiles visibles a menos de 500 unidades y predice impactos durante los siguientes 0,9 segundos, incluyendo su propio movimiento. No conoce proyectiles detrás de muros ni anticipa rebotes ocultos: reevalúa una trayectoria cuando el misil realmente rebota. Descarta proyectiles que se alejan o caducan antes de llegar. También reconoce fuego amigo y sus propios misiles tras un rebote.
+
+Tras 0,1 segundos de reacción, elige un desplazamiento perpendicular de 0,34 segundos a su velocidad habitual. Comprueba todo el recorrido contra muros, cavidades, tanques y otros misiles; busca el lado libre de fuego cruzado. Hay 0,45 segundos de descanso entre esquivas. Al terminar evita volver a cruzar el mismo disparo si permanecer en su posición es seguro.
+
+Si ya carga su ataque o no puede esquivar, puede sustituir ese tiro por un **contratiro**: prepara durante al menos 0,2 segundos, gira la torreta con velocidad limitada y calcula dónde interceptar el misil. El arco cambia a azul pálido. Dispara un proyectil real que debe chocar con el entrante mediante las colisiones normales; no borra misiles ni genera un escudo. Si la amenaza desaparece, cancela la preparación. Usa el mismo único misil activo y los mismos 2,8 segundos de recarga que un ataque.
+
+La recuperación de 0,65 segundos después de cualquier disparo y los últimos 0,2 segundos de carga ofensiva son compromisos: no puede cancelarlos para esquivar. Disparos muy cercanos, rebotes tardíos, salvas y ataques desde distintos ángulos aprovechan la reacción, la recarga o la falta de una salida segura. El cazador combina movilidad y defensa limitada; el centinela sigue siendo una defensa estacionaria.
 
 ## Apariencia y lectura
 
-Carbón con placas cobrizas, chevrón en el cuerpo y detalles de cobre en la torreta. El arco de carga muestra su preparación, no una trayectoria de tiro. El centinela conserva sus misiles rápidos con propulsión y su interceptación.
+Carbón con placas cobrizas, chevrón en el cuerpo y detalles de cobre en la torreta. El arco cobrizo anuncia el ataque y el azul pálido el contratiro; ninguno muestra una trayectoria de tiro. El centinela conserva sus misiles rápidos con propulsión y su interceptación.
 
 ## Alcance y ajuste siguiente
 
@@ -27,4 +37,4 @@ Primero jugar la práctica y la 21: comprobar que se reconoce el rodeo, que la c
 
 ## Verificación
 
-`npm test` comprueba flanqueo real, visibilidad y memoria, compromiso de objetivo, preparación y recuperación completas, dirección fija al esquivar, vulnerabilidad con un misil, perfil del proyectil, navegación de los despliegues y conservación de los mapas ajenos a la 21. Las pruebas de navegador recorren entrada con 1–4 jugadores, mandos independientes, carga y texturas, un disparo real, pausa, victoria, derrota y repetición sin afectar el progreso. `npm run review:solo` y `npm run review:duo` regeneran sus atlas; `npm run build` verifica TypeScript y producción.
+`npm test` comprueba flanqueo real, visibilidad y memoria, compromiso de objetivo, preparación y recuperación completas, dirección fija al esquivar, vulnerabilidad con un misil, perfil del proyectil, navegación de los despliegues y conservación de los mapas ajenos a la 21. Las pruebas defensivas verifican evasión con disparos reales a 30/60/120 Hz, salidas bloqueadas y fuego cruzado, predicción relativa, intercepción real, límite de munición, cancelación de amenazas y contraataque durante la recuperación. Las pruebas de navegador recorren entrada con 1–4 jugadores, mandos independientes, carga y texturas, un disparo real, pausa, victoria, derrota y repetición sin afectar el progreso. `npm run review:solo` y `npm run review:duo` regeneran sus atlas; `npm run build` verifica TypeScript y producción.

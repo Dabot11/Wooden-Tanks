@@ -76,9 +76,9 @@ export class BoardRenderer {
       sprite.body.setVisible(tank.alive).setPosition(tank.x, tank.y).setRotation(tank.angle);
       sprite.turret.setVisible(tank.alive).setPosition(tank.x, tank.y).setRotation(tank.turret);
       sprite.shadow.setVisible(tank.alive).setPosition(tank.x + 5, tank.y + 7);
-      if(tank.alive&&tank.kind==='hunter'&&tank.state==='Windup') {
+      if(tank.alive&&tank.kind==='hunter'&&(tank.state==='Windup'||tank.state==='Guard')) {
         const charge=tank.hunter?.charge??0;
-        this.hunterCharge.lineStyle(3,0xe1ad7c,.9).beginPath().arc(tank.x,tank.y,27,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.max(.05,charge),false).strokePath();
+        this.hunterCharge.lineStyle(3,tank.state==='Guard'?0xa7d4d6:0xe1ad7c,.9).beginPath().arc(tank.x,tank.y,27,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.max(.05,charge),false).strokePath();
         this.hunterCharge.fillStyle(0xffd4a1,.5+.5*charge).fillCircle(tank.x+Math.cos(tank.turret)*24,tank.y+Math.sin(tank.turret)*24,3+charge*2);
       }
       if (tank.alive && tank.distance - sprite.last > 7) {
