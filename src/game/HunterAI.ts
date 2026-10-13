@@ -1,17 +1,18 @@
-import { TANK_SPEED, SHOT_SPEED, wrapAngle } from './types';
+import { TANK_SPEED, wrapAngle } from './types';
+import { enemyProfile } from './EnemyProfiles';
 import type { Tank, Vec } from './types';
 import type { World } from './World';
 import { lineClear } from './CollisionManager';
 import { findPath, bankAngle } from './Navigation';
-export const HUNTER = { speed:TANK_SPEED*.8, windup:.65, recovery:.65, memory:2, commitment:2.8, cooldown:2.8 } as const;
+export const HUNTER = { speed:TANK_SPEED*1.4, windup:.65, recovery:.65, memory:2, commitment:2.8, cooldown:2.8 } as const;
 interface Plan { targetId:number|null; lastSeen?:Vec; memory:number; commitment:number; decision:number; phaseTime:number; angle:number|null; stuck:number; search:number }
 const distance=(a:Vec,b:Vec)=>Math.hypot(a.x-b.x,a.y-b.y);
 const position=(p:Vec):Vec=>({x:p.x,y:p.y});
-/** A committed flanker with finite sight memory, fixed telegraphed aim and one ordinary shell. */
+/** A fast flanker with finite sight memory, fixed telegraphed aim and one fast shell. */
 export class HunterAI {
   private plans=new Map<number,Plan>();
   private shotAngle(w:World,t:Tank,target:Vec):number|null {
-    return lineClear(t,target,w.solids,5)?Math.atan2(target.y-t.y,target.x-t.x):bankAngle(t,target,w.solids,SHOT_SPEED*6.8);
+    return lineClear(t,target,w.solids,5)?Math.atan2(target.y-t.y,target.x-t.x):bankAngle(t,target,w.solids,enemyProfile('hunter').speed*6.8);
   }
   private chooseTarget(w:World,t:Tank):Tank|undefined {
     const visible=w.alivePlayers.filter(p=>lineClear(t,p,w.solids,5));

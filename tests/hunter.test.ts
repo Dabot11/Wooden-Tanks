@@ -19,8 +19,19 @@ test('hunter chooses a lateral route instead of chasing directly and stays withi
  const w=new World(fixture),h=w.enemies[0];step(w,.45);
  assert.equal(h.state,'Flank');assert.ok(Math.abs(h.goal.y-w.player.y)>150);
  assert.ok(findPath(h,h.goal,w.movementSolids,20,w.arena).length);
- for(let f=0;f<350&&h.state!=='Windup';f++){w.update(1/120,idle);assert.ok(w.canStand(h,h.radius,h.id));}
- assert.ok(Math.abs(h.y-300)>100);assert.ok(h.distance>200);
+ let lateral=0;
+ for(let f=0;f<350&&h.state!=='Windup';f++){w.update(1/120,idle);lateral=Math.max(lateral,Math.abs(h.y-300));assert.ok(w.canStand(h,h.radius,h.id));}
+ assert.ok(lateral>100);assert.ok(h.distance>200);
+});
+for(const hz of [30,60,120])test(`hunter flanks faster than the moving player at ${hz} Hz without crossing cover`,()=>{
+ const w=new World(fixture),h=w.enemies[0];step(w,.45);
+ const start=h.distance,playerX=w.player.x;
+ for(let f=0;f<hz/10;f++){
+   w.update(1/hz,{...idle,move:{x:1,y:0}});
+   assert.ok(w.canStand(h,h.radius,h.id));assert.equal(h.state,'Flank');
+ }
+ const playerTravel=w.player.x-playerX,hunterTravel=h.distance-start;
+ assert.ok(Math.abs(hunterTravel/playerTravel-1.4)<.01,'real movement is 40% faster than the player');
 });
 test('hunter stops for a complete visible preparation and recovery, firing its fixed bearing',()=>{
  const w=new World(fixture),h=charging(w),where={x:h.x,y:h.y};
@@ -55,12 +66,21 @@ test('hunter remains vulnerable to a single real missile while charging and neve
  for(let f=0;f<120&&h.alive;f++)w.update(1/120,{...idle,aim:{x:h.x,y:h.y}});
  assert.equal(h.alive,false);assert.equal(h.shots,0);assert.equal(w.events.filter(e=>e.type==='destroy'&&!e.player).length,1);
 });
-test('hunter weapon has normal speed, one bounce, a fixed slow reload and one active shell',()=>{
+test('hunter weapon has double normal speed, one bounce, a fixed slow reload and one active shell',()=>{
  const w=new World({...fixture,obstacles:[]}),h=w.enemies[0];h.cooldown=0;h.turret=0;assert.ok(w.fire(h));
- const shell=w.projectiles[0];assert.equal(Math.hypot(shell.vx,shell.vy),322.5);assert.equal(shell.maxBounces,1);assert.equal(shell.propelled,false);assert.equal(h.cooldown,2.8);
+ const shell=w.projectiles[0];assert.equal(Math.hypot(shell.vx,shell.vy),645);assert.equal(shell.maxBounces,1);assert.equal(shell.propelled,false);assert.equal(h.cooldown,2.8);
  h.cooldown=0;assert.equal(w.fire(h),false);h.alive=false;
  for(let hit=0;hit<2;hit++){shell.x=w.arena.x+w.arena.w-5;shell.y=300;shell.vx=Math.abs(shell.vx);shell.vy=0;w.stepProjectile(shell,.01);assert.equal(shell.alive,hit===0);}
  assert.equal(enemyProfile('hunter').limit,1);
+});
+test('fast hunter and player missiles destroy each other even when they cross within one frame',()=>{
+ const w=new World({...fixture,obstacles:[]}),h=w.enemies[0],p=w.player;
+ // At the slowest simulation rate the two shells would swap sides without continuous collision detection.
+ h.x=p.x+108;h.y=p.y;h.turret=Math.PI;h.cooldown=0;p.turret=0;
+ assert.ok(w.fire(p));assert.ok(w.fire(h));
+ w.update(.05,idle,false);
+ assert.equal(w.projectiles.length,0);assert.equal(h.alive,true);assert.equal(p.alive,true);
+ assert.equal(w.events.filter(e=>e.type==='shellCollision').length,1);
 });
 for(const count of [1,2,3,4]as PlayerCount[])test(`mission 21 and isolated hunter practice support ${count} players without multiplying hunters`,()=>{
  const l=getLevel(20,count),w=new World(l,count),trial=new World(hunterTrial(l),count);

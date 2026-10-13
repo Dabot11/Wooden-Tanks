@@ -69,7 +69,7 @@ for (const kind of ['basic', 'patrol', 'tactical', 'hunter'] as const) test(`${k
   const w = new World({ ...fixture, enemies: [{ x: 650, y: 300, kind }] }), tank = w.enemies[0];
   tank.cooldown = 0; tank.turret = 0; assert.ok(w.fire(tank));
   const p = w.projectiles[0], limit = kind === 'basic' ? 0 : 1;
-  assert.equal(Math.hypot(p.vx, p.vy), 322.5 * (kind === 'tactical' ? 1.8 : 1));
+  assert.equal(Math.hypot(p.vx, p.vy), 322.5 * (kind === 'hunter' ? 2 : kind === 'tactical' ? 1.8 : 1));
   if (kind !== 'patrol') { tank.cooldown = 0; assert.equal(w.fire(tank), false); }
   tank.alive = false;
   for (let impact = 0; impact <= limit; impact++) {

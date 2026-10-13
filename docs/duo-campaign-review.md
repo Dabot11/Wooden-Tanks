@@ -549,7 +549,7 @@ Separación inicial: 425. Reagrupamiento accesible desde ambos puestos: (1102.6,
 
 Corcho, recorrido cerrado → abierto: pieza 4: 296 → 174. Los pasos se verifican con navegación y tres impactos reales.
 
-Presión inicial, peor de tres semillas de IA hasta la primera caída: al menos 8 segundos.
+Presión inicial, peor de tres semillas de IA hasta la primera caída: 5.47 segundos.
 
 ## 22 · Cajas apiladas
 

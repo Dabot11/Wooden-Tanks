@@ -162,4 +162,4 @@ Consulta el [registro de las 40 variantes](docs/duo-campaign-review.md) o el [at
 
 ## Probar el cazador
 
-**Probar cazador** en el menú abre una práctica con un cazador y dos coberturas, para uno a cuatro jugadores, conservando el progreso de campaña. La misión 21 presenta al nuevo enemigo con poca escolta: tres enemigos para uno/dos jugadores y cuatro para tres/cuatro. El cazador flanquea, recuerda brevemente posiciones visibles y se detiene para preparar un disparo normal con un rebote. Muere con un impacto. Consulta el [diseño y alcance del prototipo](docs/hunter.md).
+**Probar cazador** en el menú abre una práctica con un cazador y dos coberturas, para uno a cuatro jugadores, conservando el progreso de campaña. La misión 21 presenta al nuevo enemigo con poca escolta: tres enemigos para uno/dos jugadores y cuatro para tres/cuatro. El cazador flanquea un 40 % más rápido que el jugador, recuerda brevemente posiciones visibles y se detiene para preparar un misil que viaja al doble de velocidad normal, con un rebote. Muere con un impacto. Consulta el [diseño y alcance del prototipo](docs/hunter.md).

@@ -9,11 +9,11 @@ La campaña incorpora al cazador únicamente en la misión 21, «Líneas de cort
 1. Observa durante 0,4 segundos y adquiere un jugador visible. Considera distancia y separación respecto de otros jugadores que también puede ver. Se compromete con el objetivo durante 2,8 segundos; si muere, puede escoger otro.
 2. Busca una aproximación lateral entre puestos alrededor del objetivo y esquinas de coberturas. Comprueba posición libre y navegación antes de elegir. El movimiento utiliza las colisiones y cavidades actuales.
 3. Detiene las orugas y prepara un tiro durante al menos 0,65 segundos. Un arco cobrizo y un mecanismo ascendente anuncian la preparación. La dirección de disparo se fija al comenzar: moverse permite esquivarlo. El giro de torreta tiene velocidad limitada y puede alargar la preparación.
-4. Dispara un misil normal con un rebote y queda detenido otros 0,65 segundos. Después vuelve a buscar posición. La recarga dura 2,8 segundos y admite un único misil activo; su inteligencia no acelera con el multiplicador de recarga de la campaña.
+4. Dispara un misil rápido a 645 unidades por segundo, el doble de un misil normal, con un rebote y queda detenido otros 0,65 segundos. Después vuelve a buscar posición. La recarga dura 2,8 segundos y admite un único misil activo; su inteligencia no acelera con el multiplicador de recarga de la campaña. Calcula los rebotes con el alcance que permite esa velocidad durante la vida del proyectil.
 
 Ve a través de líneas despejadas. Tras perder la visión recuerda la última posición durante dos segundos, sin actualizar las coordenadas del jugador oculto. Puede intentar un rebote hacia esa posición conocida. Cuando pierde la memoria busca terreno mediante un circuito de reconocimiento; no dispara contra alguien que nunca ha visto. Recupera rutas si se atasca durante 0,7 segundos.
 
-Se mueve a 93 unidades por segundo, el 80 % de la velocidad del jugador actual. Muere con un impacto, puede sufrir fuego amigo y no intercepta proyectiles. Las velocidades, cadencia, físicas y comportamientos de los enemigos anteriores se conservan.
+Se mueve a 162,75 unidades por segundo, un 40 % más rápido que el jugador actual y un 75 % más rápido que su primera versión (93). El aumento de velocidad exige cambiar de esquina antes del flanqueo; el aviso de disparo y la recuperación conservan sus 0,65 segundos para permitir esquiva y contraataque. Muere con un impacto, puede sufrir fuego amigo y no intercepta proyectiles. Las velocidades, cadencia, físicas y comportamientos de los enemigos anteriores se conservan.
 
 ## Apariencia y lectura
 
