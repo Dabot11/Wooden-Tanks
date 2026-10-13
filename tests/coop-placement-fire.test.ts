@@ -1,9 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { World } from '../src/game/World.ts';
-import { levels } from '../src/game/LevelManager.ts';
+import { levels, getLevel } from '../src/game/LevelManager.ts';
 for (const count of [2, 3, 4] as const) test(`${count} players have separated safe firing lanes in every campaign mission`, () => {
-  for (const level of levels) {
+  for (const soloLevel of levels) {
+    const level = getLevel(soloLevel.id - 1, count);
     const world = new World(level, count), scale = 1 + (count - 1) * .2;
     for (const [i, player] of world.players.entries()) {
       for (const teammate of world.players.slice(i + 1)) {

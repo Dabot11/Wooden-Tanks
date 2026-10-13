@@ -81,7 +81,7 @@ Elige **Cooperativo local**, selecciona 2, 3 o 4 jugadores y pulsa un botón en 
 - MENÚ en cualquier mando o ESC pausa para todos. A confirma y B regresa. Una desconexión pausa y conserva el puesto: ningún otro mando sustituye automáticamente al ausente. Suelta sticks y gatillos al reanudar. Si Chrome cambia el índice del dispositivo, vuelve al menú para reasignarlo.
 - Cada jugador adicional amplía ambos ejes del mapa un 20 % y añade una dotación completa de enemigos: cuatro jugadores tienen 1,6 veces el ancho/alto y cuatro veces los enemigos. La cámara muestra todo el terreno; el mouse se transforma a coordenadas del mundo y la mira permanece exactamente en el cursor.
 
-La campaña contiene treinta misiones con cobertura, corcho destructible, cavidades y rutas que exigen esquivas y rebotes. En la misión 16, Galería de rebotes, las cavidades encierran a los jugadores en una zona: la pared bloquea el tiro directo y los centinelas deben alcanzarse rebotando por abajo. El progreso, récord y preferencias existentes se conservan. Las pruebas simulan Xbox con nombres iguales e índices independientes; Bluetooth/USB físicos en macOS requieren comprobación en la laptop.
+La campaña contiene cuarenta misiones con cobertura, corcho destructible, cavidades y rutas que exigen esquivas y rebotes. En la misión 16, Galería de rebotes, las cavidades encierran a los jugadores en una zona: la pared bloquea el tiro directo y los centinelas deben alcanzarse rebotando por abajo. El progreso, récord y preferencias existentes se conservan. Las pruebas simulan Xbox con nombres iguales e índices independientes; Bluetooth/USB físicos en macOS requieren comprobación en la laptop.
 
 ## Sala de jugadores y duelo
 
@@ -95,7 +95,7 @@ Duelo es todos contra todos, sin enemigos de IA. El último tanque vivo gana la 
 
 ## Enemigos
 
-Solo estos tres tipos aparecen en las treinta misiones:
+Solo estos tres tipos aparecen en las cuarenta misiones:
 
 - **Explorador gris (misión 1):** móvil y lento, un misil activo, sin rebotes.
 - **Patrullero violeta con franjas oscuras (misión 3):** móvil, puede esquivar, hasta dos misiles activos y un rebote por misil.
@@ -116,7 +116,7 @@ Para reutilizar Chromium instalado en el sistema:
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e
 ```
 
-Playwright arranca Vite automáticamente si no está activo. Comprueba una victoria con controles reales, movimiento y apuntado, disparos, pausa, reinicio, pérdida de vidas, Game Over, las treinta transiciones de campaña, victoria final, persistencia y proporción 16:9. También comprueba twin-stick, RT, retención de apuntado, conexión/desconexión, alternancia de dispositivos, menús con A/B y zonas muertas guardadas. Las pruebas de pérdida de vidas y de transiciones usan proyectiles de prueba para producir colisiones controladas. El acceso de diagnóstico `window.__wooden` solo existe en modo desarrollo; no forma parte de la compilación de producción.
+Playwright arranca Vite automáticamente si no está activo. Comprueba una victoria con controles reales, movimiento y apuntado, disparos, pausa, reinicio, pérdida de vidas, Game Over, las cuarenta transiciones de campaña, victoria final, persistencia y proporción 16:9. También comprueba twin-stick, RT, retención de apuntado, conexión/desconexión, alternancia de dispositivos, menús con A/B y zonas muertas guardadas. Las pruebas de pérdida de vidas y de transiciones usan proyectiles de prueba para producir colisiones controladas. El acceso de diagnóstico `window.__wooden` solo existe en modo desarrollo; no forma parte de la compilación de producción.
 
 ## Arquitectura
 
@@ -147,3 +147,9 @@ Una marcha original de 112 BPM combina melodía de juguete, bajo y percusión. L
 El sonido se activa tras una interacción del navegador. **M** o el botón de sonido silencian música y efectos y guardan la preferencia. La pausa y el cambio de pestaña detienen el audio; al reanudar vuelve la música. No se descargan archivos musicales ni se requiere un servicio externo.
 
 La derrota deja terminar la explosión y un motivo musical descendente antes de ofrecer **Reintentar misión**; no cambia el tablero automáticamente. El cooperativo añade terreno de despliegue y verifica posiciones separadas (al menos 180 unidades del mapa base), rutas transitables y líneas iniciales de disparo distintas para todo el equipo. Las misiones de zona restringida conservan su barrera y su desafío de rebotes.
+
+## Revisión individual de las 40 misiones
+
+La campaña de un jugador tiene diseños propios en `src/game/missions/solo`: cada misión documenta su lección, identidad, cambios y rutas. Se revisaron apariciones, coberturas, pasos de corcho y posiciones de tiro. Las variantes cooperativas conservan sus datos anteriores; `campaignVariants` y `getLevel` permiten revisarlas después por cantidad de jugadores sin alterar el progreso compartido.
+
+Consulta el [registro misión por misión](docs/solo-campaign-review.md) o el [atlas interactivo antes/después](https://dabot11.github.io/Wooden-Tanks/solo-campaign-review.html). `npm run review:solo` regenera ambos a partir de los mapas jugables. Las pruebas verifican que el atlas publicado corresponda al catálogo actual.

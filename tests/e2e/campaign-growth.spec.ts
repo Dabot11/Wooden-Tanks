@@ -1,3 +1,4 @@
+import { levels } from '../../src/game/LevelManager';
 import { test, expect } from '@playwright/test';
 import { waitForPlaying } from './mission-flow';
 
@@ -9,7 +10,7 @@ test('a thirty-mission winner starts chapter four, sees its roster and unlocks m
   await expect(page.locator('.mission-choice').nth(30)).toBeEnabled(); await expect(page.locator('.mission-choice').nth(31)).toBeDisabled();
   await page.locator('.mission-choice').nth(30).click();
   await expect(page.getByRole('heading', { name: 'El bastión', exact: true })).toBeVisible();
-  await expect(page.locator('.brief-total')).toContainText('9 tanques enemigos');
+  await expect(page.locator('.brief-total')).toContainText(`${levels[30].enemies.length} tanques enemigos`);
   await waitForPlaying(page);
   await page.evaluate(() => {
     const w = (window as any).__wooden.world; w.ai.update = () => {};

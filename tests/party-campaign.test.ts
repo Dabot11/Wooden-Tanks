@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { World } from '../src/game/World.ts';
-import { levels } from '../src/game/LevelManager.ts';
+import { levels, getLevel } from '../src/game/LevelManager.ts';
 import { GamepadTeam } from '../src/input/GamepadTeam.ts';
 import type { PadSnapshot } from '../src/input/GamepadController.ts';
 import { EnemyAI, findPath, bankAngle } from '../src/game/EnemyAI.ts';
@@ -10,7 +10,8 @@ const idle = { move: { x: 0, y: 0 }, aim: { x: 100, y: 0 }, fire: false };
 const fixture: Level = { id: 1, name: '', subtitle: '', difficulty: 1, obstacles: [], holes: [], player: { x: 150, y: 300 }, enemies: [{ x: 650, y: 300, kind: 'tactical' }] };
 const pad = (index: number): PadSnapshot => ({ index, id: 'Xbox Series Controller', mapping: 'standard', connected: true, axes: [0, 0, 0, 0], buttons: Array.from({ length: 17 }, () => ({ pressed: false, value: 0 })) });
 for (const count of [1, 2, 3, 4] as const) test(`${count} players: all published missions have free spawns, expanded bounds and proportional forces`, () => {
-  for (const level of levels) {
+  for (const soloLevel of levels) {
+    const level = getLevel(soloLevel.id - 1, count);
     const original = structuredClone(level);
     const w = new World(level, count);
     assert.equal(w.players.length, count); assert.equal(w.enemies.length, level.enemies.length * count);

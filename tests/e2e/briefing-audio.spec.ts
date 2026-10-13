@@ -22,7 +22,7 @@ test('new campaign saves unlock 21 and the selector contains every published mis
   await page.goto('/');await page.locator('#select').click();await expect(page.locator('.mission-choice')).toHaveCount(levels.length);
   await expect(page.locator('.mission-choice').nth(20)).toBeEnabled();await expect(page.locator('.mission-choice').nth(21)).toBeDisabled();
   await page.locator('.mission-choice').nth(20).click();await expect(page.getByRole('heading',{name:'El aserradero',exact:true})).toBeVisible();
-  await expect(page.locator('.brief-total')).toContainText('7 tanques enemigos');
+  await expect(page.locator('.brief-total')).toContainText(`${levels[20].enemies.length} tanques enemigos`);
 });
 test('audio synthesis renders distinct finite wooden sounds and an audible march',async({page})=>{
   await page.goto('/');

@@ -33,7 +33,7 @@ export class GameScene extends Phaser.Scene {
   create() {
     gamepad.suppress();
     if (this.session.coop && !this.session.playerCount) this.session.playerCount = gamepad.playerCount;
-    this.world = new World(this.session.mode === 'duel' ? duelLevel(this.session.round ?? 1) : getLevel(this.session.level), this.session.coop ? this.session.playerCount ?? 2 : 1, this.session.mode === 'duel' ? 'duel' : 'campaign');
+    this.world = new World(this.session.mode === 'duel' ? duelLevel(this.session.round ?? 1) : getLevel(this.session.level, this.session.coop ? this.session.playerCount ?? 2 : 1), this.session.coop ? this.session.playerCount ?? 2 : 1, this.session.mode === 'duel' ? 'duel' : 'campaign');
     this.board = new BoardRenderer(this, this.world); this.effects = new ParticleEffects(this);
     this.root = document.querySelector<HTMLElement>('#ui')!;
     this.hud = new HUD(this.root, this.world, this.session, () => this.pauseGame());

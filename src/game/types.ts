@@ -16,7 +16,15 @@ export interface Projectile extends Vec {
 export interface Obstacle extends Rect { id: number; destructible: boolean; hp: number; alive: boolean }
 export interface Spawn extends Vec { kind: Exclude<TankKind, 'player'> }
 export type PlayerCount = 1 | 2 | 3 | 4;
-export interface Level { bankShotOnly?: boolean; arena?: Rect; id: number; name: string; subtitle: string; obstacles: (Rect & { destructible?: boolean })[]; holes?: Hole[]; player: Vec; enemies: Spawn[]; difficulty: number }
+export interface TacticalRoute { name: string; points: Vec[] }
+export interface MissionDesign {
+  lesson: string;
+  identity: string;
+  changes: string;
+  routes: TacticalRoute[];
+  bankTargets?: { from: Vec; enemy: number }[];
+}
+export interface Level { design?: MissionDesign; bankShotOnly?: boolean; arena?: Rect; id: number; name: string; subtitle: string; obstacles: (Rect & { destructible?: boolean })[]; holes?: Hole[]; player: Vec; enemies: Spawn[]; difficulty: number }
 export type CombatEvent =
   | { type: 'shot'; x: number; y: number; angle: number; player: boolean }
   | { type: 'bounce' | 'impact' | 'break' | 'shellCollision'; x: number; y: number }
