@@ -69,18 +69,18 @@ test('both tanks spawn safely with a reachable route in every mission and the re
     assert.ok(findPath(w.player, p, w.movementSolids, 20, w.arena).length, `reachable mission ${l.id}`);
   }
 });
-test('players move, aim and fire independently with identical speed, reload and ammo limits', () => {
-  const w = new World(level, 2), p2 = w.players[1]; p2.x = 300; w.player.y = p2.y = 400;
+test('players move, aim and fire independently with identical speed, continuous fire intervals', () => {
+  const w = new World(level, 2), p2 = w.players[1]; w.player.x = 150; p2.x = 300; w.player.y = p2.y = 400;
   w.update(0.05, { ...idle, move: { x: 0, y: -1 }, aim: { x: 1000, y: 394 }, fire: true }, false,
     { move: { x: 0, y: 1 }, aim: { x: 300, y: 1000 }, fire: true });
   assert.ok(w.player.y < 400 && p2.y > 400); assert.ok(Math.abs(w.player.y + p2.y - 800) < 1e-8);
-  assert.equal(w.projectiles.length, 2); assert.equal(w.player.cooldown, 0.28); assert.equal(p2.cooldown, 0.28);
+  assert.equal(w.projectiles.length, 2); assert.equal(w.player.cooldown, 0.65); assert.equal(p2.cooldown, 0.65);
   assert.equal(w.events.filter(e => e.type === 'shot' && e.player).length, 2);
   for (const p of w.players) {
     for (let i = 0; i < 4; i++) { p.cooldown = 0; assert.ok(w.fire(p)); }
-    p.cooldown = 0; assert.equal(w.fire(p), false);
+    p.cooldown = 0; assert.ok(w.fire(p));
   }
-  assert.equal(w.projectiles.filter(p => p.owner === p2.id).length, 5);
+  assert.equal(w.projectiles.filter(p => p.owner === p2.id).length, 6);
 });
 test('teammates are killed by allied shells, including rebounds, but enemies still take damage', () => {
   for (const shooter of [0, -1]) {

@@ -237,3 +237,5 @@ kbd { font-family: inherit; font-size: .85em; border: 1px solid #8f826150; borde
 .enemy-brief-row > b { font-size: calc(24 * var(--unit)); }
 
 .mission-chapter { grid-column: 1 / -1; text-align: left; margin: calc(8 * var(--unit)) 0 0; font-size: calc(11 * var(--unit)); color: #8a573d; letter-spacing: .06em; }
+
+#ammo, [id^="ammo-p"] { font-size: calc(13 * var(--unit)); font-variant-numeric: tabular-nums; color: #675e40; min-width: calc(22 * var(--unit)); }

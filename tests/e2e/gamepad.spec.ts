@@ -70,7 +70,7 @@ test('Xbox twin-stick, retained aim, held RT, keyboard/mouse switching, pause ga
   const idle = await state(page); await page.waitForTimeout(180);
   expect((await state(page)).x).toBe(idle.x); expect((await state(page)).y).toBe(idle.y);
   await button(page, 7, true); await page.waitForTimeout(700); await button(page, 7, false);
-  expect((await state(page)).shots).toBeGreaterThanOrEqual(3);
+  expect((await state(page)).shots).toBeGreaterThanOrEqual(2);
   // Leave the input checks independent of returning shells; collision tests cover friendly fire.
   await isolate(page);
   await axes(page, [1, 0, 0, 0]); await page.waitForTimeout(120);

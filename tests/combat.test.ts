@@ -59,11 +59,12 @@ test('destructible block takes three impacts and frees the passage', () => {
   assert.equal(world.obstacles[0].alive, false); assert.equal(world.obstacles[0].hp, 0);
   assert.ok(world.canStand({ x: 320, y: 150 }, 19));
 });
-test('reload and active projectile limit are enforced', () => {
+test('player shot interval is enforced without an active projectile cap', () => {
   const world = new World(base); world.player.turret = Math.PI / 2;
   assert.ok(world.fire(world.player)); assert.equal(world.fire(world.player), false);
-  for (let i = 0; i < 4; i++) { world.player.cooldown = 0; assert.ok(world.fire(world.player)); }
-  world.player.cooldown = 0; assert.equal(world.fire(world.player), false);
+  for (let i = 0; i < 12; i++) { world.player.cooldown = 0; assert.ok(world.fire(world.player)); }
+  world.player.cooldown = 0; assert.ok(world.fire(world.player));
+  assert.equal(world.projectiles.length, 14);
 });
 test('enemy fires only with an unobstructed direct line of sight', () => {
   const world = new World(base); const enemy = world.enemies[0]; enemy.x = 450; enemy.y = 150; enemy.cooldown = 0;
@@ -82,11 +83,11 @@ test('player and moving enemies retain the reduced movement speeds', () => {
     assert.ok(Math.abs(900 - enemy.x - previous * 0.75 * 0.97 * 0.05) < 1e-8, kind);
   }
 });
-test('new missiles travel at 75 percent speed without changing reload timing', () => {
+test('new missiles travel at 75 percent speed with the slower continuous player cadence', () => {
   const world = new World(base); world.player.turret = Math.PI / 2;
   assert.ok(world.fire(world.player));
   assert.equal(Math.hypot(world.projectiles[0].vx, world.projectiles[0].vy), 430 * 0.75);
-  assert.equal(world.player.cooldown, 0.28);
+  assert.equal(world.player.cooldown, 0.65);
 });
 const openWorld = () => new World({ ...base, obstacles: [] });
 test('head-on shells destroy each other for both friendly and hostile owners', () => {
@@ -131,13 +132,12 @@ test('shells can collide during the remainder of a frame after a bounce', () => 
   assert.equal(w.events.filter(e => e.type === 'bounce').length, 1);
   assert.equal(w.events.filter(e => e.type === 'shellCollision').length, 1);
 });
-test('expired shells cannot destroy live shells and collisions free ammunition slots', () => {
+test('expired shells cannot destroy live shells and collisions remove only colliding missiles', () => {
   const w = openWorld(); w.player.turret = Math.PI / 2;
   w.projectiles = [shot({ x: 500, y: 300, age: 7 }), shot({ id: 21, x: 520, y: 300, vx: -430 })];
   w.update(0.05, input, false); assert.equal(w.projectiles.length, 1);
   w.projectiles = [shot({ x: 500, y: 300 }), shot({ id: 21, x: 520, y: 300, vx: -430 }),
     ...[22, 23, 24].map((id, i) => shot({ id, x: 600, y: 300 + i * 20 }))];
-  assert.equal(w.fire(w.player), false);
   w.update(0.05, input, false);
   assert.equal(w.projectiles.length, 3); assert.ok(w.fire(w.player));
 });

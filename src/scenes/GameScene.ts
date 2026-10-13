@@ -3,7 +3,7 @@ import { duelLevel, duelResult, DUEL_TARGET } from '../game/Duel';
 import { World } from '../game/World';
 import { getLevel, levels } from '../game/LevelManager';
 import { BoardRenderer } from '../game/BoardRenderer';
-import { ParticleEffects, DEATH_SETTLE_MS } from '../game/ParticleEffects';
+import { ParticleEffects } from '../game/ParticleEffects';
 import { progress } from '../game/Progress';
 import { audio } from '../game/AudioManager';
 import { HUD } from '../ui/HUD';
@@ -27,8 +27,8 @@ export class GameScene extends Phaser.Scene {
   init(data: { session?: Session }) {
     this.session = { ...(data.session ?? { level: 0, score: 0, lives: 3, missionStartScore: 0 }) };
     this.mouseClient = undefined; this.mouseOnCanvas = false;
-    this.teamAims = Array.from({ length: 3 }, () => ({ x: 0, y: -1 }));
-    this.status = 'intro'; this.queuedShot = false; this.aimMode = 'default'; this.padAim = { x: 0, y: -1 }; this.closePause = undefined; this.closePadSettings = undefined;
+    this.teamAims = Array.from({ length: 3 }, () => ({ x: this.session.coop ? 1 : 0, y: this.session.coop ? 0 : -1 }));
+    this.status = 'intro'; this.queuedShot = false; this.aimMode = 'default'; this.padAim = this.session.coop ? { x: 1, y: 0 } : { x: 0, y: -1 }; this.closePause = undefined; this.closePadSettings = undefined;
   }
   create() {
     gamepad.suppress();
@@ -115,7 +115,7 @@ export class GameScene extends Phaser.Scene {
     this.session.wins = wins; this.hud.update(this.world, this.session);
     const champion = result !== null && wins[result] >= DUEL_TARGET;
     const round = this.session.round ?? 1;
-    this.time.delayedCall(DEATH_SETTLE_MS, () => {
+    this.effects.settle(() => {
       this.status = 'ended';
       showOverlay(this.root, { eyebrow: champion ? 'DUELO TERMINADO' : `RONDA ${round}`, title: result === null ? 'Empate' : `P${result + 1} ${champion ? 'gana el duelo' : 'gana la ronda'}`,
         description: wins.slice(0, this.world.players.length).map((w, i) => `P${i + 1}: ${w} / ${DUEL_TARGET}`).join(' · '), cancel: () => this.menu(), actions: [
@@ -132,7 +132,7 @@ export class GameScene extends Phaser.Scene {
     progress.record(this.session.score); this.hud.update(this.world, this.session);
     const final = this.session.level === levels.length - 1;
     progress.complete(this.session.level + 1);
-    this.time.delayedCall(DEATH_SETTLE_MS, () => {
+    this.effects.settle(() => {
       audio.play('win');
       const banner = document.createElement('div'); banner.className = 'mission-intro victory-toast';
       banner.innerHTML = `<span class="eyebrow">TABLERO DESPEJADO</span><strong>Misión cumplida</strong><span>+${bonus} puntos por completar la misión</span>`; this.root.append(banner);
@@ -152,10 +152,17 @@ export class GameScene extends Phaser.Scene {
   private loseLife() {
     gamepad.suppress();
     this.reticle.hidden = true;
-    audio.setScene('briefing'); this.status = 'dead'; document.querySelector('#app')!.classList.remove('gameplay'); this.session.lives--; progress.record(this.session.score); this.hud.update(this.world, this.session);
-    this.time.delayedCall(DEATH_SETTLE_MS, () => {
-      if (this.session.lives > 0) this.restartMission();
-      else {
+    const defeatSound = audio.defeat(); this.status = 'dead'; document.querySelector('#app')!.classList.remove('gameplay'); this.session.lives--; progress.record(this.session.score); this.hud.update(this.world, this.session);
+    const animation = new Promise<void>(resolve => this.effects.settle(resolve));
+    void Promise.all([animation, defeatSound]).then(() => {
+      if (!this.sys.isActive() || this.status !== 'dead') return;
+      audio.setScene('briefing'); gamepad.suppress(); this.status = 'ended';
+      if (this.session.lives > 0) {
+        showOverlay(this.root, { eyebrow: 'MISIÓN FALLIDA', title: this.session.coop ? 'El equipo ha caído' : 'Tanque destruido', description: `${this.session.lives} ${this.session.lives === 1 ? 'vida restante' : 'vidas restantes'}. Vuelve a intentarlo cuando estés listo.`, cancel: () => this.menu(), actions: [
+          { text: 'Reintentar misión →', run: () => this.restartMission() },
+          { text: 'Volver al menú', secondary: true, run: () => this.menu() },
+        ] });
+      } else {
         this.status = 'ended'; document.querySelector('#app')!.classList.remove('gameplay');
         showOverlay(this.root, { eyebrow: 'GAME OVER', title: 'Hasta la próxima batalla', description: `${String(this.session.score).padStart(6, '0')} puntos · Récord ${String(progress.data.best).padStart(6, '0')}`, cancel: () => this.menu(), actions: [
           { text: 'Volver a intentarlo →', run: () => this.scene.restart({ session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop, playerCount: this.session.playerCount } }) },
@@ -189,7 +196,7 @@ export class GameScene extends Phaser.Scene {
     // A distant point expresses a bearing through World's existing point-based aim input.
     // This keeps the bearing stable as the tank moves, without changing the simulation.
     const aim = this.aimMode === 'gamepad' ? { x: player.x + this.padAim.x * 100000, y: player.y + this.padAim.y * 100000 } :
-      this.aimMode === 'mouse' ? mouseAim : { x: player.x, y: player.y - 100 };
+      this.aimMode === 'mouse' ? mouseAim : { x: player.x + (this.session.coop ? 100 : 0), y: player.y - (this.session.coop ? 0 : 100) };
     const beforeMovement = this.world.players.map(p => p.distance);
     this.world.update(delta / 1000, {
       move: usePad ? pad.move : { x: +!!(down('D') || down('RIGHT')) - +!!(down('A') || down('LEFT')), y: +!!(down('S') || down('DOWN')) - +!!(down('W') || down('UP')) },

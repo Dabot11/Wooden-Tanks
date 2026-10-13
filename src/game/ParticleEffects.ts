@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import type { CombatEvent } from './types';
 import { audio } from './AudioManager';
 // Let the longest death effects finish before covering or replacing the board.
-export const DEATH_SETTLE_MS = 2200;
+export const DEATH_SETTLE_MS = 2600;
 export class ParticleEffects {
   private count = 0;
   constructor(private scene: Phaser.Scene) {}
@@ -12,6 +12,10 @@ export class ParticleEffects {
     const image = this.scene.add.image(x, y, texture).setDepth(40).setScale(scale);
     if (tint !== undefined) image.setTint(tint);
     this.scene.tweens.add({ targets: image, x: x + dx, y: y + dy, angle: Math.random() * 180, alpha: 0, scale: texture === 'smoke' ? scale * 2.4 : scale * 0.4, duration, ease: 'Cubic.Out', onComplete: () => { image.destroy(); this.count--; } });
+  }
+  settle(done: () => void) {
+    // Use the animation clock, not Scene timers (which can outrun tweens on slow frames).
+    this.scene.tweens.addCounter({ from: 0, to: 1, duration: DEATH_SETTLE_MS, onComplete: done });
   }
   event(event: CombatEvent) {
     audio.play(event.type);

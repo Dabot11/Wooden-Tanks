@@ -1,11 +1,11 @@
-import { ARENA, SHOT_LIMIT, SHOT_SPEED, TANK_SPEED, lerpAngle } from './types';
+import { ARENA, PLAYER_SHOT_INTERVAL, SHOT_SPEED, TANK_SPEED, lerpAngle } from './types';
 import type { Tank, Projectile, Obstacle, Level, Vec, CombatEvent, Rect, Hole, PlayerInput } from './types';
 import { circleBox, circleCircle, sweepBox, sweepCircle, reflect, lineClear } from './CollisionManager';
 import { enemyProfile } from './EnemyProfiles';
 import type { PlayerCount } from './types';
 import { duelSpawns } from './Duel';
 import { createTank } from './Tank';
-import { EnemyAI } from './EnemyAI';
+import { EnemyAI, findPath } from './EnemyAI';
 function isObstacle(value: Rect): value is Obstacle { return 'destructible' in value; }
 export class World {
   holes: Hole[]; tanks: Tank[]; projectiles: Projectile[] = []; obstacles: Obstacle[];
@@ -14,8 +14,11 @@ export class World {
   walls: Rect[];
   constructor(public level: Level, playerCount: PlayerCount = 1, mode: 'campaign' | 'duel' = 'campaign') {
     const scale = 1 + (playerCount - 1) * 0.2;
-    const point = (p: Vec) => ({ x: ARENA.x + (p.x - ARENA.x) * scale, y: ARENA.y + (p.y - ARENA.y) * scale });
-    if (playerCount > 1) this.level = level = { ...level, arena: { ...ARENA, w: ARENA.w * scale, h: ARENA.h * scale }, player: point(level.player), enemies: level.enemies.map(e => ({ ...e, ...point(e) })), obstacles: level.obstacles.map(o => ({ ...o, ...point(o), w: o.w * scale, h: o.h * scale })), holes: level.holes?.map(h => ({ ...h, ...point(h) })) };
+    // Reserve extra friendly staging terrain in co-op instead of filling every corner with enemies.
+    const staging = mode === 'campaign' && !level.bankShotOnly ? 120 * (playerCount - 1) * scale : 0;
+    const heightScale = scale + staging / ARENA.w;
+    const point = (p: Vec) => ({ x: ARENA.x + staging + (p.x - ARENA.x) * scale, y: ARENA.y + (p.y - ARENA.y) * heightScale });
+    if (playerCount > 1) this.level = level = { ...level, arena: { ...ARENA, w: ARENA.w * scale + staging, h: ARENA.h * heightScale }, player: point(level.player), enemies: level.enemies.map(e => ({ ...e, ...point(e) })), obstacles: level.obstacles.map(o => ({ ...o, ...point(o), w: o.w * scale, h: o.h * heightScale })), holes: level.holes?.map(h => ({ ...h, ...point(h) })) };
     this.arena = level.arena ?? ARENA;
     const bounds = this.arena;
     this.walls = [
@@ -28,9 +31,10 @@ export class World {
     this.holes = (level.holes ?? []).map(hole => ({ ...hole }));
     this.tanks = [createTank(0, 'player', level.player), ...level.enemies.map((s, i) => createTank(i + 1, s.kind, s))];
     this.obstacles = level.obstacles.map((o, i) => ({ ...o, id: i, hp: 3, alive: true, destructible: !!o.destructible }));
-    const spawns = mode === 'duel' ? duelSpawns(playerCount).map(point) : undefined;
+    const spawns = mode === 'duel' ? duelSpawns(playerCount).map(point) : playerCount > 1 ? this.cooperativeSpawns(playerCount) : undefined;
     if (spawns) Object.assign(this.player, spawns[0]);
-    for (let slot = 1; slot < playerCount; slot++) this.tanks.push(createTank(-slot, 'player', spawns?.[slot] ?? this.partnerSpawn()));
+    for (let slot = 1; slot < playerCount; slot++) this.tanks.push(createTank(-slot, 'player', spawns![slot]));
+    if (mode === 'campaign' && playerCount > 1) for (const player of this.players) player.turret = player.angle = 0;
     // Add one complete wave per additional player; distribute it over free terrain.
     const extra = level.enemies.length * (playerCount - 1);
     for (let i = 0; i < extra; i++) {
@@ -38,7 +42,7 @@ export class World {
       let spawn: Vec | undefined;
       for (let y = this.arena.y + 100 * scale; y < this.arena.y + this.arena.h - 40 && !spawn; y += 72)
         for (let x = this.arena.x + this.arena.w - 60; x > this.arena.x + this.arena.w * 0.45; x -= 72)
-          if (this.canStand({ x, y }, 25) && this.players.every(p => Math.hypot(p.x - x, p.y - y) > 280)) { spawn = { x, y }; break; }
+          if (this.canStand({ x, y }, 25) && this.players.every(p => Math.hypot(p.x - x, p.y - y) > 280 * scale)) { spawn = { x, y }; break; }
       if (!spawn) throw new Error('No safe reinforcement spawn');
       this.tanks.push(createTank(level.enemies.length + i + 1, source.kind, spawn));
     }
@@ -46,15 +50,33 @@ export class World {
   get player() { return this.tanks[0]; }
   get players() { return this.tanks.filter(t => t.kind === 'player'); }
   get alivePlayers() { return this.players.filter(t => t.alive); }
-  private partnerSpawn(): Vec {
-    // Pick a nearby free spot with a clear route to P1, never across a wall or pit.
-    for (let distance = 52; distance < this.arena.w; distance += 16) for (let i = 0; i < 16; i++) {
-      const angle = i * Math.PI / 8;
-      const p = { x: this.player.x + Math.cos(angle) * distance, y: this.player.y + Math.sin(angle) * distance };
-      if (p.x < this.arena.x + 19 || p.x > this.arena.x + this.arena.w - 19 || p.y < this.arena.y + 19 || p.y > this.arena.y + this.arena.h - 19) continue;
-      if (this.canStand(p, 19) && lineClear(this.player, p, this.movementSolids, 19)) return p;
-    }
-    throw new Error('No safe cooperative spawn on this board');
+  private cooperativeSpawns(count: PlayerCount): Vec[] {
+    const scale = 1 + (count - 1) * 0.2, a = this.arena;
+    const candidates: Vec[] = [];
+    // Reachable staging terrain on the friendly side; never inside a pit or enemy nest.
+    for (let y = a.y + 90 * scale; y < a.y + a.h - 50 * scale; y += 40 * scale)
+      for (let x = a.x + 50 * scale; x < a.x + a.w * 0.4; x += 40 * scale) {
+        const p = { x, y };
+        if (this.enemies.some(t => Math.hypot(t.x - x, t.y - y) < 190 * scale) || !this.canStand(p, 28) || !lineClear(p, { x: x + 120, y }, this.solids, 5) ||
+            !findPath(this.player, p, this.movementSolids, 20, a).length) continue;
+        candidates.push(p);
+      }
+    const chosen: Vec[] = [{ x: this.player.x, y: this.player.y }];
+    const separation = (p: Vec) => Math.min(...chosen.map(t => Math.hypot(t.x - p.x, t.y - p.y)));
+    const place = (): boolean => {
+      if (chosen.length === count) return true;
+      const available = candidates.filter(p => separation(p) >= 180 * scale && chosen.every(t => Math.abs(t.y - p.y) >= 60 * scale));
+      available.sort((p, q) => (separation(q) - Math.abs(q.x - (a.x + a.w * 0.17)) * 0.15) - (separation(p) - Math.abs(p.x - (a.x + a.w * 0.17)) * 0.15));
+      for (const candidate of available) {
+        chosen.push(candidate);
+        if (place()) return true;
+        chosen.pop();
+      }
+      return false;
+    };
+    // Solve the whole team together; greedy placement can strand P4 in restricted maps.
+    if (!place()) throw new Error(`No separated cooperative layout on mission ${this.level.id}`);
+    return chosen;
   }
   get enemies() { return this.tanks.filter(t => t.kind !== 'player' && t.alive); }
   get solids(): Rect[] { return [...this.walls, ...this.obstacles.filter(o => o.alive)]; }
@@ -79,14 +101,14 @@ export class World {
   }
   fire(tank: Tank): boolean {
     const profile = enemyProfile(tank.kind);
-    if (!tank.alive || tank.cooldown > 0 || this.projectiles.filter(p => p.alive && p.owner === tank.id).length >= (tank.kind === 'player' ? SHOT_LIMIT : profile.limit)) return false;
+    if (!tank.alive || tank.cooldown > 0 || (tank.kind !== 'player' && this.projectiles.filter(p => p.alive && p.owner === tank.id).length >= profile.limit)) return false;
     const direction = { x: Math.cos(tank.turret), y: Math.sin(tank.turret) };
     const muzzle = { x: tank.x + direction.x * 32, y: tank.y + direction.y * 32 };
     if (!lineClear(tank, muzzle, this.solids, 4)) return false;
     const speed = tank.kind === 'player' ? SHOT_SPEED : profile.speed;
     this.projectiles.push({ ...muzzle, id: this.nextId++, owner: tank.id, vx: direction.x * speed,
       vy: direction.y * speed, age: 0, bounces: 0, alive: true, maxBounces: tank.kind === 'player' ? 2 : profile.bounces, propelled: tank.kind === 'tactical' });
-    tank.cooldown = tank.kind === 'player' ? 0.28 : profile.cooldown;
+    tank.cooldown = tank.kind === 'player' ? PLAYER_SHOT_INTERVAL : profile.cooldown;
     tank.shots++;
     this.events.push({ type: 'shot', ...muzzle, angle: tank.turret, player: tank.kind === 'player' });
     return true;

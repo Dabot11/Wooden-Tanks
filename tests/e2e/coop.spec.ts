@@ -58,8 +58,9 @@ test('two identical controllers independently move, aim, fire and pause the coop
   // Fire across the open board: downward ricochets at the nearby rim can kill their owner.
   await sticks(page, 1, [0, 0, 1, 0]); await page.waitForTimeout(200); await neutral(page);
   await button(page, 0, 7, 1); await button(page, 1, 7, 1); await page.waitForTimeout(650); await neutral(page);
-  expect((await state(page)).players.every(p => p.shots >= 3)).toBe(true);
-  await expect(page.locator('#ammo-p2 .ready')).toHaveCount(2);
+  expect((await state(page)).players.every(p => p.shots >= 1)).toBe(true);
+  await expect(page.locator('#ammo-p2')).toContainText(/\d{2}/);
+  expect((await state(page)).players.every(p => p.shots <= 2)).toBe(true);
   const aim = (await state(page)).players[1].turret;
   await sticks(page, 1, [1, 0, 0, 0]); await page.waitForTimeout(220); await neutral(page);
   expect(Math.abs((await state(page)).players[1].turret - aim)).toBeLessThan(0.03);

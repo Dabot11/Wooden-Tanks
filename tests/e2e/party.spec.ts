@@ -24,7 +24,9 @@ for (const count of [3, 4]) test(`${count} controllers drive independent players
     const s = (window as any).__wooden;
     return { players: s.world.players.map((p: any) => ({ x: p.x, y: p.y })), enemies: s.world.enemies.length, zoom: s.cameras.main.zoom };
   });
-  expect(info.players).toHaveLength(count); expect(info.enemies).toBe(count); expect(info.zoom).toBeCloseTo(1 / (1 + (count - 1) * 0.2));
+  expect(info.players).toHaveLength(count); expect(info.enemies).toBe(count); expect(info.zoom).toBeLessThan(1 / (1 + (count - 1) * 0.2));
+  for (let i = 0; i < info.players.length; i++) for (let j = i + 1; j < info.players.length; j++)
+    expect(Math.hypot(info.players[i].x - info.players[j].x, info.players[i].y - info.players[j].y)).toBeGreaterThan(180);
   for (let i = 0; i < count; i++) {
     await page.evaluate(i => { (window as any).__pads[i].axes = [0, -1, 1, 0]; }, i);
     await expect.poll(() => page.evaluate(i => (window as any).__wooden.world.players[i].y, i)).toBeLessThan(info.players[i].y - 10);
@@ -37,7 +39,7 @@ for (const count of [3, 4]) test(`${count} controllers drive independent players
   await page.getByRole('button', { name: 'Reiniciar misión', exact: true }).click();
   await waitForPlaying(page);
   expect(await page.evaluate(() => (window as any).__wooden.world.players.length)).toBe(count);
-  await expect(page.locator(`#ammo-p${count} .ammo`)).toHaveCount(5);
+  await expect(page.locator(`#ammo-p${count}`)).toHaveText('00');
   await page.screenshot({ path: `.playwright/party-${count}.png` });
   expect(errors).toEqual([]);
 });

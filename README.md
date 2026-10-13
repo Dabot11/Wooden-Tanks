@@ -39,7 +39,7 @@ La dirección prevista es `https://dabot11.github.io/Wooden-Tanks/`; estará dis
 
 Al apuntar con mouse, la mira se centra exactamente en el cursor y se oculta al usar el mando, pausar o perder el tanque. Los misiles que chocan se destruyen con un destello, una onda expansiva y humo, sin daño de área.
 
-Cada tanque se destruye con un impacto. Tienes tres vidas, cinco proyectiles simultáneos y una recarga de 280 ms. Las balas rebotan hasta dos veces; el siguiente impacto sólido las elimina. Caducan a los siete segundos. **Tu propio proyectil también puede destruirte al regresar.** Los huecos circulares son cavidades del suelo: bloquean a los tanques, la IA los rodea y los proyectiles pasan por encima. Los bloques de corcho se rompen tras tres impactos; los bloques de madera son indestructibles.
+Cada tanque se destruye con un impacto. Tienes tres vidas y puedes disparar continuamente cada 650 ms, sin cargador ni límite de misiles activos. Las balas rebotan hasta dos veces; el siguiente impacto sólido las elimina. Caducan a los siete segundos. **Tu propio proyectil también puede destruirte al regresar.** Los huecos circulares son cavidades del suelo: bloquean a los tanques, la IA los rodea y los proyectiles pasan por encima. Los bloques de corcho se rompen tras tres impactos; los bloques de madera son indestructibles.
 
 Destruye todos los enemigos para pasar de misión. Completarla desbloquea la siguiente y otorga una bonificación de tiempo. Al morir se reinicia el tablero y la puntuación vuelve a la que tenías al entrar en esa misión. Reiniciar desde la pausa también restaura esa puntuación, sin consumir una vida. El récord, las misiones desbloqueadas, las campañas ganadas y la preferencia de sonido se guardan en LocalStorage. Si el almacenamiento no está disponible, la partida funciona igualmente durante la sesión.
 
@@ -63,7 +63,7 @@ La torreta conserva su última dirección al soltar el stick derecho. El tanque 
 
 **Ajustes del control**, en el menú principal o en la pausa, permite configurar zonas muertas radiales independientes: 18 % para movimiento y 20 % para apuntado inicialmente, ajustables entre 5 % y 45 %. Usa el mouse/teclado o la cruceta / stick: arriba y abajo eligen el ajuste, izquierda y derecha lo cambian. Se guardan en `wooden-tanks-gamepad-v1` de LocalStorage y hay un botón para restaurar los valores. Aumenta la zona si hay drift.
 
-El aviso de conexión y las pistas de controles se actualizan automáticamente. Si el control activo se desconecta, la partida se pausa y puede continuarse con teclado/mouse. Conectar un mando con botones pulsados no inicia ni dispara; después de conectar, cambiar de pantalla, reanudar o volver a la pestaña, suelta **ambos sticks, RT y los botones** para habilitarlo. A/B/Menú y la navegación se activan una vez por pulsación; RT conserva la recarga y el límite de proyectiles existentes.
+El aviso de conexión y las pistas de controles se actualizan automáticamente. Si el control activo se desconecta, la partida se pausa y puede continuarse con teclado/mouse. Conectar un mando con botones pulsados no inicia ni dispara; después de conectar, cambiar de pantalla, reanudar o volver a la pestaña, suelta **ambos sticks, RT y los botones** para habilitarlo. A/B/Menú y la navegación se activan una vez por pulsación; RT permite disparar continuamente cada 0,65 segundos, sin límite de misiles activos que fuerce una recarga.
 
 Se utiliza la **Gamepad API** y el mapeo `standard` del navegador (A=0, B=1, RT=7, Menú=9, sticks=0–3). Otros gamepads twin-stick con ese mapeo también funcionan. Un mando sin mapeo estándar muestra un aviso y deja disponibles teclado y mouse; no se adivina su distribución. Si el navegador no ofrece la API o la bloquea, el juego sigue funcionando con los controles originales.
 
@@ -75,7 +75,7 @@ Elige **Cooperativo local**, selecciona 2, 3 o 4 jugadores y pulsa un botón en 
 
 - **Controles para todos:** el mando usado en el menú se asigna primero. LS mueve, RS apunta y RT dispara.
 - **Teclado + controles:** P1 usa WASD, mouse y clic/espacio; los restantes usan un mando cada uno.
-- P1 azul, P2 rojo, P3 verde y P4 amarillo. Cada jugador tiene recarga propia y cinco proyectiles; la puntuación y las tres vidas son compartidas.
+- P1 azul, P2 rojo, P3 verde y P4 amarillo. Cada jugador dispara cada 0,65 segundos sin cargador ni límite de misiles activos; la puntuación y las tres vidas son compartidas.
 - **Fuego amigo activo:** cualquier proyectil puede matar a un compañero. Las colisiones entre misiles destruyen ambos y producen una explosión visual.
 - Los caídos esperan la siguiente misión. Si cae todo el equipo, se consume una vida y se reinicia la misión.
 - MENÚ en cualquier mando o ESC pausa para todos. A confirma y B regresa. Una desconexión pausa y conserva el puesto: ningún otro mando sustituye automáticamente al ausente. Suelta sticks y gatillos al reanudar. Si Chrome cambia el índice del dispositivo, vuelve al menú para reasignarlo.
@@ -145,3 +145,5 @@ La campaña tiene 30 misiones. Las partidas que terminaron el capítulo de veint
 Una marcha original de 112 BPM combina melodía de juguete, bajo y percusión. Los efectos se sintetizan con Web Audio: disparos con chasquido y golpe grave, resonancias cortas de madera para rebotes, crujidos para destrucciones y orugas sincronizadas con el desplazamiento real. El volumen de la música deja espacio a los efectos; un compresor y límites de voces controlan las salvas grandes.
 
 El sonido se activa tras una interacción del navegador. **M** o el botón de sonido silencian música y efectos y guardan la preferencia. La pausa y el cambio de pestaña detienen el audio; al reanudar vuelve la música. No se descargan archivos musicales ni se requiere un servicio externo.
+
+La derrota deja terminar la explosión y un motivo musical descendente antes de ofrecer **Reintentar misión**; no cambia el tablero automáticamente. El cooperativo añade terreno de despliegue y verifica posiciones separadas (al menos 180 unidades del mapa base), rutas transitables y líneas iniciales de disparo distintas para todo el equipo. Las misiones de zona restringida conservan su barrera y su desafío de rebotes.
