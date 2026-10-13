@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { duelLevel, duelResult, DUEL_TARGET } from '../game/Duel';
 import { World } from '../game/World';
 import { getLevel, levels } from '../game/LevelManager';
+import { hunterTrial } from '../game/missions/hunterDebut';
 import { BoardRenderer } from '../game/BoardRenderer';
 import { ParticleEffects } from '../game/ParticleEffects';
 import { progress } from '../game/Progress';
@@ -13,7 +14,7 @@ import type { PlayerCount } from '../game/types';
 import type { CoopLayout } from '../input/GamepadTeam';
 import { gamepad } from '../input/GamepadRuntime';
 import { showGamepadSettings } from '../ui/GamepadSettings';
-export interface Session { level: number; score: number; lives: number; missionStartScore: number; coop?: CoopLayout; playerCount?: PlayerCount; mode?: 'duel'; round?: number; wins?: number[] }
+export interface Session { level: number; score: number; lives: number; missionStartScore: number; coop?: CoopLayout; playerCount?: PlayerCount; mode?: 'duel'; round?: number; wins?: number[]; practice?: boolean }
 export class GameScene extends Phaser.Scene {
   world!: World; session!: Session; status: 'intro' | 'playing' | 'paused' | 'won' | 'dead' | 'ended' = 'intro';
   private board!: BoardRenderer; private effects!: ParticleEffects; private hud!: HUD;
@@ -33,7 +34,8 @@ export class GameScene extends Phaser.Scene {
   create() {
     gamepad.suppress();
     if (this.session.coop && !this.session.playerCount) this.session.playerCount = gamepad.playerCount;
-    this.world = new World(this.session.mode === 'duel' ? duelLevel(this.session.round ?? 1) : getLevel(this.session.level, this.session.coop ? this.session.playerCount ?? 2 : 1), this.session.coop ? this.session.playerCount ?? 2 : 1, this.session.mode === 'duel' ? 'duel' : 'campaign');
+    const level=this.session.mode === 'duel' ? duelLevel(this.session.round ?? 1) : getLevel(this.session.level, this.session.coop ? this.session.playerCount ?? 2 : 1);
+    this.world = new World(this.session.practice ? hunterTrial(level) : level, this.session.coop ? this.session.playerCount ?? 2 : 1, this.session.mode === 'duel' ? 'duel' : 'campaign');
     this.board = new BoardRenderer(this, this.world); this.effects = new ParticleEffects(this);
     this.root = document.querySelector<HTMLElement>('#ui')!;
     this.hud = new HUD(this.root, this.world, this.session, () => this.pauseGame());
@@ -106,7 +108,7 @@ export class GameScene extends Phaser.Scene {
     document.querySelector('#app')!.classList.add('gameplay'); (document.activeElement as HTMLElement)?.blur();
   }
   private restartMission() { this.time.paused = false; this.scene.restart({ session: { ...this.session, score: this.session.missionStartScore } }); }
-  private menu() { if (this.session.mode !== 'duel') progress.record(this.session.score); this.time.paused = false; this.scene.start('Menu'); }
+  private menu() { if (this.session.mode !== 'duel'&&!this.session.practice) progress.record(this.session.score); this.time.paused = false; this.scene.start('Menu'); }
   private finishDuel(result: number | null) {
     audio.setScene('briefing'); this.status = 'won'; gamepad.suppress(); this.reticle.hidden = true; this.queuedShot = false;
     document.querySelector('#app')!.classList.remove('gameplay');
@@ -128,6 +130,15 @@ export class GameScene extends Phaser.Scene {
     gamepad.suppress();
     this.reticle.hidden = true;
     audio.setScene('briefing'); this.status = 'won'; document.querySelector('#app')!.classList.remove('gameplay');
+    if(this.session.practice){
+      this.effects.settle(()=>{
+        audio.play('win');this.status='ended';
+        showOverlay(this.root,{eyebrow:'PRÁCTICA COMPLETADA',title:'Cazador derrotado',description:'Prueba otra ruta o vuelve al taller. Esta práctica conserva tu progreso de campaña.',cancel:()=>this.menu(),actions:[
+          {text:'Repetir práctica →',run:()=>this.scene.restart({session:{...this.session,score:0,lives:3,missionStartScore:0}})},
+          {text:'Volver al menú',secondary:true,run:()=>this.menu()},
+        ]});
+      });return;
+    }
     const bonus = Math.max(100, Math.round(500 - this.world.elapsed * 3)); this.session.score += bonus;
     progress.record(this.session.score); this.hud.update(this.world, this.session);
     const final = this.session.level === levels.length - 1;
@@ -152,7 +163,7 @@ export class GameScene extends Phaser.Scene {
   private loseLife() {
     gamepad.suppress();
     this.reticle.hidden = true;
-    const defeatSound = audio.defeat(); this.status = 'dead'; document.querySelector('#app')!.classList.remove('gameplay'); this.session.lives--; progress.record(this.session.score); this.hud.update(this.world, this.session);
+    const defeatSound = audio.defeat(); this.status = 'dead'; document.querySelector('#app')!.classList.remove('gameplay'); this.session.lives--; if(!this.session.practice)progress.record(this.session.score); this.hud.update(this.world, this.session);
     const animation = new Promise<void>(resolve => this.effects.settle(resolve));
     void Promise.all([animation, defeatSound]).then(() => {
       if (!this.sys.isActive() || this.status !== 'dead') return;
@@ -165,7 +176,7 @@ export class GameScene extends Phaser.Scene {
       } else {
         this.status = 'ended'; document.querySelector('#app')!.classList.remove('gameplay');
         showOverlay(this.root, { eyebrow: 'GAME OVER', title: 'Hasta la próxima batalla', description: `${String(this.session.score).padStart(6, '0')} puntos · Récord ${String(progress.data.best).padStart(6, '0')}`, cancel: () => this.menu(), actions: [
-          { text: 'Volver a intentarlo →', run: () => this.scene.restart({ session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop, playerCount: this.session.playerCount } }) },
+          { text: 'Volver a intentarlo →', run: () => this.scene.restart({ session: { level: this.session.practice?20:0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop, playerCount: this.session.playerCount, practice:this.session.practice } }) },
           { text: 'Volver al menú', secondary: true, run: () => this.menu() },
         ] });
       }
@@ -210,7 +221,7 @@ export class GameScene extends Phaser.Scene {
     this.queuedShot = false;
     for (const event of this.world.events) {
       this.effects.event(event);
-      if (event.type === 'destroy' && !event.player) this.session.score += 100 + ({ basic: 0, patrol: 50, tactical: 100, player: 0 }[event.kind]);
+      if (event.type === 'destroy' && !event.player) this.session.score += 100 + ({ basic: 0, patrol: 50, tactical: 100, hunter: 100, player: 0 }[event.kind]);
     }
     this.world.events.length = 0;
     this.board.render(delta / 1000); this.hud.update(this.world, this.session);

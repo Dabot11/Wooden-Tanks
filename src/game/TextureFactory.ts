@@ -91,6 +91,10 @@ export function createTextures(scene: Phaser.Scene) {
       t.fillStyle = '#20232a';
       for (const x of [-9, 4]) { t.save(); t.translate(x, 0); t.rotate(-0.45); t.fillRect(-2, -17, 4, 30); t.restore(); }
       if (kind === 'tactical') { t.fillStyle = '#e87929'; t.fillRect(-21, -15, 7, 27); t.fillRect(12, -15, 7, 27); }
+      if (kind === 'hunter') {
+        t.fillStyle = '#be8057'; t.fillRect(-19, -15, 6, 26); t.fillRect(11, -15, 6, 26);
+        t.strokeStyle = '#e1ad7c'; t.lineWidth = 2; t.beginPath(); t.moveTo(-6,-10); t.lineTo(2,0); t.lineTo(-6,10); t.stroke();
+      }
     }
     scene.textures.addCanvas(`body-${kind}`, body.canvas);
     const turret = canvas(90, 90), u = turret.ctx; u.translate(45, 45);
@@ -101,6 +105,7 @@ export function createTextures(scene: Phaser.Scene) {
     rounded(u, -7, -8, 15, 12, 4, '#18272088'); u.strokeStyle = '#ffffff55'; u.lineWidth = 1; u.beginPath(); u.roundRect(-7, -8, 15, 12, 4); u.stroke();
     u.fillStyle = '#ead7a0'; u.fillRect(-4, -9, 8, 2);
     if (!['player', 'partner', 'third', 'fourth'].includes(kind)) { u.fillStyle = kind === 'tactical' ? '#eb7628' : '#25232d'; u.fillRect(-11, -3, 25, 4); }
+    if (kind === 'hunter') { u.fillStyle = '#be8057'; u.fillRect(-10,-9,4,17); u.fillRect(12,-4,16,4); }
     scene.textures.addCanvas(`turret-${kind}`, turret.canvas);
   }
 }

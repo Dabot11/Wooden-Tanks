@@ -12,6 +12,7 @@ export class BoardRenderer {
   private tracks: Phaser.GameObjects.Graphics;
   private trails: Phaser.GameObjects.Graphics;
   private cracks: Phaser.GameObjects.Graphics;
+  private hunterCharge: Phaser.GameObjects.Graphics;
   constructor(private scene: Phaser.Scene, private world: World) {
     createTextures(scene);
     const a = world.arena;
@@ -24,6 +25,7 @@ export class BoardRenderer {
     this.tracks = scene.add.graphics().setDepth(1);
     this.trails = scene.add.graphics().setDepth(25);
     this.cracks = scene.add.graphics().setDepth(12);
+    this.hunterCharge = scene.add.graphics().setDepth(24).setData('hunter-charge',true);
     for (const hole of world.holes) scene.add.image(hole.x, hole.y, 'hole').setScale(hole.radius / 15).setDepth(2);
     // Rim made of separate wooden pieces, with rounded outer corner caps.
     for (let x = a.x - 38; x < a.x + a.w + 38; x += 70) {
@@ -52,13 +54,14 @@ export class BoardRenderer {
     const texture = tank.kind === 'player' ? ['player', 'partner', 'third', 'fourth'][-tank.id] : tank.kind;
     this.tanks.set(tank.id, {
       shadow: this.scene.add.image(tank.x + 5, tank.y + 7, 'shadow').setScale(0.78, 0.64).setDepth(17),
-      body: this.scene.add.image(tank.x, tank.y, `body-${texture}`).setDepth(20),
-      turret: this.scene.add.image(tank.x, tank.y, `turret-${texture}`).setDepth(22), last: 0,
+      body: this.scene.add.image(tank.x, tank.y, `body-${texture}`).setScale(1,tank.kind==='hunter'?.88:1).setDepth(20),
+      turret: this.scene.add.image(tank.x, tank.y, `turret-${texture}`).setScale(tank.kind==='hunter'?.9:1).setDepth(22), last: 0,
       label: tank.kind === 'player' && this.world.players.length > 1 ? this.scene.add.text(tank.x, tank.y - 32, `P${1 - tank.id}`, { fontFamily: 'sans-serif', fontSize: '11px', fontStyle: 'bold', color: '#fff5d5', backgroundColor: ['#24667b', '#a03130', '#31733b', '#8e751e'][-tank.id], padding: { x: 4, y: 2 } }).setOrigin(0.5).setDepth(23) : undefined,
     });
   }
   render(dt: number) {
     let dirty = false;
+    this.hunterCharge.clear();
     for (const tank of this.world.tanks) {
       const sprite = this.tanks.get(tank.id)!;
       if (!tank.alive && !sprite.destroyed) {
@@ -73,6 +76,11 @@ export class BoardRenderer {
       sprite.body.setVisible(tank.alive).setPosition(tank.x, tank.y).setRotation(tank.angle);
       sprite.turret.setVisible(tank.alive).setPosition(tank.x, tank.y).setRotation(tank.turret);
       sprite.shadow.setVisible(tank.alive).setPosition(tank.x + 5, tank.y + 7);
+      if(tank.alive&&tank.kind==='hunter'&&tank.state==='Windup') {
+        const charge=tank.hunter?.charge??0;
+        this.hunterCharge.lineStyle(3,0xe1ad7c,.9).beginPath().arc(tank.x,tank.y,27,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.max(.05,charge),false).strokePath();
+        this.hunterCharge.fillStyle(0xffd4a1,.5+.5*charge).fillCircle(tank.x+Math.cos(tank.turret)*24,tank.y+Math.sin(tank.turret)*24,3+charge*2);
+      }
       if (tank.alive && tank.distance - sprite.last > 7) {
         sprite.last = tank.distance; this.marks.push({ x: tank.x, y: tank.y, angle: tank.angle, alpha: 0.13 }); dirty = true;
       }

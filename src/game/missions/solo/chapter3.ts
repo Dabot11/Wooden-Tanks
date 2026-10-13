@@ -1,8 +1,8 @@
 import { block as w, enemy as e } from '../shared';
 import { at, hole, revise, route } from './design';
 export const soloChapter3 = [
-  revise(21, at(180,320), [w(360,160,176,44),w(744,420,176,44),w(600,260,44,176),w(744,354,44,66,true),w(330,250,44,140)], [e(1060,120,'tactical'),e(1100,520,'tactical'),e(940,230,'patrol'),e(660,150,'patrol'),e(710,520,'patrol'),e(490,450,'basic')], {
-    lesson:'Cruza cada línea de corte desde una cobertura y elige qué sector liberar primero.', identity:'Una pieza central divide dos líneas de corte en sectores norte y sur.', changes:'Se abre el capítulo con seis enemigos repartidos por función, no con una acumulación de guardias grises.',
+  revise(21, at(180,320), [w(360,160,176,44),w(744,420,176,44),w(600,260,44,176),w(744,354,44,66,true),w(330,250,44,140)], [e(940,330,'hunter'),e(1080,130,'basic'),e(1080,520,'basic')], {
+    lesson:'El cazador busca tu flanco. Cambia de esquina y ataca cuando se detenga para cargar.', identity:'Una pieza central divide dos líneas de corte en sectores norte y sur.', changes:'Debut del cazador con dos exploradores de escolta: los bordes permiten reconocer su rodeo y contraatacar durante la preparación.',
     routes:[route('Sector alto',[260,100],[590,100],[890,120]),route('Sector bajo',[260,550],[550,550],[960,570])],
   }),
   revise(22, at(180,500), [w(380,180,88,88),w(620,340,88,88),w(860,180,88,88),w(468,224,88,44,true),w(708,384,88,44,true),w(360,420,44,130)], [e(1090,140,'tactical'),e(1080,530,'tactical'),e(740,150,'patrol'),e(560,500,'patrol'),e(1020,330,'patrol'),e(570,140,'patrol'),e(900,520,'basic')], {

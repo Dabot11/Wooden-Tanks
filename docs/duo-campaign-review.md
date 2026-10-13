@@ -2,58 +2,60 @@
 
 [Atlas interactivo](https://dabot11.github.io/Wooden-Tanks/duo-campaign-review.html). Compara cada misión individual con su variante para la pareja.
 
-Los nombres, IDs, desbloqueos e introducciones de enemigos se comparten con la campaña individual. Cada variante de dos jugadores declara arena, dos posiciones iniciales, formación enemiga, dos rutas asignadas y un punto de reagrupamiento. `World` utiliza esos datos directamente: no vuelve a escalar el mapa ni duplica los enemigos. Las campañas de uno, tres y cuatro jugadores conservan sus datos anteriores.
+Los nombres, IDs, desbloqueos e introducciones de enemigos se comparten con la campaña individual. Cada variante de dos jugadores declara arena, dos posiciones iniciales, formación enemiga, dos rutas asignadas y un punto de reagrupamiento. `World` utiliza esos datos directamente: no vuelve a escalar el mapa ni duplica los enemigos. La misión 21 presenta al cazador con poca escolta para todos los tamaños de equipo; los demás mapas conservan sus datos anteriores.
 
 Progresión: grises en 1–2, patrulleros desde 3, corcho en 5, cavidades en 6 y un solo centinela en 7. Los cierres 10/20/30/40 combinan lo aprendido; la galería 16 conserva su zona restringida y 36 conserva cinco vigías. El desafío cooperativo cambia de flancos separados a apoyo, relevo de señuelo, apertura de sectores y asalto conjunto. La cantidad de enemigos no tiene que crecer en cada misión: importa su función.
 
 Las rutas son opciones tácticas con obstáculos intactos, no trayectorias invulnerables ni posiciones obligatorias. El punto de reagrupamiento es accesible, pero requiere conquistar el terreno. Ambos pueden intercambiar papeles. La prueba de presión deja a ambos inmóviles y mide la primera caída con tres semillas; detecta comienzos abruptos, no la dificultad total. Las salvas simultáneas hacia delante se comprueban sin IA, para aislar el riesgo inicial de fuego amigo; después de moverse cada jugador sigue siendo responsable de sus trayectorias y rebotes.
 
+El cazador debuta en la misión 21 con poca escolta. Su prueba aislada está disponible desde «Probar cazador» en el menú y conserva el progreso de campaña.
+
 ## Catálogo
 
-G / P / C = exploradores grises / patrulleros / centinelas. Distancias expresadas en unidades del mundo.
+G / P / C / H = exploradores grises / patrulleros / centinelas / cazadores. Distancias expresadas en unidades del mundo.
 
-| Misión | G / P / C | Separación | Líneas P1 / P2 | Objetivo de pareja |
+| Misión | G / P / C / H | Separación | Líneas P1 / P2 | Objetivo de pareja |
 |---|---|---:|---|---|
-| 1. Primeras huellas | 2 / 0 / 0 | 370 | 1 / 1 | Cada tanque toma un flanco. Antes de cruzarse, dejen de disparar. |
-| 2. Dos esquinas | 3 / 0 / 0 | 372 | 2 / 1 | Despejen las dos esquinas y reúnanse detrás de la cobertura central. |
-| 3. De patrulla | 2 / 2 / 0 | 370 | 0 / 1 | Uno vigila al patrullero mientras el otro cambia de flanco. |
-| 4. Efecto rebote | 3 / 2 / 0 | 392 | 1 / 2 | P2 practica el rebote; P1 atrae a la escolta desde el rodeo alto. |
-| 5. Astillas | 2 / 3 / 0 | 392 | 0 / 0 | Uno rompe la compuerta; el otro vigila el rodeo. No abran ambos frentes a la vez. |
-| 6. Sin tregua | 1 / 4 / 0 | 392 | 2 / 1 | Rodeen las cavidades por lados distintos; no cubren de los misiles. |
-| 7. A cubierto | 3 / 0 / 1 | 403 | 1 / 1 | P1 distrae al centinela; P2 cambia el ángulo y dispara durante su recarga. |
-| 8. El laberinto | 2 / 3 / 1 | 403 | 0 / 0 | P1 despeja el anillo; P2 avanza por la escalera. Avísense antes de reunirse. |
-| 9. Fuego cruzado | 1 / 3 / 2 | 403 | 0 / 0 | Aíslen una torreta cada uno y mantengan libre el enlace entre sectores. |
-| 10. Maestro del taller | 2 / 4 / 2 | 403 | 2 / 0 | Conquisten una mitad cada uno y coordinen el asalto final sin cruzar salvas. |
-| 11. Dos frentes | 2 / 3 / 1 | 384 | 0 / 0 | Sostengan las dos ramas y ayuden al compañero desde el enlace, sin cerrar su retirada. |
-| 12. Ruta de escape | 2 / 3 / 1 | 395 | 0 / 0 | Alternen los cruces del zigzag: uno avanza y el otro espera con un carril libre. |
-| 13. Corcho y fuego | 2 / 3 / 2 | 418 | 2 / 0 | No rompan dos refugios a la vez. Uno sostiene la L mientras el otro abre el siguiente frente. |
-| 14. La pinza | 2 / 4 / 1 | 409 | 0 / 1 | Ataquen los dos brazos de la pinza, pero mantengan un extremo disponible para reagruparse. |
-| 15. Islas de madera | 2 / 3 / 2 | 406 | 0 / 0 | Rodeen las islas en sentidos complementarios y reúnanse fuera de las cavidades. |
-| 16. Galería de rebotes | 0 / 0 / 4 | 233 | 0 / 0 | Compartan la galería sin cruzar salvas: alternen señuelo y rebote desde puestos separados. |
-| 17. La emboscada | 2 / 4 / 2 | 429 | 2 / 0 | P1 revela la emboscada; P2 cubre su retirada desde la esquina opuesta. |
-| 18. Doble fortaleza | 2 / 5 / 2 | 406 | 0 / 0 | Elijan una fortaleza para concentrar el fuego; el compañero conserva el camino hacia la otra. |
-| 19. Último cerco | 2 / 5 / 2 | 418 | 2 / 0 | Dividan la vigilancia de los puestos y cambien el señuelo tras cada salva rápida. |
-| 20. Leyenda del taller | 2 / 5 / 3 | 429 | 2 / 1 | Alternen avance y cobertura en cada sector; reagrúpense antes de romper la última puerta. |
-| 21. El aserradero | 2 / 5 / 2 | 425 | 2 / 0 | Liberen las dos líneas de corte y sostengan el enlace antes de entrar al siguiente sector. |
-| 22. Cajas apiladas | 2 / 6 / 2 | 448 | 0 / 0 | Avancen de caja en caja con un carril cada uno; esperen al compañero antes del último cruce. |
-| 23. Paso de sierra | 2 / 6 / 2 | 413 | 0 / 1 | Usen carriles alternados; el jugador del borde sostiene la salida del zigzag. |
-| 24. La bisagra | 2 / 5 / 3 | 460 | 0 / 1 | P1 controla el giro alto y P2 el bajo. Abran la bisagra solo cuando puedan vigilar ambos lados. |
-| 25. Cuatro refugios | 2 / 5 / 3 | 425 | 0 / 2 | Uno provoca el tiro y el otro cambia de refugio. Intercambien papeles tras ganar el centro. |
-| 26. Doble compuerta | 2 / 6 / 3 | 460 | 2 / 2 | Uno abre y cruza una puerta; el otro vigila el rodeo. Reúnanse antes de la segunda. |
-| 27. Anillo de guardia | 2 / 6 / 3 | 437 | 0 / 0 | Rodeen el anillo por extremos diferentes y acuerden qué entrada usar para reunirse. |
-| 28. Virutas y pólvora | 1 / 7 / 3 | 448 | 0 / 0 | Sostengan las dos eles y usen la diagonal para apoyar al compañero sin dispararle por detrás. |
-| 29. Última defensa | 1 / 7 / 3 | 448 | 1 / 2 | Provocación y ataque deben venir de ángulos distintos; roten el señuelo después de cada ventana. |
-| 30. Gran maestro de madera | 1 / 7 / 3 | 472 | 2 / 2 | Conquisten sectores complementarios y esperen al compañero para entrar al último frente. |
-| 31. El bastión | 1 / 6 / 3 | 456 | 0 / 0 | El bastión se abre con dos ángulos: uno fuerza la salva y el otro cambia de flanco. |
-| 32. Callejón de astillas | 2 / 6 / 3 | 456 | 0 / 0 | P1 amenaza la salida alta; P2 abre el callejón. Eviten entrar juntos en el mismo pasillo. |
-| 33. Tres cruces | 0 / 8 / 3 | 432 | 2 / 0 | Cruces alternados: uno avanza, otro sostiene la salida. Reagrúpense tras cada sector. |
-| 34. La tenaza | 0 / 7 / 4 | 456 | 0 / 0 | Rompan un brazo de la tenaza y utilicen ese espacio para ayudar al compañero en el otro. |
-| 35. Ciudadela de corcho | 0 / 8 / 4 | 468 | 2 / 0 | Una puerta abierta, otra como escudo: sostengan el sector ganado antes de avanzar juntos. |
-| 36. Cinco vigías | 1 / 6 / 5 | 468 | 2 / 0 | Los cinco vigías siguen ángulos distintos. Releven el señuelo y ataquen durante la recarga. |
-| 37. Dientes de madera | 0 / 8 / 4 | 456 | 0 / 0 | Recorran dientes opuestos y mantengan libre el enlace para cortar las salvas sin bloquearse. |
-| 38. El nudo | 0 / 8 / 4 | 432 | 1 / 0 | Aíslen los dos extremos del nudo; no atraviesen su centro hasta dominar una mitad. |
-| 39. Asedio al taller | 1 / 8 / 4 | 468 | 2 / 0 | Uno conquista la puerta y otro cubre la respuesta. Reúnanse tras ganar cada sector. |
-| 40. Comandante del taller | 1 / 8 / 4 | 480 | 2 / 1 | Examen de mando en pareja: separen flancos, alternen señuelo y reagrúpense antes del último asalto. |
+| 1. Primeras huellas | 2 / 0 / 0 / 0 | 370 | 1 / 1 | Cada tanque toma un flanco. Antes de cruzarse, dejen de disparar. |
+| 2. Dos esquinas | 3 / 0 / 0 / 0 | 372 | 2 / 1 | Despejen las dos esquinas y reúnanse detrás de la cobertura central. |
+| 3. De patrulla | 2 / 2 / 0 / 0 | 370 | 0 / 1 | Uno vigila al patrullero mientras el otro cambia de flanco. |
+| 4. Efecto rebote | 3 / 2 / 0 / 0 | 392 | 1 / 2 | P2 practica el rebote; P1 atrae a la escolta desde el rodeo alto. |
+| 5. Astillas | 2 / 3 / 0 / 0 | 392 | 0 / 0 | Uno rompe la compuerta; el otro vigila el rodeo. No abran ambos frentes a la vez. |
+| 6. Sin tregua | 1 / 4 / 0 / 0 | 392 | 2 / 1 | Rodeen las cavidades por lados distintos; no cubren de los misiles. |
+| 7. A cubierto | 3 / 0 / 1 / 0 | 403 | 1 / 1 | P1 distrae al centinela; P2 cambia el ángulo y dispara durante su recarga. |
+| 8. El laberinto | 2 / 3 / 1 / 0 | 403 | 0 / 0 | P1 despeja el anillo; P2 avanza por la escalera. Avísense antes de reunirse. |
+| 9. Fuego cruzado | 1 / 3 / 2 / 0 | 403 | 0 / 0 | Aíslen una torreta cada uno y mantengan libre el enlace entre sectores. |
+| 10. Maestro del taller | 2 / 4 / 2 / 0 | 403 | 2 / 0 | Conquisten una mitad cada uno y coordinen el asalto final sin cruzar salvas. |
+| 11. Dos frentes | 2 / 3 / 1 / 0 | 384 | 0 / 0 | Sostengan las dos ramas y ayuden al compañero desde el enlace, sin cerrar su retirada. |
+| 12. Ruta de escape | 2 / 3 / 1 / 0 | 395 | 0 / 0 | Alternen los cruces del zigzag: uno avanza y el otro espera con un carril libre. |
+| 13. Corcho y fuego | 2 / 3 / 2 / 0 | 418 | 2 / 0 | No rompan dos refugios a la vez. Uno sostiene la L mientras el otro abre el siguiente frente. |
+| 14. La pinza | 2 / 4 / 1 / 0 | 409 | 0 / 1 | Ataquen los dos brazos de la pinza, pero mantengan un extremo disponible para reagruparse. |
+| 15. Islas de madera | 2 / 3 / 2 / 0 | 406 | 0 / 0 | Rodeen las islas en sentidos complementarios y reúnanse fuera de las cavidades. |
+| 16. Galería de rebotes | 0 / 0 / 4 / 0 | 233 | 0 / 0 | Compartan la galería sin cruzar salvas: alternen señuelo y rebote desde puestos separados. |
+| 17. La emboscada | 2 / 4 / 2 / 0 | 429 | 2 / 0 | P1 revela la emboscada; P2 cubre su retirada desde la esquina opuesta. |
+| 18. Doble fortaleza | 2 / 5 / 2 / 0 | 406 | 0 / 0 | Elijan una fortaleza para concentrar el fuego; el compañero conserva el camino hacia la otra. |
+| 19. Último cerco | 2 / 5 / 2 / 0 | 418 | 2 / 0 | Dividan la vigilancia de los puestos y cambien el señuelo tras cada salva rápida. |
+| 20. Leyenda del taller | 2 / 5 / 3 / 0 | 429 | 2 / 1 | Alternen avance y cobertura en cada sector; reagrúpense antes de romper la última puerta. |
+| 21. El aserradero | 2 / 0 / 0 / 1 | 425 | 1 / 1 | Uno atrae al cazador; el otro vigila su flanco. Ataquen cuando se detenga para cargar. |
+| 22. Cajas apiladas | 2 / 6 / 2 / 0 | 448 | 0 / 0 | Avancen de caja en caja con un carril cada uno; esperen al compañero antes del último cruce. |
+| 23. Paso de sierra | 2 / 6 / 2 / 0 | 413 | 0 / 1 | Usen carriles alternados; el jugador del borde sostiene la salida del zigzag. |
+| 24. La bisagra | 2 / 5 / 3 / 0 | 460 | 0 / 1 | P1 controla el giro alto y P2 el bajo. Abran la bisagra solo cuando puedan vigilar ambos lados. |
+| 25. Cuatro refugios | 2 / 5 / 3 / 0 | 425 | 0 / 2 | Uno provoca el tiro y el otro cambia de refugio. Intercambien papeles tras ganar el centro. |
+| 26. Doble compuerta | 2 / 6 / 3 / 0 | 460 | 2 / 2 | Uno abre y cruza una puerta; el otro vigila el rodeo. Reúnanse antes de la segunda. |
+| 27. Anillo de guardia | 2 / 6 / 3 / 0 | 437 | 0 / 0 | Rodeen el anillo por extremos diferentes y acuerden qué entrada usar para reunirse. |
+| 28. Virutas y pólvora | 1 / 7 / 3 / 0 | 448 | 0 / 0 | Sostengan las dos eles y usen la diagonal para apoyar al compañero sin dispararle por detrás. |
+| 29. Última defensa | 1 / 7 / 3 / 0 | 448 | 1 / 2 | Provocación y ataque deben venir de ángulos distintos; roten el señuelo después de cada ventana. |
+| 30. Gran maestro de madera | 1 / 7 / 3 / 0 | 472 | 2 / 2 | Conquisten sectores complementarios y esperen al compañero para entrar al último frente. |
+| 31. El bastión | 1 / 6 / 3 / 0 | 456 | 0 / 0 | El bastión se abre con dos ángulos: uno fuerza la salva y el otro cambia de flanco. |
+| 32. Callejón de astillas | 2 / 6 / 3 / 0 | 456 | 0 / 0 | P1 amenaza la salida alta; P2 abre el callejón. Eviten entrar juntos en el mismo pasillo. |
+| 33. Tres cruces | 0 / 8 / 3 / 0 | 432 | 2 / 0 | Cruces alternados: uno avanza, otro sostiene la salida. Reagrúpense tras cada sector. |
+| 34. La tenaza | 0 / 7 / 4 / 0 | 456 | 0 / 0 | Rompan un brazo de la tenaza y utilicen ese espacio para ayudar al compañero en el otro. |
+| 35. Ciudadela de corcho | 0 / 8 / 4 / 0 | 468 | 2 / 0 | Una puerta abierta, otra como escudo: sostengan el sector ganado antes de avanzar juntos. |
+| 36. Cinco vigías | 1 / 6 / 5 / 0 | 468 | 2 / 0 | Los cinco vigías siguen ángulos distintos. Releven el señuelo y ataquen durante la recarga. |
+| 37. Dientes de madera | 0 / 8 / 4 / 0 | 456 | 0 / 0 | Recorran dientes opuestos y mantengan libre el enlace para cortar las salvas sin bloquearse. |
+| 38. El nudo | 0 / 8 / 4 / 0 | 432 | 1 / 0 | Aíslen los dos extremos del nudo; no atraviesen su centro hasta dominar una mitad. |
+| 39. Asedio al taller | 1 / 8 / 4 / 0 | 468 | 2 / 0 | Uno conquista la puerta y otro cubre la respuesta. Reúnanse tras ganar cada sector. |
+| 40. Comandante del taller | 1 / 8 / 4 / 0 | 480 | 2 / 1 | Examen de mando en pareja: separen flancos, alternen señuelo y reagrúpense antes del último asalto. |
 
 ## 01 · Primeras huellas
 
@@ -65,7 +67,7 @@ G / P / C = exploradores grises / patrulleros / centinelas. Distancias expresada
 
 **Decisión de diseño:** Dos exploradores en extremos opuestos y un refugio de enlace enseñan flancos y fuego amigo sin saturación.
 
-Arena: 1446 × 647. Enemigos G/P/C: 2 / 0 / 0 (individual: 1 / 0 / 0).
+Arena: 1446 × 647. Enemigos G/P/C/H: 2 / 0 / 0 / 0 (individual: 1 / 0 / 0 / 0).
 
 - **P1:** (315.8, 185.1); P1 · rodeo norte. Enemigo más cercano: 952; líneas iniciales: 1; salidas libres: 8/8.
 - **P2:** (315.8, 554.7); P2 · rodeo sur. Enemigo más cercano: 918; líneas iniciales: 1; salidas libres: 8/8.
@@ -87,7 +89,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: al menos 
 
 **Decisión de diseño:** Un tercer explorador cubre el enlace; una cobertura alta permite que P1 avance sin entrar en el carril de P2.
 
-Arena: 1446 × 647. Enemigos G/P/C: 3 / 0 / 0 (individual: 2 / 0 / 0).
+Arena: 1446 × 647. Enemigos G/P/C/H: 3 / 0 / 0 / 0 (individual: 2 / 0 / 0 / 0).
 
 - **P1:** (315.8, 185.1); P1 · asegurar la esquina alta. Enemigo más cercano: 571; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (360.6, 554.7); P2 · asegurar la esquina baja. Enemigo más cercano: 650; líneas iniciales: 1; salidas libres: 8/8.
@@ -109,7 +111,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 6.30 segu
 
 **Decisión de diseño:** El debut móvil recibe un segundo patrullero lateral y un explorador de enlace; el nuevo refugio corta el cruce central.
 
-Arena: 1446 × 647. Enemigos G/P/C: 2 / 2 / 0 (individual: 1 / 1 / 0).
+Arena: 1446 × 647. Enemigos G/P/C/H: 2 / 2 / 0 / 0 (individual: 1 / 1 / 0 / 0).
 
 - **P1:** (315.8, 185.1); P1 · controlar el paso central. Enemigo más cercano: 571; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (315.8, 554.7); P2 · envolver por abajo. Enemigo más cercano: 674; líneas iniciales: 1; salidas libres: 8/8.
@@ -131,7 +133,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: al menos 
 
 **Decisión de diseño:** La cobertura baja permite sostener el rebote sin cortar la ruta alta; los refuerzos guardan enlaces, no los puntos de salida.
 
-Arena: 1446 × 647. Enemigos G/P/C: 3 / 2 / 0 (individual: 2 / 1 / 0).
+Arena: 1446 × 647. Enemigos G/P/C/H: 3 / 2 / 0 / 0 (individual: 2 / 1 / 0 / 0).
 
 - **P1:** (315.8, 185.1); P1 · despejar el rodeo directo. Enemigo más cercano: 526; líneas iniciales: 1; salidas libres: 8/8.
 - **P2:** (315.8, 577.1); P2 · sostener el puesto de rebote. Enemigo más cercano: 571; líneas iniciales: 2; salidas libres: 8/8.
@@ -155,7 +157,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.37 segu
 
 **Decisión de diseño:** La compuerta conserva su atajo; un refugio entre puertas y dos defensores separados permiten alternar apertura y vigilancia.
 
-Arena: 1446 × 647. Enemigos G/P/C: 2 / 3 / 0 (individual: 1 / 2 / 0).
+Arena: 1446 × 647. Enemigos G/P/C/H: 2 / 3 / 0 / 0 (individual: 1 / 2 / 0 / 0).
 
 - **P1:** (315.8, 162.7); P1 · vigilar el rodeo norte. Enemigo más cercano: 527; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (327.0, 554.7); P2 · abrir el primer sector. Enemigo más cercano: 504; líneas iniciales: 0; salidas libres: 8/8.
@@ -179,7 +181,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: al menos 
 
 **Decisión de diseño:** Las cavidades mantienen la lección del cruce; un refugio bajo y dos defensores de salida hacen útiles ambos bordes.
 
-Arena: 1446 × 647. Enemigos G/P/C: 1 / 4 / 0 (individual: 0 / 3 / 0).
+Arena: 1446 × 647. Enemigos G/P/C/H: 1 / 4 / 0 / 0 (individual: 0 / 3 / 0 / 0).
 
 - **P1:** (315.8, 151.5); P1 · borde alto de las cavidades. Enemigo más cercano: 527; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (327.0, 543.5); P2 · borde bajo de las cavidades. Enemigo más cercano: 634; líneas iniciales: 1; salidas libres: 8/8.
@@ -201,7 +203,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 3.73 segu
 
 **Decisión de diseño:** Se mantiene un único centinela en su debut. Tres exploradores escoltan sectores diferentes y la madera intermedia ayuda al relevo.
 
-Arena: 1446 × 647. Enemigos G/P/C: 3 / 0 / 1 (individual: 1 / 0 / 1).
+Arena: 1446 × 647. Enemigos G/P/C/H: 3 / 0 / 1 / 0 (individual: 1 / 0 / 1 / 0).
 
 - **P1:** (315.8, 151.5); P1 · atraer desde el flanco alto. Enemigo más cercano: 616; líneas iniciales: 1; salidas libres: 8/8.
 - **P2:** (327.0, 554.7); P2 · atacar desde el flanco bajo. Enemigo más cercano: 733; líneas iniciales: 1; salidas libres: 8/8.
@@ -225,7 +227,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 6.47 segu
 
 **Decisión de diseño:** Las rutas alternadas reciben escolta en cada tramo y un refugio de retirada; la segunda ruta ya no parte del mismo rincón.
 
-Arena: 1446 × 647. Enemigos G/P/C: 2 / 3 / 1 (individual: 1 / 2 / 1).
+Arena: 1446 × 647. Enemigos G/P/C/H: 2 / 3 / 1 / 0 (individual: 1 / 2 / 1 / 0).
 
 - **P1:** (310.2, 151.5); P1 · anillo exterior. Enemigo más cercano: 321; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (310.2, 554.7); P2 · escalera de coberturas. Enemigo más cercano: 488; líneas iniciales: 0; salidas libres: 8/8.
@@ -247,7 +249,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 5.10 segu
 
 **Decisión de diseño:** El enlace lateral gana cobertura; una patrulla interior impide resolver el cruce disparando inmóviles desde ambos extremos.
 
-Arena: 1446 × 647. Enemigos G/P/C: 1 / 3 / 2 (individual: 0 / 2 / 2).
+Arena: 1446 × 647. Enemigos G/P/C/H: 1 / 3 / 2 / 0 (individual: 0 / 2 / 2 / 0).
 
 - **P1:** (315.8, 151.5); P1 · neutralizar el sector norte. Enemigo más cercano: 504; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (327.0, 554.7); P2 · neutralizar el sector sur. Enemigo más cercano: 478; líneas iniciales: 0; salidas libres: 8/8.
@@ -271,7 +273,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 5.30 segu
 
 **Decisión de diseño:** El examen añade escolta por sector y cobertura para el relevo. Ocho enemigos definidos sustituyen una duplicación automática.
 
-Arena: 1446 × 647. Enemigos G/P/C: 2 / 4 / 2 (individual: 1 / 2 / 2).
+Arena: 1446 × 647. Enemigos G/P/C/H: 2 / 4 / 2 / 0 (individual: 1 / 2 / 2 / 0).
 
 - **P1:** (304.6, 151.5); P1 · conquista norte. Enemigo más cercano: 370; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (304.6, 554.7); P2 · conquista sur. Enemigo más cercano: 539; líneas iniciales: 0; salidas libres: 8/8.
@@ -295,7 +297,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.93 segu
 
 **Decisión de diseño:** La bifurcación conserva dos frentes; el enlace gana refugio y guardias de salida para que el equipo elija dónde concentrarse.
 
-Arena: 1493 × 670. Enemigos G/P/C: 2 / 3 / 1 (individual: 1 / 2 / 1).
+Arena: 1493 × 670. Enemigos G/P/C/H: 2 / 3 / 1 / 0 (individual: 1 / 2 / 1 / 0).
 
 - **P1:** (321.1, 178.6); P1 · rama norte. Enemigo más cercano: 546; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (344.3, 561.4); P2 · rama sur. Enemigo más cercano: 546; líneas iniciales: 0; salidas libres: 8/8.
@@ -319,7 +321,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 5.30 segu
 
 **Decisión de diseño:** P2 empieza en una salida inferior propia; el nuevo refugio antes del segundo giro permite alternar avances.
 
-Arena: 1493 × 670. Enemigos G/P/C: 2 / 3 / 1 (individual: 1 / 2 / 1).
+Arena: 1493 × 670. Enemigos G/P/C/H: 2 / 3 / 1 / 0 (individual: 1 / 2 / 1 / 0).
 
 - **P1:** (309.5, 190.2); P1 · zigzag protegido. Enemigo más cercano: 384; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (321.1, 584.6); P2 · enlace por el borde inferior. Enemigo más cercano: 559; líneas iniciales: 0; salidas libres: 8/8.
@@ -343,7 +345,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.60 segu
 
 **Decisión de diseño:** Un punto de enlace protegido y escolta entre las dos eles dan valor a conservar corcho mientras el compañero rota.
 
-Arena: 1493 × 670. Enemigos G/P/C: 2 / 3 / 2 (individual: 1 / 2 / 2).
+Arena: 1493 × 670. Enemigos G/P/C/H: 2 / 3 / 2 / 0 (individual: 1 / 2 / 2 / 0).
 
 - **P1:** (321.1, 155.4); P1 · sostener la L superior. Enemigo más cercano: 394; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (321.1, 573.0); P2 · abrir la L inferior. Enemigo más cercano: 429; líneas iniciales: 0; salidas libres: 8/8.
@@ -367,7 +369,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 2.30 segu
 
 **Decisión de diseño:** El refugio del enlace protege la retirada; los refuerzos guardan extremos distintos de la pinza.
 
-Arena: 1493 × 670. Enemigos G/P/C: 2 / 4 / 1 (individual: 1 / 3 / 1).
+Arena: 1493 × 670. Enemigos G/P/C/H: 2 / 4 / 1 / 0 (individual: 1 / 3 / 1 / 0).
 
 - **P1:** (274.7, 167.0); P1 · romper el brazo alto. Enemigo más cercano: 315; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (321.1, 573.0); P2 · contener el brazo bajo. Enemigo más cercano: 515; líneas iniciales: 1; salidas libres: 8/8.
@@ -391,7 +393,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.17 segu
 
 **Decisión de diseño:** Los circuitos conservan el centro bloqueado; el refugio de salida y los refuerzos laterales reparten el combate entre ambos.
 
-Arena: 1493 × 670. Enemigos G/P/C: 2 / 3 / 2 (individual: 1 / 2 / 2).
+Arena: 1493 × 670. Enemigos G/P/C/H: 2 / 3 / 2 / 0 (individual: 1 / 2 / 2 / 0).
 
 - **P1:** (321.1, 167.0); P1 · circuito norte. Enemigo más cercano: 465; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (321.1, 573.0); P2 · circuito sur. Enemigo más cercano: 468; líneas iniciales: 0; salidas libres: 8/8.
@@ -415,7 +417,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 5.10 segu
 
 **Decisión de diseño:** Dos puestos separados permanecen dentro de la zona restringida; cuatro centinelas y una ampliación moderada conservan rebotes dentro de la vida del misil.
 
-Arena: 1255 × 613. Enemigos G/P/C: 0 / 0 / 4 (individual: 0 / 0 / 3).
+Arena: 1255 × 613. Enemigos G/P/C/H: 0 / 0 / 4 / 0 (individual: 0 / 0 / 3 / 0).
 
 - **P1:** (187.9, 135.2); P1 · puesto alto de la galería. Enemigo más cercano: 679; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (187.9, 368.4); P2 · puesto bajo de la galería. Enemigo más cercano: 710; líneas iniciales: 0; salidas libres: 8/8.
@@ -439,7 +441,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.90 segu
 
 **Decisión de diseño:** El enlace de las eles gana un refugio y dos guardias de sector; ninguno aparece dentro de la salida del compañero.
 
-Arena: 1493 × 670. Enemigos G/P/C: 2 / 4 / 2 (individual: 1 / 3 / 2).
+Arena: 1493 × 670. Enemigos G/P/C/H: 2 / 4 / 2 / 0 (individual: 1 / 3 / 2 / 0).
 
 - **P1:** (321.1, 155.4); P1 · reconocer la emboscada. Enemigo más cercano: 469; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (321.1, 584.6); P2 · sostener la retirada diagonal. Enemigo más cercano: 382; líneas iniciales: 0; salidas libres: 8/8.
@@ -463,7 +465,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.47 segu
 
 **Decisión de diseño:** Tres refuerzos protegen conexiones entre fortalezas, no forman una fila idéntica; la madera lateral cubre el cambio de objetivo.
 
-Arena: 1493 × 670. Enemigos G/P/C: 2 / 5 / 2 (individual: 1 / 3 / 2).
+Arena: 1493 × 670. Enemigos G/P/C/H: 2 / 5 / 2 / 0 (individual: 1 / 3 / 2 / 0).
 
 - **P1:** (309.5, 190.2); P1 · presión sobre la fortaleza alta. Enemigo más cercano: 419; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (321.1, 596.2); P2 · apoyo por el asalto bajo. Enemigo más cercano: 573; líneas iniciales: 0; salidas libres: 8/8.
@@ -487,7 +489,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.13 segu
 
 **Decisión de diseño:** Un refugio de enlace permite relevos; la escolta móvil se reparte entre ambos flancos sin añadir centinelas al inicio.
 
-Arena: 1493 × 670. Enemigos G/P/C: 2 / 5 / 2 (individual: 1 / 3 / 2).
+Arena: 1493 × 670. Enemigos G/P/C/H: 2 / 5 / 2 / 0 (individual: 1 / 3 / 2 / 0).
 
 - **P1:** (321.1, 167.0); P1 · vigilar puestos altos. Enemigo más cercano: 545; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (321.1, 584.6); P2 · enlazar puestos bajos. Enemigo más cercano: 499; líneas iniciales: 0; salidas libres: 8/8.
@@ -511,7 +513,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 5.33 segu
 
 **Decisión de diseño:** El examen añade defensores de enlace y una cobertura de relevo, con una fuerza elegida expresamente para la pareja.
 
-Arena: 1493 × 670. Enemigos G/P/C: 2 / 5 / 3 (individual: 1 / 3 / 3).
+Arena: 1493 × 670. Enemigos G/P/C/H: 2 / 5 / 3 / 0 (individual: 1 / 3 / 3 / 0).
 
 - **P1:** (309.5, 155.4); P1 · avance por el frente norte. Enemigo más cercano: 327; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (309.5, 584.6); P2 · apoyo por el frente sur. Enemigo más cercano: 488; líneas iniciales: 1; salidas libres: 8/8.
@@ -531,23 +533,23 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 3.13 segu
 
 **Identidad compartida:** Una pieza central divide dos líneas de corte en sectores norte y sur.
 
-**Objetivo:** Liberen las dos líneas de corte y sostengan el enlace antes de entrar al siguiente sector.
+**Objetivo:** Uno atrae al cazador; el otro vigila su flanco. Ataquen cuando se detenga para cargar.
 
-**Decisión de diseño:** La línea central tiene escolta propia y refugio lateral; cada sector admite avance y retirada de un jugador.
+**Decisión de diseño:** Un cazador y dos exploradores sustituyen nueve enemigos. Los flancos y el refugio de enlace enseñan el relevo de señuelo con fuego amigo.
 
-Arena: 1517 × 682. Enemigos G/P/C: 2 / 5 / 2 (individual: 1 / 3 / 2).
+Arena: 1517 × 682. Enemigos G/P/C/H: 2 / 0 / 0 / 1 (individual: 2 / 0 / 0 / 1).
 
-- **P1:** (323.8, 169.1); P1 · línea de corte alta. Enemigo más cercano: 509; líneas iniciales: 2; salidas libres: 8/8.
-- **P2:** (323.8, 593.9); P2 · línea de corte baja. Enemigo más cercano: 373; líneas iniciales: 0; salidas libres: 8/8.
+- **P1:** (323.8, 169.1); P1 · atraer desde el frente alto. Enemigo más cercano: 922; líneas iniciales: 1; salidas libres: 8/8.
+- **P2:** (323.8, 593.9); P2 · vigilar el rodeo bajo. Enemigo más cercano: 922; líneas iniciales: 1; salidas libres: 8/8.
 
-Separación inicial: 425. Reagrupamiento accesible desde ambos puestos: (1185.2, 405.1).
+Separación inicial: 425. Reagrupamiento accesible desde ambos puestos: (1102.6, 405.1).
 
-- **P1 · línea de corte alta:** 871 unidades; puestos (409.0, 101.0) → (827.0, 101.0) → (1169.0, 139.0).
-- **P2 · línea de corte baja:** 968 unidades; puestos (409.0, 633.0) → (789.0, 633.0) → (1283.0, 633.0).
+- **P1 · atraer desde el frente alto:** 871 unidades; puestos (409.0, 101.0) → (827.0, 101.0) → (1169.0, 139.0).
+- **P2 · vigilar el rodeo bajo:** 968 unidades; puestos (409.0, 633.0) → (789.0, 633.0) → (1283.0, 633.0).
 
 Corcho, recorrido cerrado → abierto: pieza 4: 296 → 174. Los pasos se verifican con navegación y tres impactos reales.
 
-Presión inicial, peor de tres semillas de IA hasta la primera caída: 5.30 segundos.
+Presión inicial, peor de tres semillas de IA hasta la primera caída: al menos 8 segundos.
 
 ## 22 · Cajas apiladas
 
@@ -559,7 +561,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 5.30 segu
 
 **Decisión de diseño:** Las pilas mantienen su silueta, con refugio de enlace y defensores distribuidos por ambas cadenas.
 
-Arena: 1517 × 682. Enemigos G/P/C: 2 / 6 / 2 (individual: 1 / 4 / 2).
+Arena: 1517 × 682. Enemigos G/P/C/H: 2 / 6 / 2 / 0 (individual: 1 / 4 / 2 / 0).
 
 - **P1:** (323.8, 157.3); P1 · cadena de cajas alta. Enemigo más cercano: 460; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (323.8, 605.7); P2 · cadena de cajas baja. Enemigo más cercano: 449; líneas iniciales: 0; salidas libres: 8/8.
@@ -583,7 +585,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 5.40 segu
 
 **Decisión de diseño:** El refugio tras el primer diente permite el relevo; los nuevos defensores cubren el final y el enlace, sin tapar las salidas.
 
-Arena: 1517 × 682. Enemigos G/P/C: 2 / 6 / 2 (individual: 1 / 4 / 2).
+Arena: 1517 × 682. Enemigos G/P/C/H: 2 / 6 / 2 / 0 (individual: 1 / 4 / 2 / 0).
 
 - **P1:** (312.0, 192.7); P1 · recorrer el zigzag. Enemigo más cercano: 354; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (323.8, 605.7); P2 · sostener el borde exterior. Enemigo más cercano: 308; líneas iniciales: 1; salidas libres: 8/8.
@@ -607,7 +609,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 3.00 segu
 
 **Decisión de diseño:** La bisagra conserva las diagonales; un refugio de enlace y escolta por extremo impiden resolverla desde un único puesto.
 
-Arena: 1517 × 682. Enemigos G/P/C: 2 / 5 / 3 (individual: 1 / 3 / 3).
+Arena: 1517 × 682. Enemigos G/P/C/H: 2 / 5 / 3 / 0 (individual: 1 / 3 / 3 / 0).
 
 - **P1:** (323.8, 157.3); P1 · giro alto de la bisagra. Enemigo más cercano: 455; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (323.8, 617.5); P2 · giro bajo de la bisagra. Enemigo más cercano: 449; líneas iniciales: 1; salidas libres: 8/8.
@@ -631,7 +633,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.10 segu
 
 **Decisión de diseño:** Los cuatro refugios se mantienen; el enlace lateral y las escoltas interiores exigen cambiar el ángulo en pareja.
 
-Arena: 1517 × 682. Enemigos G/P/C: 2 / 5 / 3 (individual: 1 / 3 / 3).
+Arena: 1517 × 682. Enemigos G/P/C/H: 2 / 5 / 3 / 0 (individual: 1 / 3 / 3 / 0).
 
 - **P1:** (323.8, 180.9); P1 · rotación entre refugios altos. Enemigo más cercano: 427; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (323.8, 605.7); P2 · rotación entre refugios bajos. Enemigo más cercano: 465; líneas iniciales: 2; salidas libres: 8/8.
@@ -655,7 +657,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 3.87 segu
 
 **Decisión de diseño:** Ambas puertas siguen abriendo pasos reales. El equipo dispone de un refugio inicial y escolta distinta en cada sector.
 
-Arena: 1517 × 682. Enemigos G/P/C: 2 / 6 / 3 (individual: 1 / 4 / 3).
+Arena: 1517 × 682. Enemigos G/P/C/H: 2 / 6 / 3 / 0 (individual: 1 / 4 / 3 / 0).
 
 - **P1:** (323.8, 157.3); P1 · vigilar el rodeo alto. Enemigo más cercano: 425; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (323.8, 617.5); P2 · dominar las compuertas. Enemigo más cercano: 493; líneas iniciales: 2; salidas libres: 8/8.
@@ -679,7 +681,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 3.97 segu
 
 **Decisión de diseño:** La cobertura lateral permite reagrupar sin cruzar el centro; los refuerzos defienden entradas opuestas del mismo anillo.
 
-Arena: 1517 × 682. Enemigos G/P/C: 2 / 6 / 3 (individual: 1 / 4 / 3).
+Arena: 1517 × 682. Enemigos G/P/C/H: 2 / 6 / 3 / 0 (individual: 1 / 4 / 3 / 0).
 
 - **P1:** (323.8, 169.1); P1 · entrada norte del anillo. Enemigo más cercano: 451; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (323.8, 605.7); P2 · entrada sur del anillo. Enemigo más cercano: 557; líneas iniciales: 0; salidas libres: 8/8.
@@ -703,7 +705,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.37 segu
 
 **Decisión de diseño:** Las eles conservan su emboscada diagonal; las nuevas patrullas vigilan enlaces distintos y hay refugio antes de cambiar de lado.
 
-Arena: 1517 × 682. Enemigos G/P/C: 1 / 7 / 3 (individual: 0 / 5 / 3).
+Arena: 1517 × 682. Enemigos G/P/C/H: 1 / 7 / 3 / 0 (individual: 0 / 5 / 3 / 0).
 
 - **P1:** (323.8, 157.3); P1 · diagonal alta. Enemigo más cercano: 464; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (323.8, 605.7); P2 · diagonal baja. Enemigo más cercano: 396; líneas iniciales: 0; salidas libres: 8/8.
@@ -727,7 +729,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.37 segu
 
 **Decisión de diseño:** Se mantienen tres defensas; la escolta adicional vigila conexiones y el refugio lateral permite cambiar el señuelo.
 
-Arena: 1517 × 682. Enemigos G/P/C: 1 / 7 / 3 (individual: 1 / 4 / 3).
+Arena: 1517 × 682. Enemigos G/P/C/H: 1 / 7 / 3 / 0 (individual: 1 / 4 / 3 / 0).
 
 - **P1:** (323.8, 169.1); P1 · provocar desde la ventana alta. Enemigo más cercano: 496; líneas iniciales: 1; salidas libres: 8/8.
 - **P2:** (323.8, 617.5); P2 · aprovechar la ventana baja. Enemigo más cercano: 404; líneas iniciales: 2; salidas libres: 8/8.
@@ -751,7 +753,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 3.57 segu
 
 **Decisión de diseño:** El examen mantiene tres sectores y agrega escolta en cada conexión, sin duplicar todas las posiciones.
 
-Arena: 1517 × 682. Enemigos G/P/C: 1 / 7 / 3 (individual: 0 / 4 / 3).
+Arena: 1517 × 682. Enemigos G/P/C/H: 1 / 7 / 3 / 0 (individual: 0 / 4 / 3 / 0).
 
 - **P1:** (312.0, 157.3); P1 · conquista alta por sectores. Enemigo más cercano: 342; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (312.0, 629.3); P2 · conquista baja por sectores. Enemigo más cercano: 403; líneas iniciales: 2; salidas libres: 8/8.
@@ -775,7 +777,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 3.00 segu
 
 **Decisión de diseño:** Las tres defensas conservan puestos diferentes; los refuerzos sostienen sus conexiones y un refugio lateral permite relevos.
 
-Arena: 1541 × 694. Enemigos G/P/C: 1 / 6 / 3 (individual: 0 / 4 / 3).
+Arena: 1541 × 694. Enemigos G/P/C/H: 1 / 6 / 3 / 0 (individual: 0 / 4 / 3 / 0).
 
 - **P1:** (314.4, 171.2); P1 · presión norte del bastión. Enemigo más cercano: 481; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (314.4, 627.2); P2 · presión sur del bastión. Enemigo más cercano: 457; líneas iniciales: 0; salidas libres: 8/8.
@@ -801,7 +803,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.73 segu
 
 **Decisión de diseño:** El callejón conserva sus rodeos. La escolta guarda salida y enlace, mientras el refugio lateral evita avanzar en fila.
 
-Arena: 1541 × 694. Enemigos G/P/C: 2 / 6 / 3 (individual: 1 / 4 / 3).
+Arena: 1541 × 694. Enemigos G/P/C/H: 2 / 6 / 3 / 0 (individual: 1 / 4 / 3 / 0).
 
 - **P1:** (314.4, 171.2); P1 · rodeo alto del callejón. Enemigo más cercano: 372; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (314.4, 627.2); P2 · apertura y salida baja. Enemigo más cercano: 588; líneas iniciales: 0; salidas libres: 8/8.
@@ -825,7 +827,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.40 segu
 
 **Decisión de diseño:** Las tres cadenas de cruce tienen escoltas diferenciadas; el refugio de enlace protege cambios de papeles.
 
-Arena: 1541 × 694. Enemigos G/P/C: 0 / 8 / 3 (individual: 0 / 5 / 3).
+Arena: 1541 × 694. Enemigos G/P/C/H: 0 / 8 / 3 / 0 (individual: 0 / 5 / 3 / 0).
 
 - **P1:** (314.4, 195.2); P1 · cruces por arriba. Enemigo más cercano: 469; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (326.4, 627.2); P2 · cruces por abajo. Enemigo más cercano: 412; líneas iniciales: 0; salidas libres: 8/8.
@@ -849,7 +851,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.57 segu
 
 **Decisión de diseño:** Las cuatro defensas permanecen separadas; las patrullas nuevas guardan el enlace interior y el refugio lateral cubre el relevo.
 
-Arena: 1541 × 694. Enemigos G/P/C: 0 / 7 / 4 (individual: 0 / 4 / 4).
+Arena: 1541 × 694. Enemigos G/P/C/H: 0 / 7 / 4 / 0 (individual: 0 / 4 / 4 / 0).
 
 - **P1:** (314.4, 171.2); P1 · romper la tenaza alta. Enemigo más cercano: 386; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (314.4, 627.2); P2 · sostener la tenaza baja. Enemigo más cercano: 531; líneas iniciales: 0; salidas libres: 8/8.
@@ -873,7 +875,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.40 segu
 
 **Decisión de diseño:** La ciudadela mantiene sus dos compuertas y cuatro defensas; tres patrullas refuerzan enlaces de sector, no los puestos iniciales.
 
-Arena: 1541 × 694. Enemigos G/P/C: 0 / 8 / 4 (individual: 0 / 5 / 4).
+Arena: 1541 × 694. Enemigos G/P/C/H: 0 / 8 / 4 / 0 (individual: 0 / 5 / 4 / 0).
 
 - **P1:** (314.4, 159.2); P1 · envolvimiento exterior norte. Enemigo más cercano: 360; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (314.4, 627.2); P2 · apertura controlada sur. Enemigo más cercano: 482; líneas iniciales: 0; salidas libres: 8/8.
@@ -897,7 +899,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 3.67 segu
 
 **Decisión de diseño:** Se conserva la identidad de cinco vigías. La escolta adicional cubre sus enlaces y un refugio lateral permite invertir papeles.
 
-Arena: 1541 × 694. Enemigos G/P/C: 1 / 6 / 5 (individual: 1 / 3 / 5).
+Arena: 1541 × 694. Enemigos G/P/C/H: 1 / 6 / 5 / 0 (individual: 1 / 3 / 5 / 0).
 
 - **P1:** (314.4, 159.2); P1 · señuelo desde puestos altos. Enemigo más cercano: 409; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (314.4, 627.2); P2 · ataque desde puestos bajos. Enemigo más cercano: 425; líneas iniciales: 0; salidas libres: 8/8.
@@ -921,7 +923,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 2.97 segu
 
 **Decisión de diseño:** La sierra conserva cruces anchos; la escolta se reparte entre dientes y el refugio lateral da una retirada compartida.
 
-Arena: 1541 × 694. Enemigos G/P/C: 0 / 8 / 4 (individual: 0 / 5 / 4).
+Arena: 1541 × 694. Enemigos G/P/C/H: 0 / 8 / 4 / 0 (individual: 0 / 5 / 4 / 0).
 
 - **P1:** (314.4, 171.2); P1 · dientes superiores. Enemigo más cercano: 372; líneas iniciales: 0; salidas libres: 8/8.
 - **P2:** (314.4, 627.2); P2 · dientes inferiores. Enemigo más cercano: 553; líneas iniciales: 0; salidas libres: 8/8.
@@ -945,7 +947,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.40 segu
 
 **Decisión de diseño:** Las eles y cavidades mantienen el nudo; los refuerzos de extremos obligan a dividir la vigilancia y el enlace admite retirada.
 
-Arena: 1541 × 694. Enemigos G/P/C: 0 / 8 / 4 (individual: 0 / 5 / 4).
+Arena: 1541 × 694. Enemigos G/P/C/H: 0 / 8 / 4 / 0 (individual: 0 / 5 / 4 / 0).
 
 - **P1:** (314.4, 195.2); P1 · extremo norte del nudo. Enemigo más cercano: 338; líneas iniciales: 1; salidas libres: 8/8.
 - **P2:** (326.4, 627.2); P2 · extremo sur del nudo. Enemigo más cercano: 309; líneas iniciales: 0; salidas libres: 8/8.
@@ -969,7 +971,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 4.30 segu
 
 **Decisión de diseño:** El asedio mantiene cuatro defensas y puertas sucesivas; cuatro escoltas adicionales protegen salidas y respuestas de sector.
 
-Arena: 1541 × 694. Enemigos G/P/C: 1 / 8 / 4 (individual: 0 / 5 / 4).
+Arena: 1541 × 694. Enemigos G/P/C/H: 1 / 8 / 4 / 0 (individual: 0 / 5 / 4 / 0).
 
 - **P1:** (314.4, 159.2); P1 · asedio por arriba. Enemigo más cercano: 360; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (314.4, 627.2); P2 · asedio por abajo. Enemigo más cercano: 576; líneas iniciales: 0; salidas libres: 8/8.
@@ -993,7 +995,7 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 2.70 segu
 
 **Decisión de diseño:** Trece enemigos con posiciones explícitas defienden los tres sectores. El refugio de enlace y las dos salidas evitan avanzar juntos bajo fuego amigo.
 
-Arena: 1541 × 694. Enemigos G/P/C: 1 / 8 / 4 (individual: 0 / 5 / 4).
+Arena: 1541 × 694. Enemigos G/P/C/H: 1 / 8 / 4 / 0 (individual: 0 / 5 / 4 / 0).
 
 - **P1:** (314.4, 159.2); P1 · mando del frente norte. Enemigo más cercano: 384; líneas iniciales: 2; salidas libres: 8/8.
 - **P2:** (314.4, 639.2); P2 · mando del frente sur. Enemigo más cercano: 576; líneas iniciales: 1; salidas libres: 8/8.
@@ -1009,6 +1011,6 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 2.77 segu
 
 ## Continuidad hacia tres y cuatro jugadores
 
-Conservar la identidad y las introducciones. Diseñar papeles, rutas, repliegues y escolta expresamente; no reutilizar una formación de dos jugadores ni multiplicar toda su plantilla. Los mapas actuales de tres y cuatro permanecen en `cooperativeLevels`. `campaignVariants[2]` selecciona `duoLevels`, mientras `[1]` sigue seleccionando el catálogo individual revisado. No cambiar físicas, IA, cadencia, fuego amigo o audio para compensar un mapa mal desplegado.
+Conservar la identidad y las introducciones. Diseñar papeles, rutas, repliegues y escolta expresamente; no reutilizar una formación de dos jugadores ni multiplicar toda su plantilla. Las variantes de tres y cuatro conservan `cooperativeLevels`, salvo la misión 21 con su debut diseñado del cazador. `campaignVariants[2]` selecciona `duoLevels`, mientras `[1]` sigue seleccionando el catálogo individual revisado. No cambiar físicas, IA, cadencia, fuego amigo o audio para compensar un mapa mal desplegado.
 
 Reproducir el atlas: `npm run review:duo`. Verificar: `npm test`, `npm run build`, `npm run test:e2e`.

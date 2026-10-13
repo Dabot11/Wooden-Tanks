@@ -13,7 +13,7 @@ test('all forty solo layouts render their authored briefing, deploy safely and a
     }
     await expect(page.getByRole('heading',{name:level.name,exact:true})).toBeVisible();
     await expect(page.locator('.mission-briefing')).toContainText(level.design!.lesson);
-    await expect(page.locator('.brief-total')).toContainText(`${level.enemies.length} tanques enemigos`);
+    await expect(page.locator('.brief-total')).toContainText(`${level.enemies.length} ${level.enemies.length===1?'tanque enemigo':'tanques enemigos'}`);
     await page.evaluate(()=>{(window as any).__wooden.world.ai.update=()=>{};});
     await waitForPlaying(page);
     expect(await page.evaluate(()=>{const w=(window as any).__wooden.world;return {player:{x:w.player.x,y:w.player.y},enemies:w.enemies.length,holes:w.holes.length,obstacles:w.obstacles.length};}))

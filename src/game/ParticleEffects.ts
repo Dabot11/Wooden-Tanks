@@ -18,6 +18,7 @@ export class ParticleEffects {
     this.scene.tweens.addCounter({ from: 0, to: 1, duration: DEATH_SETTLE_MS, onComplete: done });
   }
   event(event: CombatEvent) {
+    if(event.type==='hunterWindup'){audio.play('hunterWindup');return;}
     audio.play(event.type);
     const { x, y, type } = event;
     if (type === 'shot') {

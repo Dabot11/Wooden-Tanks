@@ -2,12 +2,14 @@ export interface Vec { x: number; y: number }
 export interface PlayerInput { move: Vec; aim: Vec; fire: boolean }
 export interface Rect extends Vec { w: number; h: number }
 export interface Hole extends Vec { radius: number }
-export type TankKind = 'player' | 'basic' | 'patrol' | 'tactical';
-export type AIState = 'Idle' | 'Patrol' | 'Chase' | 'Aim' | 'Shoot' | 'Evade' | 'Reposition';
+export type TankKind = 'player' | 'basic' | 'patrol' | 'tactical' | 'hunter';
+export type AIState = 'Idle' | 'Patrol' | 'Chase' | 'Aim' | 'Shoot' | 'Evade' | 'Reposition' | 'Observe' | 'Flank' | 'Windup' | 'Recover' | 'Search';
+export interface HunterStatus { targetId: number | null; lastSeen?: Vec; memory: number; charge: number }
 export interface Tank extends Vec {
   id: number; kind: TankKind; alive: boolean; angle: number; turret: number;
   radius: number; cooldown: number; state: AIState; think: number;
   goal: Vec; path: Vec[]; pathTime: number; shots: number; distance: number;
+  hunter?: HunterStatus;
 }
 export interface Projectile extends Vec {
   id: number; owner: number; vx: number; vy: number; age: number;
@@ -23,12 +25,12 @@ export interface MissionDesign {
   changes: string;
   routes: TacticalRoute[];
   bankTargets?: { from: Vec; enemy: number }[];
-  cooperation?: { roles: [string, string]; rally: Vec };
+  cooperation?: { roles: string[]; rally: Vec };
 }
 export interface Level { design?: MissionDesign; bankShotOnly?: boolean; arena?: Rect; playerSpawns?: Vec[]; id: number; name: string; subtitle: string; obstacles: (Rect & { destructible?: boolean })[]; holes?: Hole[]; player: Vec; enemies: Spawn[]; difficulty: number }
 export type CombatEvent =
   | { type: 'shot'; x: number; y: number; angle: number; player: boolean }
-  | { type: 'bounce' | 'impact' | 'break' | 'shellCollision'; x: number; y: number }
+  | { type: 'bounce' | 'impact' | 'break' | 'shellCollision' | 'hunterWindup'; x: number; y: number }
   | { type: 'destroy'; x: number; y: number; player: boolean; kind: TankKind };
 export const ARENA: Rect = { x: 48, y: 44, w: 1184, h: 578 };
 export const WIDTH = 1280;

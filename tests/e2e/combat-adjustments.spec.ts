@@ -81,6 +81,9 @@ test('initial menu has clear mode choices, keyboard navigation and no reference 
   await page.keyboard.press('ArrowDown'); await expect(page.locator('#gamepad-settings')).toBeFocused();
   await page.keyboard.press('Enter'); await expect(page.getByRole('heading', { name: 'Tu control, tu zona' })).toBeVisible();
   await page.keyboard.press('Escape'); await expect(page.locator('#gamepad-settings')).toBeFocused();
+  await page.keyboard.press('ArrowDown'); await expect(page.locator('#hunter-test')).toBeFocused();
+  await page.keyboard.press('Enter'); await expect(page.getByRole('heading',{name:'Conoce al cazador'})).toBeVisible();
+  await page.keyboard.press('Escape'); await expect(page.locator('#hunter-test')).toBeFocused();
   await page.keyboard.press('ArrowDown'); await expect(page.locator('#play')).toBeFocused();
   await page.keyboard.press('Enter'); await waitForPlaying(page);
   expect(await page.evaluate(() => (window as any).__wooden.world.level.id)).toBe(1);

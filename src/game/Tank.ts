@@ -7,5 +7,5 @@ export function createTank(id: number, kind: TankKind, position: Vec): Tank {
     pathTime: 0, shots: 0, distance: 0 };
 }
 export const TANK_COLORS: Record<TankKind, number> = {
-  player: 0x258db2, basic: 0x81868a, patrol: 0x82659b, tactical: 0xd9ceaa,
+  player: 0x258db2, basic: 0x81868a, patrol: 0x82659b, tactical: 0xd9ceaa, hunter: 0x42454a,
 };

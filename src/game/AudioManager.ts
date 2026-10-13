@@ -1,9 +1,9 @@
-export type Sound = 'shot' | 'bounce' | 'impact' | 'break' | 'destroy' | 'win' | 'shellCollision' | 'tread' | 'defeat';
+export type Sound = 'shot' | 'bounce' | 'impact' | 'break' | 'destroy' | 'win' | 'shellCollision' | 'tread' | 'defeat' | 'hunterWindup';
 export type AudioScene = 'menu' | 'briefing' | 'battle' | 'silent' | 'defeat';
 export const MARCH_TEMPO = 112;
 // An original minor-key toy march: plucked melody, bass and snare, on eighth notes.
 export const MARCH_MELODY = [69,0,72,74,76,0,74,72,69,0,67,69,72,0,67,0,65,0,69,72,74,0,72,69,67,0,64,67,69,0,64,0];
-export const SOUND_DURATION: Record<Sound, number> = { shot: .19, bounce: .16, impact: .14, break: .32, destroy: 1.05, shellCollision: .38, win: .5, tread: .1, defeat: 1.4 };
+export const SOUND_DURATION: Record<Sound, number> = { shot: .19, bounce: .16, impact: .14, break: .32, destroy: 1.05, shellCollision: .38, win: .5, tread: .1, defeat: 1.4, hunterWindup:.55 };
 const frequency = (note: number) => 440 * 2 ** ((note - 69) / 12);
 /** Schedule finite voices; OfflineAudioContext can render the same synthesis as live play. */
 export function synthSound(ctx: BaseAudioContext, output: AudioNode, type: Sound, at = ctx.currentTime, noise?: AudioBuffer): AudioScheduledSourceNode[] {
@@ -25,6 +25,7 @@ export function synthSound(ctx: BaseAudioContext, output: AudioNode, type: Sound
     source.onended = () => { source.disconnect(); filter.disconnect(); gain.disconnect(); };
   };
   if (type === 'shot') { voice(330,85,.3); voice(1450,520,.07,'sine'); burst(1700,.25,.075); }
+  else if(type==='hunterWindup'){voice(260,640,.08,'triangle');voice(780,900,.035,'sine',.15);burst(1300,.08,.045);}
   else if (type === 'bounce' || type === 'impact') { voice(type === 'bounce' ? 540 : 390,180,.2,'sine'); voice(940,460,.065,'triangle',.009); burst(2200,.14,.045); }
   else if (type === 'tread') { voice(145,85,.1); voice(740,390,.045,'sine'); burst(900,.07,.045); }
   else if (type === 'defeat') { voice(392,392,.11,'triangle'); voice(311,311,.12,'triangle',.28); voice(262,262,.14,'triangle',.58); voice(196,147,.1,'sine',.85); }

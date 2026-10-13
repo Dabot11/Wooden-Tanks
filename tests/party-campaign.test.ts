@@ -37,7 +37,7 @@ test('the campaign introduces only gray scouts, striped raiders and stationary s
   assert.ok(levels.slice(2, 6).some(l => l.enemies.some(e => e.kind === 'patrol')));
   assert.ok(levels.slice(0, 6).every(l => l.enemies.every(e => e.kind !== 'tactical')));
   assert.ok(levels[6].enemies.some(e => e.kind === 'tactical'));
-  assert.deepEqual(new Set(levels.flatMap(l => l.enemies.map(e => e.kind))), new Set(['basic', 'patrol', 'tactical']));
+  assert.deepEqual(new Set(levels.flatMap(l => l.enemies.map(e => e.kind))), new Set(['basic', 'patrol', 'tactical', 'hunter']));
 });
 for (const count of [3, 4] as PlayerCount[]) for (const layout of ['two-pads', 'keyboard-pad'] as const) test(`${count} players with ${layout}: stable device assignment, reconnect safety and shared pause`, () => {
   const team = new GamepadTeam(), pads = Array.from({ length: count - (layout === 'keyboard-pad' ? 1 : 0) }, (_, i) => pad(i * 2));
@@ -65,7 +65,7 @@ test('all four tanks accept independent aim/fire and friendly shots kill any tea
   }
   assert.equal(w.alivePlayers.length, 1);
 });
-for (const kind of ['basic', 'patrol', 'tactical'] as const) test(`${kind}: real missiles respect speed, ammunition and wall bounce profile after owner dies`, () => {
+for (const kind of ['basic', 'patrol', 'tactical', 'hunter'] as const) test(`${kind}: real missiles respect speed, ammunition and wall bounce profile after owner dies`, () => {
   const w = new World({ ...fixture, enemies: [{ x: 650, y: 300, kind }] }), tank = w.enemies[0];
   tank.cooldown = 0; tank.turret = 0; assert.ok(w.fire(tank));
   const p = w.projectiles[0], limit = kind === 'basic' ? 0 : 1;

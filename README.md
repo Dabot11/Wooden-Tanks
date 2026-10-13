@@ -159,3 +159,7 @@ Consulta el [registro misión por misión](docs/solo-campaign-review.md) o el [a
 La pareja tiene mapas propios en `src/game/missions/duo`, con dos apariciones, una formación enemiga explícita, dos rutas asignadas y reagrupamiento accesible. Se conserva la identidad de cada misión individual y el orden de introducción de enemigos. El mapa y las fuerzas se usan tal como están definidos, sin volver a escalar ni añadir refuerzos automáticos.
 
 Consulta el [registro de las 40 variantes](docs/duo-campaign-review.md) o el [atlas individual/pareja](https://dabot11.github.io/Wooden-Tanks/duo-campaign-review.html). `npm run review:duo` regenera ambos desde los mapas jugables.
+
+## Probar el cazador
+
+**Probar cazador** en el menú abre una práctica con un cazador y dos coberturas, para uno a cuatro jugadores, conservando el progreso de campaña. La misión 21 presenta al nuevo enemigo con poca escolta: tres enemigos para uno/dos jugadores y cuatro para tres/cuatro. El cazador flanquea, recuerda brevemente posiciones visibles y se detiene para preparar un disparo normal con un rebote. Muere con un impacto. Consulta el [diseño y alcance del prototipo](docs/hunter.md).

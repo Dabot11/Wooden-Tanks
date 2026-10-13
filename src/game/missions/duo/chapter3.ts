@@ -1,8 +1,8 @@
 import { block as w, enemy as e } from '../shared';
 import { at, type DuoPlan } from './design';
 export const duoChapter3: DuoPlan[] = [
-  {id:21,starts:[at(180,150),at(180,510)],extras:[e(920,500,'patrol'),e(1090,340,'patrol'),e(720,280,'basic')],cover:[w(240,300,88,44),w(300,440,44,80)],rally:at(910,350),
-    lesson:'Liberen las dos líneas de corte y sostengan el enlace antes de entrar al siguiente sector.',roles:['P1 · línea de corte alta','P2 · línea de corte baja'],changes:'La línea central tiene escolta propia y refugio lateral; cada sector admite avance y retirada de un jugador.'},
+  {id:21,starts:[at(180,150),at(180,510)],extras:[],cover:[w(240,300,88,44)],rally:at(840,350),
+    lesson:'Uno atrae al cazador; el otro vigila su flanco. Ataquen cuando se detenga para cargar.',roles:['P1 · atraer desde el frente alto','P2 · vigilar el rodeo bajo'],changes:'Un cazador y dos exploradores sustituyen nueve enemigos. Los flancos y el refugio de enlace enseñan el relevo de señuelo con fuego amigo.'},
   {id:22,starts:[at(180,140),at(180,520)],extras:[e(810,480,'patrol'),e(1090,330,'patrol'),e(650,250,'basic')],cover:[w(290,310,88,44),w(300,130,44,100)],rally:at(850,340),
     lesson:'Avancen de caja en caja con un carril cada uno; esperen al compañero antes del último cruce.',roles:['P1 · cadena de cajas alta','P2 · cadena de cajas baja'],changes:'Las pilas mantienen su silueta, con refugio de enlace y defensores distribuidos por ambas cadenas.'},
   {id:23,starts:[at(170,170),at(180,520)],extras:[e(1120,320,'patrol'),e(840,500,'patrol'),e(920,160,'basic')],cover:[w(410,320,66,44)],rally:at(910,340),
