@@ -1,4 +1,4 @@
-import type { Level, Vec } from './types';
+import type { Level, Vec, PlayerCount } from './types';
 import { SHOT_SPEED } from './types';
 import { World } from './World';
 import { findPath, bankAngle } from './EnemyAI';
@@ -41,22 +41,22 @@ export function auditSolo(level: Level): SoloAudit {
   return {id:level.id,issues:[...new Set(issues)],routes,directThreats,nearestEnemy,escapeDirections,bankTargets:level.design?.bankTargets?.length??0};
 }
 /** Real projectile geometry, including tank bodies, wall ricochets and the seven-second lifetime. */
-export function canHitFrom(level: Level, from: Vec, index: number, ricochet: boolean): boolean {
-  const world = new World(level), target = world.enemies[index];
-  if (!world.canStand(from,world.player.radius,0)) return false;
-  Object.assign(world.player,from);
+export function canHitFrom(level: Level, from: Vec, index: number, ricochet: boolean, playerCount: PlayerCount = 1, playerIndex = 0): boolean {
+  const world = new World(level,playerCount), target = world.enemies[index], player=world.players[playerIndex];
+  if (!world.canStand(from,player.radius,player.id)) return false;
+  Object.assign(player,from);
   const angle = ricochet ? bankAngle(from,target,world.solids,SHOT_SPEED*6.8) : Math.atan2(target.y-from.y,target.x-from.x);
   if (angle===null) return false;
-  world.player.turret=angle;
-  if (!world.fire(world.player)) return false;
-  for(let frame=0;frame<840&&target.alive&&world.player.alive&&world.projectiles.length;frame++)
-    world.update(1/120,{move:{x:0,y:0},aim:{x:from.x+Math.cos(angle)*10000,y:from.y+Math.sin(angle)*10000},fire:false},false);
+  player.turret=angle;
+  if (!world.fire(player)) return false;
+  for(let frame=0;frame<840&&target.alive&&player.alive&&world.projectiles.length;frame++)
+    world.update(1/120,{move:{x:0,y:0},aim:{x:world.player.x+Math.cos(world.player.turret)*10000,y:world.player.y+Math.sin(world.player.turret)*10000},fire:false},false);
   return !target.alive && (!ricochet || world.events.some(event=>event.type==='bounce'));
 }
 export interface CorkAudit { obstacle: number; before: number; after: number; from: Vec; to: Vec; afterPath: Vec[] }
 /** Compare a passage across each cork piece with the same passage after its destruction. */
-export function auditCork(level: Level): CorkAudit[] {
-  const world=new World(level), results:CorkAudit[]=[];
+export function auditCork(level: Level, playerCount: PlayerCount = 1): CorkAudit[] {
+  const world=new World(level,playerCount), results:CorkAudit[]=[];
   const length=(from:Vec,to:Vec)=>{
     const path=findPath(from,to,world.movementSolids,20,world.arena);
     if(!path.length)return Infinity;

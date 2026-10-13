@@ -14,8 +14,8 @@ for (const count of [1, 2, 3, 4] as const) test(`${count} players: all published
     const level = getLevel(soloLevel.id - 1, count);
     const original = structuredClone(level);
     const w = new World(level, count);
-    assert.equal(w.players.length, count); assert.equal(w.enemies.length, level.enemies.length * count);
-    assert.ok(w.arena.w >= 1184 * (1 + (count - 1) * 0.2));
+    assert.equal(w.players.length, count); assert.equal(w.enemies.length, level.enemies.length * (level.playerSpawns ? 1 : count));
+    assert.ok(w.arena.w >= (level.playerSpawns ? 1184 : 1184 * (1 + (count - 1) * 0.2)));
     for (const tank of w.tanks) {
       assert.ok(w.canStand(tank, tank.radius, tank.id), `mission ${level.id}, tank ${tank.id}`);
       assert.ok(tank.x >= w.arena.x + tank.radius && tank.x <= w.arena.x + w.arena.w - tank.radius);

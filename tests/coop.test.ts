@@ -64,7 +64,7 @@ test('unsupported controllers cannot start co-op', () => {
 });
 test('both tanks spawn safely with a reachable route in every mission and the regression fixture', () => {
   for (const l of [...levels, demo]) {
-    const w = new World(l.id <= levels.length ? getLevel(l.id - 1, 2) : l, 2); assert.equal(w.players.length, 2); assert.equal(w.enemies.length, w.level.enemies.length * 2);
+    const w = new World(l.id <= levels.length ? getLevel(l.id - 1, 2) : l, 2); assert.equal(w.players.length, 2); assert.equal(w.enemies.length, w.level.enemies.length * (w.level.playerSpawns ? 1 : 2));
     const p = w.players[1]; assert.ok(w.canStand(p, p.radius, p.id), `mission ${l.id}`);
     assert.ok(findPath(w.player, p, w.movementSolids, 20, w.arena).length, `reachable mission ${l.id}`);
   }

@@ -140,7 +140,7 @@ El juego está diseñado para computadora con teclado/mouse o gamepad estándar.
 
 ## Preparación y audio
 
-La campaña tiene 30 misiones. Las partidas que terminaron el capítulo de veinte misiones desbloquean la misión 21 y conservan el récord y el sonido. Antes de cada misión y cada reintento aparece su nombre, objetivo y cantidad real de exploradores, patrulleros y centinelas, incluidos los refuerzos del cooperativo. La simulación espera a **Continuar** (clic, Enter o A del mando). Los duelos conservan su introducción de ronda.
+La campaña tiene 40 misiones. Las partidas que terminaron el capítulo de veinte misiones desbloquean la misión 21 y conservan el récord y el sonido. Antes de cada misión y cada reintento aparece su nombre, objetivo y cantidad real de exploradores, patrulleros y centinelas, incluidos los refuerzos del cooperativo. La simulación espera a **Continuar** (clic, Enter o A del mando). Los duelos conservan su introducción de ronda.
 
 Una marcha original de 112 BPM combina melodía de juguete, bajo y percusión. Los efectos se sintetizan con Web Audio: disparos con chasquido y golpe grave, resonancias cortas de madera para rebotes, crujidos para destrucciones y orugas sincronizadas con el desplazamiento real. El volumen de la música deja espacio a los efectos; un compresor y límites de voces controlan las salvas grandes.
 
@@ -150,6 +150,12 @@ La derrota deja terminar la explosión y un motivo musical descendente antes de 
 
 ## Revisión individual de las 40 misiones
 
-La campaña de un jugador tiene diseños propios en `src/game/missions/solo`: cada misión documenta su lección, identidad, cambios y rutas. Se revisaron apariciones, coberturas, pasos de corcho y posiciones de tiro. Las variantes cooperativas conservan sus datos anteriores; `campaignVariants` y `getLevel` permiten revisarlas después por cantidad de jugadores sin alterar el progreso compartido.
+La campaña de un jugador tiene diseños propios en `src/game/missions/solo`: cada misión documenta su lección, identidad, cambios y rutas. Se revisaron apariciones, coberturas, pasos de corcho y posiciones de tiro. Las variantes de tres y cuatro jugadores conservan sus datos anteriores; `campaignVariants` y `getLevel` permiten revisarlas después por cantidad de jugadores sin alterar el progreso compartido.
 
 Consulta el [registro misión por misión](docs/solo-campaign-review.md) o el [atlas interactivo antes/después](https://dabot11.github.io/Wooden-Tanks/solo-campaign-review.html). `npm run review:solo` regenera ambos a partir de los mapas jugables. Las pruebas verifican que el atlas publicado corresponda al catálogo actual.
+
+## Revisión de las 40 misiones para dos jugadores
+
+La pareja tiene mapas propios en `src/game/missions/duo`, con dos apariciones, una formación enemiga explícita, dos rutas asignadas y reagrupamiento accesible. Se conserva la identidad de cada misión individual y el orden de introducción de enemigos. El mapa y las fuerzas se usan tal como están definidos, sin volver a escalar ni añadir refuerzos automáticos.
+
+Consulta el [registro de las 40 variantes](docs/duo-campaign-review.md) o el [atlas individual/pareja](https://dabot11.github.io/Wooden-Tanks/duo-campaign-review.html). `npm run review:duo` regenera ambos desde los mapas jugables.

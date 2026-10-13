@@ -20,5 +20,13 @@ export function showMissionBriefing(root: HTMLElement, world: World, proceed: ()
   }
   const total = document.createElement('p'); total.className = 'brief-total'; total.textContent = `${world.enemies.length} tanques enemigos · ${world.players.length} ${world.players.length === 1 ? 'jugador' : 'jugadores'}`;
   card.querySelector('.modal-actions')!.before(roster, total);
+  const cooperation = world.level.design?.cooperation;
+  if (world.players.length === 2 && cooperation) {
+    const plan = document.createElement('div'); plan.className = 'coop-plan'; plan.setAttribute('aria-label', 'Plan sugerido para la pareja');
+    for (const role of cooperation.roles) {
+      const hint = document.createElement('p'); hint.textContent = role; plan.append(hint);
+    }
+    total.before(plan);
+  }
   return remove;
 }

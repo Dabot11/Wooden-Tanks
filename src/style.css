@@ -235,6 +235,9 @@ kbd { font-family: inherit; font-size: .85em; border: 1px solid #8f826150; borde
 .enemy-brief-row strong { display: block; font-size: calc(14 * var(--unit)); }
 .enemy-brief-row small { display: block; margin-top: calc(4 * var(--unit)); font-size: calc(10 * var(--unit)); color: #817765; }
 .enemy-brief-row > b { font-size: calc(24 * var(--unit)); }
+.coop-plan { display: grid; gap: calc(6 * var(--unit)); margin: calc(10 * var(--unit)) 0; text-align: left; }
+.coop-plan p { margin: 0; padding-left: calc(10 * var(--unit)); border-left: calc(3 * var(--unit)) solid #258db2; font-size: calc(13 * var(--unit)); }
+.coop-plan p + p { border-color: #b84239; }
 
 .mission-chapter { grid-column: 1 / -1; text-align: left; margin: calc(8 * var(--unit)) 0 0; font-size: calc(11 * var(--unit)); color: #8a573d; letter-spacing: .06em; }
 

@@ -13,12 +13,13 @@ export class World {
   arena: Rect;
   walls: Rect[];
   constructor(public level: Level, playerCount: PlayerCount = 1, mode: 'campaign' | 'duel' = 'campaign') {
+    const authored = mode === 'campaign' && level.playerSpawns?.length === playerCount;
     const scale = 1 + (playerCount - 1) * 0.2;
     // Reserve extra friendly staging terrain in co-op instead of filling every corner with enemies.
     const staging = mode === 'campaign' && !level.bankShotOnly ? 120 * (playerCount - 1) * scale : 0;
     const heightScale = scale + staging / ARENA.w;
     const point = (p: Vec) => ({ x: ARENA.x + staging + (p.x - ARENA.x) * scale, y: ARENA.y + (p.y - ARENA.y) * heightScale });
-    if (playerCount > 1) this.level = level = { ...level, arena: { ...ARENA, w: ARENA.w * scale + staging, h: ARENA.h * heightScale }, player: point(level.player), enemies: level.enemies.map(e => ({ ...e, ...point(e) })), obstacles: level.obstacles.map(o => ({ ...o, ...point(o), w: o.w * scale, h: o.h * heightScale })), holes: level.holes?.map(h => ({ ...h, ...point(h) })) };
+    if (playerCount > 1 && !authored) this.level = level = { ...level, arena: { ...ARENA, w: ARENA.w * scale + staging, h: ARENA.h * heightScale }, player: point(level.player), enemies: level.enemies.map(e => ({ ...e, ...point(e) })), obstacles: level.obstacles.map(o => ({ ...o, ...point(o), w: o.w * scale, h: o.h * heightScale })), holes: level.holes?.map(h => ({ ...h, ...point(h) })) };
     this.arena = level.arena ?? ARENA;
     const bounds = this.arena;
     this.walls = [
@@ -31,12 +32,12 @@ export class World {
     this.holes = (level.holes ?? []).map(hole => ({ ...hole }));
     this.tanks = [createTank(0, 'player', level.player), ...level.enemies.map((s, i) => createTank(i + 1, s.kind, s))];
     this.obstacles = level.obstacles.map((o, i) => ({ ...o, id: i, hp: 3, alive: true, destructible: !!o.destructible }));
-    const spawns = mode === 'duel' ? duelSpawns(playerCount).map(point) : playerCount > 1 ? this.cooperativeSpawns(playerCount) : undefined;
+    const spawns = authored ? level.playerSpawns : mode === 'duel' ? duelSpawns(playerCount).map(point) : playerCount > 1 ? this.cooperativeSpawns(playerCount) : undefined;
     if (spawns) Object.assign(this.player, spawns[0]);
     for (let slot = 1; slot < playerCount; slot++) this.tanks.push(createTank(-slot, 'player', spawns![slot]));
     if (mode === 'campaign' && playerCount > 1) for (const player of this.players) player.turret = player.angle = 0;
     // Add one complete wave per additional player; distribute it over free terrain.
-    const extra = level.enemies.length * (playerCount - 1);
+    const extra = authored ? 0 : level.enemies.length * (playerCount - 1);
     for (let i = 0; i < extra; i++) {
       const source = level.enemies[i % level.enemies.length];
       let spawn: Vec | undefined;

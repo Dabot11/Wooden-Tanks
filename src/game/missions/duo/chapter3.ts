@@ -1,0 +1,24 @@
+import { block as w, enemy as e } from '../shared';
+import { at, type DuoPlan } from './design';
+export const duoChapter3: DuoPlan[] = [
+  {id:21,starts:[at(180,150),at(180,510)],extras:[e(920,500,'patrol'),e(1090,340,'patrol'),e(720,280,'basic')],cover:[w(240,300,88,44),w(300,440,44,80)],rally:at(910,350),
+    lesson:'Liberen las dos líneas de corte y sostengan el enlace antes de entrar al siguiente sector.',roles:['P1 · línea de corte alta','P2 · línea de corte baja'],changes:'La línea central tiene escolta propia y refugio lateral; cada sector admite avance y retirada de un jugador.'},
+  {id:22,starts:[at(180,140),at(180,520)],extras:[e(810,480,'patrol'),e(1090,330,'patrol'),e(650,250,'basic')],cover:[w(290,310,88,44),w(300,130,44,100)],rally:at(850,340),
+    lesson:'Avancen de caja en caja con un carril cada uno; esperen al compañero antes del último cruce.',roles:['P1 · cadena de cajas alta','P2 · cadena de cajas baja'],changes:'Las pilas mantienen su silueta, con refugio de enlace y defensores distribuidos por ambas cadenas.'},
+  {id:23,starts:[at(170,170),at(180,520)],extras:[e(1120,320,'patrol'),e(840,500,'patrol'),e(920,160,'basic')],cover:[w(410,320,66,44)],rally:at(910,340),
+    lesson:'Usen carriles alternados; el jugador del borde sostiene la salida del zigzag.',roles:['P1 · recorrer el zigzag','P2 · sostener el borde exterior'],changes:'El refugio tras el primer diente permite el relevo; los nuevos defensores cubren el final y el enlace, sin tapar las salidas.'},
+  {id:24,starts:[at(180,140),at(180,530)],extras:[e(1110,350,'patrol'),e(890,550,'patrol'),e(900,130,'basic')],cover:[w(280,310,88,44),w(300,130,44,100)],rally:at(890,350),
+    lesson:'P1 controla el giro alto y P2 el bajo. Abran la bisagra solo cuando puedan vigilar ambos lados.',roles:['P1 · giro alto de la bisagra','P2 · giro bajo de la bisagra'],changes:'La bisagra conserva las diagonales; un refugio de enlace y escolta por extremo impiden resolverla desde un único puesto.'},
+  {id:25,starts:[at(180,160),at(180,520)],extras:[e(1100,380,'patrol'),e(710,400,'patrol'),e(920,130,'basic')],cover:[w(270,300,88,44),w(300,130,44,100)],rally:at(910,370),
+    lesson:'Uno provoca el tiro y el otro cambia de refugio. Intercambien papeles tras ganar el centro.',roles:['P1 · rotación entre refugios altos','P2 · rotación entre refugios bajos'],changes:'Los cuatro refugios se mantienen; el enlace lateral y las escoltas interiores exigen cambiar el ángulo en pareja.'},
+  {id:26,starts:[at(180,140),at(180,530)],extras:[e(710,420,'patrol'),e(1090,350,'patrol'),e(940,140,'basic')],cover:[w(280,300,88,44)],rally:at(680,350),
+    lesson:'Uno abre y cruza una puerta; el otro vigila el rodeo. Reúnanse antes de la segunda.',roles:['P1 · vigilar el rodeo alto','P2 · dominar las compuertas'],changes:'Ambas puertas siguen abriendo pasos reales. El equipo dispone de un refugio inicial y escolta distinta en cada sector.'},
+  {id:27,starts:[at(180,150),at(180,520)],extras:[e(920,310,'patrol'),e(900,520,'patrol'),e(1090,280,'basic')],cover:[w(310,310,88,44),w(300,130,44,100),w(300,430,44,90)],rally:at(950,380),
+    lesson:'Rodeen el anillo por extremos diferentes y acuerden qué entrada usar para reunirse.',roles:['P1 · entrada norte del anillo','P2 · entrada sur del anillo'],changes:'La cobertura lateral permite reagrupar sin cruzar el centro; los refuerzos defienden entradas opuestas del mismo anillo.'},
+  {id:28,starts:[at(180,140),at(180,520)],extras:[e(750,170,'patrol'),e(1090,360,'patrol'),e(900,550,'basic')],cover:[w(280,310,88,44),w(300,130,44,100)],rally:at(740,410),
+    lesson:'Sostengan las dos eles y usen la diagonal para apoyar al compañero sin dispararle por detrás.',roles:['P1 · diagonal alta','P2 · diagonal baja'],changes:'Las eles conservan su emboscada diagonal; las nuevas patrullas vigilan enlaces distintos y hay refugio antes de cambiar de lado.'},
+  {id:29,starts:[at(180,150),at(180,530)],extras:[e(890,200,'patrol'),e(1060,410,'patrol'),e(700,350,'patrol')],cover:[w(270,300,88,44)],rally:at(800,360),
+    lesson:'Provocación y ataque deben venir de ángulos distintos; roten el señuelo después de cada ventana.',roles:['P1 · provocar desde la ventana alta','P2 · aprovechar la ventana baja'],changes:'Se mantienen tres defensas; la escolta adicional vigila conexiones y el refugio lateral permite cambiar el señuelo.'},
+  {id:30,starts:[at(170,140),at(170,540)],extras:[e(1080,350,'patrol'),e(820,520,'patrol'),e(700,300,'patrol'),e(920,140,'basic')],cover:[w(260,320,88,44)],rally:at(850,350),
+    lesson:'Conquisten sectores complementarios y esperen al compañero para entrar al último frente.',roles:['P1 · conquista alta por sectores','P2 · conquista baja por sectores'],changes:'El examen mantiene tres sectores y agrega escolta en cada conexión, sin duplicar todas las posiciones.'},
+];

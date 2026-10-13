@@ -49,7 +49,7 @@ test('solo revisions preserve mission identity and exact existing cooperative da
   assert.equal(createHash('sha256').update(JSON.stringify(cooperativeLevels)).digest('hex'),'72f8366dceb74a8c58de3266c4b37979596d356b34e2ca4be8bdebbf3b424596');
   for(const level of levels) {
     assert.equal(getLevel(level.id-1),level);
-    for(const count of [2,3,4] as const) {
+    for(const count of [3,4] as const) {
       assert.equal(getLevel(level.id-1,count),cooperativeLevels[level.id-1]);
       assert.equal(getLevel(level.id-1,count).name,level.name);
     }
