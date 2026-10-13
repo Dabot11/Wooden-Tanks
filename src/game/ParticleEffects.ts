@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import type { CombatEvent } from './types';
 import { audio } from './AudioManager';
+// Let the longest death effects finish before covering or replacing the board.
+export const DEATH_SETTLE_MS = 2200;
 export class ParticleEffects {
   private count = 0;
   constructor(private scene: Phaser.Scene) {}
@@ -29,10 +31,21 @@ export class ParticleEffects {
       }
       for (let i = 0; i < 5; i++) this.particle('smoke', x, y, (Math.random() - 0.5) * 32, -12 - Math.random() * 20, 450 + Math.random() * 200, 0.45);
     } else if (type === 'destroy') {
-      this.scene.cameras.main.shake(160, event.player ? 0.003 : 0.0014);
+      const marker = this.scene.add.graphics().setPosition(x, y).setDepth(3).setAlpha(0).setData('death-marker', true);
+      marker.lineStyle(7, 0x57412b, 0.25);
+      marker.lineBetween(-10, -8, 10, 8); marker.lineBetween(10, -8, -10, 8);
+      marker.lineStyle(4, 0xfff9e8, 0.95);
+      marker.lineBetween(-10, -8, 10, 8); marker.lineBetween(10, -8, -10, 8);
+      this.scene.tweens.add({ targets: marker, alpha: 1, delay: 450, duration: 450 });
+      // The core blast and persistent marker are independent of the debris budget.
+      const flash = this.scene.add.image(x, y, 'spark').setDepth(42).setScale(0.7).setBlendMode(Phaser.BlendModes.ADD).setData('tank-explosion', true);
+      const ring = this.scene.add.circle(x, y, 10, 0xffaa45, 0.3).setStrokeStyle(3, 0xffe5a0, 0.9).setDepth(41).setData('tank-explosion', true);
+      this.scene.tweens.add({ targets: flash, scale: 5, alpha: 0, duration: 400, ease: 'Cubic.Out', onComplete: () => flash.destroy() });
+      this.scene.tweens.add({ targets: ring, scale: 5.5, alpha: 0, duration: 550, ease: 'Cubic.Out', onComplete: () => ring.destroy() });
+      this.scene.cameras.main.shake(220, event.player ? 0.003 : 0.0014);
       for (let i = 0; i < 12; i++) { const a = Math.random() * Math.PI * 2, d = 20 + Math.random() * 45; this.particle('spark', x, y, Math.cos(a) * d, Math.sin(a) * d, 250 + Math.random() * 200, 0.7 + Math.random()); }
-      for (let i = 0; i < 8; i++) this.particle('smoke', x, y, (Math.random() - 0.5) * 65, -20 - Math.random() * 45, 650 + Math.random() * 500, 0.8);
-      for (let i = 0; i < 10; i++) this.particle('chip', x, y, (Math.random() - 0.5) * 80, (Math.random() - 0.5) * 80, 600, 1.4);
+      for (let i = 0; i < 8; i++) this.particle('smoke', x, y, (Math.random() - 0.5) * 65, -20 - Math.random() * 45, 1200 + Math.random() * 600, 0.9);
+      for (let i = 0; i < 10; i++) this.particle('chip', x, y, (Math.random() - 0.5) * 80, (Math.random() - 0.5) * 100, 900, 1.4);
     } else {
       const amount = type === 'break' ? 20 : 5;
       for (let i = 0; i < amount; i++) this.particle(type === 'break' ? 'chip' : 'spark', x, y, (Math.random() - 0.5) * 65, (Math.random() - 0.5) * 65, type === 'break' ? 650 : 200, type === 'break' ? 1.2 : 0.5);

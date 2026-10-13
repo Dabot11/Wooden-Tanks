@@ -90,7 +90,7 @@ test('projectile impacts consume lives, reset the mission, show Game Over and al
   expect((await state(page)).lives).toBe(3);
 });
 test('all campaign transitions and final victory handle actual collision outcomes', async ({ page }) => {
-  test.setTimeout(120000);
+  test.setTimeout(180000);
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
   await start(page);
   for (let level = 0; level < 30; level++) {

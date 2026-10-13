@@ -3,7 +3,7 @@ import { duelLevel, duelResult, DUEL_TARGET } from '../game/Duel';
 import { World } from '../game/World';
 import { getLevel, levels } from '../game/LevelManager';
 import { BoardRenderer } from '../game/BoardRenderer';
-import { ParticleEffects } from '../game/ParticleEffects';
+import { ParticleEffects, DEATH_SETTLE_MS } from '../game/ParticleEffects';
 import { progress } from '../game/Progress';
 import { audio } from '../game/AudioManager';
 import { HUD } from '../ui/HUD';
@@ -115,7 +115,7 @@ export class GameScene extends Phaser.Scene {
     this.session.wins = wins; this.hud.update(this.world, this.session);
     const champion = result !== null && wins[result] >= DUEL_TARGET;
     const round = this.session.round ?? 1;
-    this.time.delayedCall(900, () => {
+    this.time.delayedCall(DEATH_SETTLE_MS, () => {
       this.status = 'ended';
       showOverlay(this.root, { eyebrow: champion ? 'DUELO TERMINADO' : `RONDA ${round}`, title: result === null ? 'Empate' : `P${result + 1} ${champion ? 'gana el duelo' : 'gana la ronda'}`,
         description: wins.slice(0, this.world.players.length).map((w, i) => `P${i + 1}: ${w} / ${DUEL_TARGET}`).join(' · '), cancel: () => this.menu(), actions: [
@@ -129,28 +129,31 @@ export class GameScene extends Phaser.Scene {
     this.reticle.hidden = true;
     audio.setScene('briefing'); this.status = 'won'; document.querySelector('#app')!.classList.remove('gameplay');
     const bonus = Math.max(100, Math.round(500 - this.world.elapsed * 3)); this.session.score += bonus;
-    progress.record(this.session.score); audio.play('win'); this.hud.update(this.world, this.session);
+    progress.record(this.session.score); this.hud.update(this.world, this.session);
     const final = this.session.level === levels.length - 1;
     progress.unlock(this.session.level + 2);
-    const banner = document.createElement('div'); banner.className = 'mission-intro victory-toast';
-    banner.innerHTML = `<span class="eyebrow">TABLERO DESPEJADO</span><strong>Misión cumplida</strong><span>+${bonus} puntos por completar la misión</span>`; this.root.append(banner);
-    this.time.delayedCall(1800, () => {
-      banner.remove();
-      if (final) {
-        this.status = 'ended';
-        progress.data.wins++; progress.save();
-        showOverlay(this.root, { eyebrow: 'CAMPAÑA COMPLETADA', title: 'Maestro del taller', description: `${String(this.session.score).padStart(6, '0')} puntos. Cada huella cuenta.`, symbol: '+', cancel: () => this.menu(), actions: [
-          { text: 'Una nueva partida →', run: () => this.scene.restart({ session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop, playerCount: this.session.playerCount } }) },
-          { text: 'Volver al menú', secondary: true, run: () => this.menu() },
-        ] });
-      } else this.scene.restart({ session: { ...this.session, level: this.session.level + 1, missionStartScore: this.session.score } });
+    this.time.delayedCall(DEATH_SETTLE_MS, () => {
+      audio.play('win');
+      const banner = document.createElement('div'); banner.className = 'mission-intro victory-toast';
+      banner.innerHTML = `<span class="eyebrow">TABLERO DESPEJADO</span><strong>Misión cumplida</strong><span>+${bonus} puntos por completar la misión</span>`; this.root.append(banner);
+      this.time.delayedCall(1000, () => {
+        banner.remove();
+        if (final) {
+          this.status = 'ended';
+          progress.data.wins++; progress.save();
+          showOverlay(this.root, { eyebrow: 'CAMPAÑA COMPLETADA', title: 'Maestro del taller', description: `${String(this.session.score).padStart(6, '0')} puntos. Cada huella cuenta.`, symbol: '+', cancel: () => this.menu(), actions: [
+            { text: 'Una nueva partida →', run: () => this.scene.restart({ session: { level: 0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop, playerCount: this.session.playerCount } }) },
+            { text: 'Volver al menú', secondary: true, run: () => this.menu() },
+          ] });
+        } else this.scene.restart({ session: { ...this.session, level: this.session.level + 1, missionStartScore: this.session.score } });
+      });
     });
   }
   private loseLife() {
     gamepad.suppress();
     this.reticle.hidden = true;
-    audio.setScene('silent'); this.status = 'dead'; this.session.lives--; progress.record(this.session.score); this.hud.update(this.world, this.session);
-    this.time.delayedCall(1300, () => {
+    audio.setScene('briefing'); this.status = 'dead'; document.querySelector('#app')!.classList.remove('gameplay'); this.session.lives--; progress.record(this.session.score); this.hud.update(this.world, this.session);
+    this.time.delayedCall(DEATH_SETTLE_MS, () => {
       if (this.session.lives > 0) this.restartMission();
       else {
         this.status = 'ended'; document.querySelector('#app')!.classList.remove('gameplay');

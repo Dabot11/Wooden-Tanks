@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import type { Tank, Vec } from './types';
 import type { World } from './World';
 import { createTextures, obstacleTexture } from './TextureFactory';
-interface TankSprite { body: Phaser.GameObjects.Image; turret: Phaser.GameObjects.Image; shadow: Phaser.GameObjects.Image; last: number; label?: Phaser.GameObjects.Text }
+interface TankSprite { body: Phaser.GameObjects.Image; turret: Phaser.GameObjects.Image; shadow: Phaser.GameObjects.Image; last: number; destroyed?: boolean; label?: Phaser.GameObjects.Text }
 interface Mark extends Vec { angle: number; alpha: number }
 export class BoardRenderer {
   private tanks = new Map<number, TankSprite>();
@@ -24,11 +24,7 @@ export class BoardRenderer {
     this.tracks = scene.add.graphics().setDepth(1);
     this.trails = scene.add.graphics().setDepth(25);
     this.cracks = scene.add.graphics().setDepth(12);
-    const decor = scene.add.graphics().setDepth(2);
     for (const hole of world.holes) scene.add.image(hole.x, hole.y, 'hole').setScale(hole.radius / 15).setDepth(2);
-    // Chalk marks sit on the wooden surface.
-    decor.lineStyle(5, 0xfff5d6, 0.8);
-    for (const p of [{ x: 578, y: 90 }, { x: 660, y: 585 }]) { decor.lineBetween(p.x - 10, p.y - 8, p.x + 10, p.y + 8); decor.lineBetween(p.x + 10, p.y - 8, p.x - 10, p.y + 8); }
     // Rim made of separate wooden pieces, with rounded outer corner caps.
     for (let x = a.x - 38; x < a.x + a.w + 38; x += 70) {
       this.blockImage(x, a.y - 30, Math.min(70, a.x + a.w + 38 - x), 30).setDepth(14);
@@ -65,6 +61,14 @@ export class BoardRenderer {
     let dirty = false;
     for (const tank of this.world.tanks) {
       const sprite = this.tanks.get(tank.id)!;
+      if (!tank.alive && !sprite.destroyed) {
+        sprite.destroyed = true;
+        // Toss the actual painted toy parts through the blast before they fade.
+        for (const [part, distance, duration] of [[sprite.body, 13, 700], [sprite.turret, 38, 1100]] as const) {
+          const debris = this.scene.add.image(tank.x, tank.y, part.texture.key).setRotation(part === sprite.body ? tank.angle : tank.turret).setDepth(35).setData('tank-debris', true);
+          this.scene.tweens.add({ targets: debris, x: tank.x + Math.cos(tank.angle + 1) * distance, y: tank.y - distance, rotation: debris.rotation + 1.8, scale: 0.6, alpha: 0, duration, ease: 'Cubic.Out', onComplete: () => debris.destroy() });
+        }
+      }
       sprite.label?.setVisible(tank.alive).setPosition(tank.x, tank.y - 32);
       sprite.body.setVisible(tank.alive).setPosition(tank.x, tank.y).setRotation(tank.angle);
       sprite.turret.setVisible(tank.alive).setPosition(tank.x, tank.y).setRotation(tank.turret);
