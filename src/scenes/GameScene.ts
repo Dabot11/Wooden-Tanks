@@ -78,7 +78,7 @@ export class GameScene extends Phaser.Scene {
       this.closeBriefing = showMissionBriefing(this.root, this.world, () => {
         if (this.status !== 'intro' || (this.session.coop && !gamepad.ready)) return;
         this.closeBriefing?.(); this.closeBriefing = undefined; this.beginBattle();
-      }, () => this.menu());
+      }, () => this.menu(), this.textures);
     }
     if (import.meta.env.DEV) (window as any).__wooden = this;
   }

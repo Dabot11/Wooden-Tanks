@@ -1,10 +1,16 @@
-import { levels } from '../../src/game/LevelManager';
+import { levels, getLevel } from '../../src/game/LevelManager';
 import { test, expect } from '@playwright/test';
 test('briefing waits indefinitely, displays the roster, continues and returns before the next mission', async ({ page }) => {
   await page.goto('/'); await page.locator('#play').click();
   await expect(page.getByRole('heading', { name: 'Primeras huellas', exact: true })).toBeVisible();
   await expect(page.locator('.enemy-brief-row[data-kind="basic"]')).toContainText('× 1');
-  await expect(page.locator('.enemy-brief-row[data-kind="tactical"]')).toContainText('× 0');
+  await expect(page.locator('.enemy-brief-row')).toHaveCount(1);
+  await expect(page.locator('.enemy-brief-row[data-kind="tactical"]')).toHaveCount(0);
+  await expect(page.locator('.enemy-brief-row img')).toBeVisible();
+  expect(await page.locator('.mission-briefing').evaluate(el=>getComputedStyle(el).backgroundImage)).toContain('url(');
+  await expect(page.getByRole('button',{name:'Volver al menú',exact:true})).toBeInViewport({ratio:1});
+  await page.waitForTimeout(600); // Let the decorative entrance finish for the visual review.
+  await page.screenshot({path:'.playwright/briefing-new-solo.png'});
   const before=await page.evaluate(()=>{const w=(window as any).__wooden.world;return {elapsed:w.elapsed,positions:w.tanks.map((p:any)=>[p.x,p.y]),shots:w.projectiles.length};});
   await page.keyboard.down('w'); await page.keyboard.down('Space'); await page.waitForTimeout(1800); await page.keyboard.up('w'); await page.keyboard.up('Space');
   expect(await page.evaluate(()=>{const w=(window as any).__wooden.world;return {elapsed:w.elapsed,positions:w.tanks.map((p:any)=>[p.x,p.y]),shots:w.projectiles.length};})).toEqual(before);
@@ -64,20 +70,30 @@ test('music and tread effects obey actual movement, pause, mute and resume',asyn
   await expect.poll(()=>page.evaluate(()=>(window as any).__wooden.audioState.voices)).toBeLessThan(90);expect(errors).toEqual([]);
 });
 test('four-player chapter briefing includes all reinforcements and accepts Continue from P4',async({page})=>{
+  await page.setViewportSize({width:1024,height:576});
   await page.addInitScript(()=>{
     (window as any).__briefPads=Array.from({length:4},(_,index)=>({index,id:'Xbox Series Controller',mapping:'standard',connected:true,axes:[0,0,0,0],buttons:Array.from({length:17},()=>({pressed:false,value:0}))}));
     Object.defineProperty(navigator,'getGamepads',{value:()=>(window as any).__briefPads});
   });
-  await page.goto('/');await page.locator('#coop').click();await page.getByRole('button',{name:'4 jugadores',exact:true}).click();await page.waitForTimeout(100);
+  await page.goto('/');await page.locator('#coop').click();await page.getByRole('button',{name:'4 jugadores',exact:true}).click();
+  await page.getByRole('button',{name:'Jugar con controles →',exact:true}).click();await page.waitForTimeout(200);
   await page.evaluate(()=>(window as any).__briefPads.forEach((p:any)=>p.buttons[0]={pressed:true,value:1}));await page.waitForTimeout(120);
   await page.evaluate(()=>(window as any).__briefPads.forEach((p:any)=>p.buttons[0]={pressed:false,value:0}));
   await expect(page.locator('.brief-total')).toContainText('4 tanques enemigos · 4 jugadores');
   await page.evaluate(()=>{const s=(window as any).__wooden;s.scene.restart({session:{...s.session,level:29}});});
   await expect(page.getByRole('heading',{name:'Gran maestro de madera',exact:true})).toBeVisible();
-  await expect(page.locator('.brief-total')).toContainText('36 tanques enemigos · 4 jugadores');
-  await expect(page.locator('[data-kind="tactical"]')).toContainText('× 16');
-  await expect(page.locator('[data-kind="patrol"]')).toContainText('× 16');
-  await expect(page.locator('[data-kind="basic"]')).toContainText('× 4');
+  const level=getLevel(29,4);
+  await expect(page.locator('.brief-total')).toContainText(`${level.enemies.length} tanques enemigos · 4 jugadores`);
+  await expect(page.locator('.enemy-brief-row')).toHaveCount(4);
+  for(const kind of ['basic','patrol','tactical','hunter']) {
+    const row=page.locator(`.enemy-brief-row[data-kind="${kind}"]`);
+    await expect(row).toContainText(`× ${level.enemies.filter(e=>e.kind===kind).length}`);
+    await expect(row.locator('img')).toBeVisible();
+  }
+  const loaded=await page.locator('.enemy-brief-row img').evaluateAll(images=>images.every(i=>(i as HTMLImageElement).complete&&(i as HTMLImageElement).naturalWidth>0));expect(loaded).toBe(true);
+  for(const name of ['Continuar →','Volver al menú'])await expect(page.getByRole('button',{name,exact:true})).toBeInViewport({ratio:1});
+  await page.waitForTimeout(600);
+  await page.screenshot({path:'.playwright/briefing-new-four.png'});
   await page.evaluate(()=>(window as any).__briefPads[3].buttons[0]={pressed:true,value:1});
   await expect.poll(()=>page.evaluate(()=>(window as any).__wooden.status)).toBe('playing');
   expect(await page.evaluate(()=>(window as any).__wooden.world.player.shots)).toBe(0);
