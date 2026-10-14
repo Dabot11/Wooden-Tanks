@@ -55,9 +55,9 @@ test('navigation validates clearance between neighboring free cells around an ob
   const path=findPath(start,end,boxes,20,arena);assert.ok(path.length);
   let from=start;for(const p of [...path,end]){assert.ok(lineClear(from,p,boxes,21),'free endpoints alone do not establish a safe edge');from=p;}
 });
-test('published three/four-player atlas matches every playable late formation and its assigned lanes',()=>{
+test('published three/four-player atlas matches every playable team formation and its assigned lanes',()=>{
   const html=readFileSync('public/party-campaign-review.html','utf8'),match=html.match(/const data=(.*?);let index=0;/s);assert.ok(match);
-  const reports=JSON.parse(match[1]);assert.equal(reports.length,20);
+  const reports=JSON.parse(match[1]);assert.equal(reports.length,40);
   for(const r of reports)for(const count of [3,4]as const){
     const v=r.variants[count];assert.deepEqual(v.level,getLevel(r.id-1,count));
     const audit=auditParty(v.level,count,true);assert.deepEqual(v.audit,audit);

@@ -31,9 +31,9 @@ Carbón con placas cobrizas, chevrón en el cuerpo y detalles de cobre en la tor
 
 ## Progresión y variantes
 
-Las misiones 1–20 y el debut de la 21 conservan sus datos. 22 combina un cazador con vigilancia; 23 ofrece un respiro de cazadores para practicar zigzag. 24–29 combinan uno con bisagra, refugios, compuertas, anillo y ventanas. 30 introduce dos cazadores en flancos distintos. 31–40 alternan movilidad y posiciones defensivas; la 36 conserva cinco centinelas y los equipos grandes encuentran un tercer cazador en encuentros seleccionados del último capítulo.
+Las campañas individual y de pareja y el debut de la 21 conservan sus datos. Tres y cuatro jugadores tienen diseños explícitos para las 40 misiones. 22 combina un cazador con vigilancia; 23 ofrece un respiro de cazadores para practicar zigzag. 24–29 combinan uno con bisagra, refugios, compuertas, anillo y ventanas. 30 introduce dos cazadores en flancos distintos. 31–40 alternan movilidad y posiciones defensivas; la 36 conserva cinco centinelas y los equipos grandes encuentran un tercer cazador en encuentros seleccionados del último capítulo.
 
-La cantidad máxima del tramo 22–40 es 7/9/10/11 enemigos para 1/2/3/4 jugadores. Se sustituyen escoltas redundantes, sin cambiar la inteligencia, velocidades o recarga ya aprobadas. Las variantes de tres/cuatro cuentan con una zona occidental más profunda, carriles de aparición separados, rutas de apoyo y una formación enemiga explícita. Las primeras veinte misiones de esos equipos todavía conservan su base anterior.
+La cantidad máxima del tramo 22–40 es 7/9/10/11 enemigos para 1/2/3/4 jugadores. Se sustituyen escoltas redundantes, sin cambiar la inteligencia, velocidades o recarga ya aprobadas. Las variantes de tres/cuatro cuentan con una zona occidental más profunda, carriles de aparición separados, rutas de apoyo y una formación enemiga explícita. Sus misiones 1–20 limitan los enemigos a ocho/nueve, conservan las introducciones y tienen una galería 16 ampliada que exige rebotes.
 
 Consulta el [registro de progresión](hunter-campaign-review.md) y el [atlas de equipos](https://dabot11.github.io/Wooden-Tanks/party-campaign-review.html), además de los atlas individual y de pareja. El zapador sigue como propuesta y no forma parte de esta integración.
 

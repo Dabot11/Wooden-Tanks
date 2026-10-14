@@ -112,6 +112,6 @@ test('hunter campaign preserves the introductory missions and its reviewed debut
  assert.equal(hash(levels),'efdaaf4522ab92619e369dc25f08969d3d8c4e23e9a5313e530085a3b3a7ce8a');assert.equal(hash(duoLevels),'52d470083c9839ca2eb0c87856229b8d7874daa16830fb6d4b4540fab8031e47');
  for(const count of [1,2,3,4]as PlayerCount[])for(let i=0;i<40;i++){
    const l=getLevel(i,count);assert.equal(l.enemies.some(e=>e.kind==='hunter'),i>=20&&i!==22);
-   if(count>=3&&i<20)assert.equal(l,cooperativeLevels[i]);
+   if(count>=3)assert.equal(l.playerSpawns?.length,count);
  }
 });

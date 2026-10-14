@@ -21,11 +21,12 @@ for (const count of [1, 2, 3, 4] as const) test(`${count} players: all published
       assert.ok(tank.x >= w.arena.x + tank.radius && tank.x <= w.arena.x + w.arena.w - tank.radius);
       assert.ok(tank.y >= w.arena.y + tank.radius && tank.y <= w.arena.y + w.arena.h - tank.radius);
     }
-    for (const enemy of w.enemies) {
+    for (const [index,enemy] of w.enemies.entries()) {
       const path = findPath(enemy, w.player, w.movementSolids, 20, w.arena);
       if (level.bankShotOnly) {
         assert.equal(path.length, 0);
-        assert.notEqual(bankAngle(w.player, enemy, w.solids, Math.hypot(w.arena.w, w.arena.h) * 1.5), null, 'a bank shot can reach every protected sentinel');
+        const posts=level.design?.bankTargets?.filter(b=>b.enemy===index).map(b=>b.from)??[w.player];
+        assert.ok(posts.some(p=>(Math.hypot(p.x-w.player.x,p.y-w.player.y)<35||findPath(w.player,p,w.movementSolids,20,w.arena).length>0)&&bankAngle(p,enemy,w.solids,Math.hypot(w.arena.w,w.arena.h)*1.5)!==null),'a reachable firing post can bank a shot to every protected sentinel');
       } else assert.ok(path.length, `mission ${level.id}: enemy ${enemy.id} has an approach route`);
     }
     for (const p of w.players.slice(1)) assert.ok(findPath(w.player, p, w.movementSolids, 20, w.arena).length);

@@ -1011,6 +1011,6 @@ Presión inicial, peor de tres semillas de IA hasta la primera caída: 3.70 segu
 
 ## Continuidad hacia tres y cuatro jugadores
 
-Conservar la identidad y las introducciones. Diseñar papeles, rutas, repliegues y escolta expresamente; no reutilizar una formación de dos jugadores ni multiplicar toda su plantilla. Las variantes de tres y cuatro conservan `cooperativeLevels` en 1–20; 21–40 tienen despliegues, papeles, rutas y apoyos explícitos, sin multiplicar toda la plantilla. Consulta su atlas en `party-campaign-review.html`. `campaignVariants[2]` selecciona `duoLevels`, mientras `[1]` sigue seleccionando el catálogo individual revisado. No cambiar físicas, IA, cadencia, fuego amigo o audio para compensar un mapa mal desplegado.
+Conservar la identidad y las introducciones. Diseñar papeles, rutas, repliegues y escolta expresamente; no reutilizar una formación de dos jugadores ni multiplicar toda su plantilla. Las variantes de tres y cuatro tienen despliegues, papeles, rutas y apoyos explícitos para las 40 misiones, sin multiplicar toda la plantilla. Consulta su atlas en `party-campaign-review.html`. `campaignVariants[2]` selecciona `duoLevels`, mientras `[1]` sigue seleccionando el catálogo individual revisado. No cambiar físicas, IA, cadencia, fuego amigo o audio para compensar un mapa mal desplegado.
 
 Reproducir el atlas: `npm run review:duo`. Verificar: `npm test`, `npm run build`, `npm run test:e2e`.

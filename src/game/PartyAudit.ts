@@ -29,7 +29,7 @@ export function auditParty(level:Level,count:3|4,pressure=false) {
   const rally=level.design?.cooperation?.rally;
   for(const p of w.players){
     if(!rally||!w.canStand(rally,20,p.id)||!findPath(p,rally,w.movementSolids,20,w.arena).length)issues.push('Reagrupamiento bloqueado');
-    for(const e of w.enemies)if(!findPath(p,e,w.movementSolids,20,w.arena).length)issues.push(`Enemigo sin acceso para P${1-p.id}`);
+    for(const e of w.enemies)if(!!findPath(p,e,w.movementSolids,20,w.arena).length===!!level.bankShotOnly)issues.push(`Conectividad incorrecta para P${1-p.id}`);
   }
   let idle=8;
   if(pressure)for(const seed of [1,7,19]){

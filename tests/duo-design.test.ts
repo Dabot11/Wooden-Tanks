@@ -52,7 +52,7 @@ test('duo preserves the introductory layouts, legacy comparison data and campaig
   assert.equal(createHash('sha256').update(JSON.stringify(cooperativeLevels)).digest('hex'),'72f8366dceb74a8c58de3266c4b37979596d356b34e2ca4be8bdebbf3b424596');
   for(const [i,l]of duoLevels.entries()){
     assert.equal(getLevel(i,2),l);assert.equal(getLevel(i,1),levels[i]);
-    for(const count of [3,4]as const)if(l.id<21)assert.equal(getLevel(i,count),cooperativeLevels[i]);
+    for(const count of [3,4]as const)assert.equal(getLevel(i,count).playerSpawns?.length,count);
     assert.equal(l.id,levels[i].id);assert.equal(l.name,levels[i].name);assert.equal(l.difficulty,levels[i].difficulty);
     assert.equal(l.design!.identity,levels[i].design!.identity);
   }

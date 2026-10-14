@@ -2,7 +2,7 @@
 
 [Abrir el atlas interactivo](https://dabot11.github.io/Wooden-Tanks/solo-campaign-review.html). Se muestran el plano anterior y el revisado, con rutas y puestos de rebote.
 
-Esta revisión afecta a la campaña individual. Se mantienen los IDs, los nombres, los desbloqueos y las reglas de combate. La pareja tiene su propia revisión; tres y cuatro jugadores conservan sus bases en 1–20 y usan formaciones explícitas en 21–40. La identidad de cada misión queda como guía para adaptar espacios, formaciones y papeles a dos, tres y cuatro jugadores.
+Esta revisión afecta a la campaña individual. Se mantienen los IDs, los nombres, los desbloqueos y las reglas de combate. La pareja tiene su propia revisión; tres y cuatro jugadores usan formaciones explícitas en las 40 misiones. La identidad de cada misión queda como guía para adaptar espacios, formaciones y papeles a dos, tres y cuatro jugadores.
 
 La progresión introduce patrulleros en la misión 3, corcho en la 5, cavidades como lección explícita en la 6 y un centinela en la 7. Las misiones 10, 20, 30 y 40 combinan lo aprendido; la 16 mantiene la galería restringida de rebotes. La dificultad estratégica incluye decisiones, ventanas de ataque y cambios de sector: no exige que cada misión tenga más enemigos que la anterior.
 
@@ -731,6 +731,6 @@ Presión inicial, tres semillas de IA y jugador inmóvil: 5.37 segundos hasta la
 
 ## Próximas revisiones por cantidad de jugadores
 
-El registro `campaignVariants` permite seleccionar datos por número de jugadores. La variante 1 contiene estos diseños; 2 tiene su revisión de pareja. Las variantes 3 y 4 conservan sus bases anteriores en 1–20; 21–40 tienen formaciones, papeles y rutas explícitas, visibles en `party-campaign-review.html`. Para cada revisión siguiente, parte de la identidad documentada, conserva las introducciones de enemigos y decide expresamente posiciones, rutas y refuerzos. No basta con multiplicar tanques o ampliar coordenadas. Mantén refugios y salidas útiles para el equipo completo y comprueba el fuego amigo desde cada aparición.
+El registro `campaignVariants` permite seleccionar datos por número de jugadores. La variante 1 contiene estos diseños; 2 tiene su revisión de pareja. Las variantes 3 y 4 tienen formaciones, papeles y rutas explícitas para las 40 misiones, visibles en `party-campaign-review.html`. Para cada revisión siguiente, parte de la identidad documentada, conserva las introducciones de enemigos y decide expresamente posiciones, rutas y refuerzos. No basta con multiplicar tanques o ampliar coordenadas. Mantén refugios y salidas útiles para el equipo completo y comprueba el fuego amigo desde cada aparición.
 
 Reproducir: `npm run review:solo`. Validación: `npm test`, `npm run build` y `npm run test:e2e`.

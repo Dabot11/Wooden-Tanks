@@ -46,11 +46,11 @@ for(const count of [1,2,3,4]as PlayerCount[])test(`late campaign: all 19 formati
 });
 test('late-party atlas covers every mission and shows exact bounded forces, routes and hunter progression',async({page})=>{
   await page.goto('/party-campaign-review.html#mission-40');await expect(page.locator('#title')).toContainText('40');
-  await expect(page.locator('#mission option')).toHaveCount(20);await expect(page.locator('#map3 [data-kind="hunter"]')).toHaveCount(2);await expect(page.locator('#map4 [data-kind="hunter"]')).toHaveCount(3);
+  await expect(page.locator('#mission option')).toHaveCount(40);await expect(page.locator('#map3 [data-kind="hunter"]')).toHaveCount(2);await expect(page.locator('#map4 [data-kind="hunter"]')).toHaveCount(3);
   await expect(page.locator('#map4 polyline[data-player]')).toHaveCount(4);
-  await page.locator('#mission').selectOption('2');await expect(page.locator('#title')).toContainText('23');await expect(page.locator('[data-kind="hunter"]')).toHaveCount(0);
+  await page.locator('#mission').selectOption('22');await expect(page.locator('#title')).toContainText('23');await expect(page.locator('[data-kind="hunter"]')).toHaveCount(0);
   await page.locator('#paths').uncheck();await expect(page.locator('polyline[data-player]')).toHaveCount(0);
-  await page.locator('#mission').selectOption('15');await expect(page.locator('#map4 [data-kind="tactical"]')).toHaveCount(5);
+  await page.locator('#mission').selectOption('35');await expect(page.locator('#map4 [data-kind="tactical"]')).toHaveCount(5);
 });
 test('four-player bastion accepts a real mouse-fired bank shot under the larger camera zoom',async({page})=>{
   await start(page,4,true);await mission(page,31);

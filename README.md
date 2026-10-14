@@ -150,7 +150,7 @@ La derrota deja terminar la explosión y un motivo musical descendente antes de 
 
 ## Revisión individual de las 40 misiones
 
-La campaña de un jugador tiene diseños propios en `src/game/missions/solo`: cada misión documenta su lección, identidad, cambios y rutas. Se revisaron apariciones, coberturas, pasos de corcho y posiciones de tiro. Las variantes de tres y cuatro conservan sus datos anteriores en 1–20 y usan formaciones explícitas en 21–40; `campaignVariants` y `getLevel` permiten revisarlas después por cantidad de jugadores sin alterar el progreso compartido.
+La campaña de un jugador tiene diseños propios en `src/game/missions/solo`: cada misión documenta su lección, identidad, cambios y rutas. Se revisaron apariciones, coberturas, pasos de corcho y posiciones de tiro. Las variantes de tres y cuatro tienen formaciones explícitas para las 40 misiones; `campaignVariants` y `getLevel` permiten revisarlas después por cantidad de jugadores sin alterar el progreso compartido.
 
 Consulta el [registro misión por misión](docs/solo-campaign-review.md) o el [atlas interactivo antes/después](https://dabot11.github.io/Wooden-Tanks/solo-campaign-review.html). `npm run review:solo` regenera ambos a partir de los mapas jugables. Las pruebas verifican que el atlas publicado corresponda al catálogo actual.
 
@@ -169,6 +169,13 @@ Consulta el [registro de las 40 variantes](docs/duo-campaign-review.md) o el [at
 
 La campaña combina cazadores con refugios, puertas y defensas, sustituyendo escoltas repetidas. La 23 da una pausa de cazadores; la 30 introduce dos flancos; la 36 conserva cinco centinelas. Los equipos grandes encuentran hasta tres cazadores en algunos combates finales. La dificultad aprobada del cazador se conserva.
 
-El tramo 22–40 limita las fuerzas a **7/9/10/11 enemigos** para **1/2/3/4 jugadores**, con formaciones explícitas. Tres y cuatro tienen carriles iniciales separados, más espacio de despliegue, rutas asignadas y apoyos por sector. Sus misiones 1–20 conservan la base anterior y quedan pendientes de revisión completa.
+El tramo 22–40 limita las fuerzas a **7/9/10/11 enemigos** para **1/2/3/4 jugadores**, con formaciones explícitas. Tres y cuatro tienen carriles iniciales separados, más espacio de despliegue, rutas asignadas y apoyos por sector. Sus misiones 1–20 tienen su propia revisión: hasta ocho/nueve enemigos para tres/cuatro jugadores, con una galería 16 ampliada y restringida.
 
 Consulta la [progresión por misión y tamaño de equipo](docs/hunter-campaign-review.md) y el [atlas de tres/cuatro jugadores](https://dabot11.github.io/Wooden-Tanks/party-campaign-review.html). `npm run review:party` los regenera a partir de los mapas jugables.
+
+
+## Primeros veinte niveles para tres y cuatro
+
+Cada misión declara su formación, apariciones separadas, papeles y rutas de relevo. 1–2 usan solo exploradores; 3 introduce un patrullero, 5 el corcho, 6 las cavidades y 7 un único centinela para todo el equipo. La galería 16 mantiene cuatro/cinco centinelas, una barrera de cavidades que cierra la zona ampliada y rebotes comprobados con los compañeros presentes. 17–20 combinan puertas, retirada y asaltos por sectores.
+
+Las campañas individual y de pareja, las variantes 21–40 y el comportamiento de los enemigos conservan sus datos aprobados. El [atlas de equipos](https://dabot11.github.io/Wooden-Tanks/party-campaign-review.html) ahora muestra las 40 misiones y los rebotes reales.
