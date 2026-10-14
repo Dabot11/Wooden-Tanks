@@ -50,7 +50,7 @@ test('solo revisions preserve mission identity and exact existing cooperative da
   for(const level of levels) {
     assert.equal(getLevel(level.id-1),level);
     for(const count of [3,4] as const) {
-      if(level.id!==21)assert.equal(getLevel(level.id-1,count),cooperativeLevels[level.id-1]);
+      if(level.id<21)assert.equal(getLevel(level.id-1,count),cooperativeLevels[level.id-1]);
       assert.equal(getLevel(level.id-1,count).name,level.name);
     }
   }

@@ -150,7 +150,7 @@ La derrota deja terminar la explosión y un motivo musical descendente antes de 
 
 ## Revisión individual de las 40 misiones
 
-La campaña de un jugador tiene diseños propios en `src/game/missions/solo`: cada misión documenta su lección, identidad, cambios y rutas. Se revisaron apariciones, coberturas, pasos de corcho y posiciones de tiro. Las variantes de tres y cuatro jugadores conservan sus datos anteriores; `campaignVariants` y `getLevel` permiten revisarlas después por cantidad de jugadores sin alterar el progreso compartido.
+La campaña de un jugador tiene diseños propios en `src/game/missions/solo`: cada misión documenta su lección, identidad, cambios y rutas. Se revisaron apariciones, coberturas, pasos de corcho y posiciones de tiro. Las variantes de tres y cuatro conservan sus datos anteriores en 1–20 y usan formaciones explícitas en 21–40; `campaignVariants` y `getLevel` permiten revisarlas después por cantidad de jugadores sin alterar el progreso compartido.
 
 Consulta el [registro misión por misión](docs/solo-campaign-review.md) o el [atlas interactivo antes/después](https://dabot11.github.io/Wooden-Tanks/solo-campaign-review.html). `npm run review:solo` regenera ambos a partir de los mapas jugables. Las pruebas verifican que el atlas publicado corresponda al catálogo actual.
 
@@ -163,3 +163,12 @@ Consulta el [registro de las 40 variantes](docs/duo-campaign-review.md) o el [at
 ## Probar el cazador
 
 **Probar cazador** en el menú abre una práctica con un cazador y dos coberturas, para uno a cuatro jugadores, conservando el progreso de campaña. La misión 21 presenta al nuevo enemigo con poca escolta: tres enemigos para uno/dos jugadores y cuatro para tres/cuatro. El cazador flanquea un 40 % más rápido que el jugador, esquiva misiles visibles y puede usar su único disparo para interceptarlos. Sus misiles viajan al doble de velocidad normal, con un rebote. Muere con un impacto; la recuperación después de disparar permite contraatacarlo. Consulta el [diseño y alcance del prototipo](docs/hunter.md).
+
+
+## Cazadores en las misiones 22–40
+
+La campaña combina cazadores con refugios, puertas y defensas, sustituyendo escoltas repetidas. La 23 da una pausa de cazadores; la 30 introduce dos flancos; la 36 conserva cinco centinelas. Los equipos grandes encuentran hasta tres cazadores en algunos combates finales. La dificultad aprobada del cazador se conserva.
+
+El tramo 22–40 limita las fuerzas a **7/9/10/11 enemigos** para **1/2/3/4 jugadores**, con formaciones explícitas. Tres y cuatro tienen carriles iniciales separados, más espacio de despliegue, rutas asignadas y apoyos por sector. Sus misiones 1–20 conservan la base anterior y quedan pendientes de revisión completa.
+
+Consulta la [progresión por misión y tamaño de equipo](docs/hunter-campaign-review.md) y el [atlas de tres/cuatro jugadores](https://dabot11.github.io/Wooden-Tanks/party-campaign-review.html). `npm run review:party` los regenera a partir de los mapas jugables.

@@ -107,11 +107,11 @@ for(const count of [1,2,3,4]as PlayerCount[])test(`mission 21 and isolated hunte
    step(board,3);assert.equal(board.alivePlayers.length,count,'intro permits a reaction');
  }
 });
-test('only mission 21 changes and the first twenty missions retain the original three enemy types',()=>{
- const hash=(ls:Level[])=>createHash('sha256').update(JSON.stringify(ls.filter(l=>l.id!==21))).digest('hex');
- assert.equal(hash(levels),'f33af46f077c547697772b26dc856bcc86d86013583aea8051f6c4de2ae359c7');assert.equal(hash(duoLevels),'60d8650a943fa72a0722c134908201a22b156c0c5a22b6fde8c97bdac11e2fd4');
+test('hunter campaign preserves the introductory missions and its reviewed debut',()=>{
+ const hash=(ls:Level[])=>createHash('sha256').update(JSON.stringify(ls.slice(0,21))).digest('hex');
+ assert.equal(hash(levels),'efdaaf4522ab92619e369dc25f08969d3d8c4e23e9a5313e530085a3b3a7ce8a');assert.equal(hash(duoLevels),'52d470083c9839ca2eb0c87856229b8d7874daa16830fb6d4b4540fab8031e47');
  for(const count of [1,2,3,4]as PlayerCount[])for(let i=0;i<40;i++){
-   const l=getLevel(i,count);assert.equal(l.enemies.some(e=>e.kind==='hunter'),i===20);
-   if(count>=3&&i!==20)assert.equal(l,cooperativeLevels[i]);
+   const l=getLevel(i,count);assert.equal(l.enemies.some(e=>e.kind==='hunter'),i>=20&&i!==22);
+   if(count>=3&&i<20)assert.equal(l,cooperativeLevels[i]);
  }
 });

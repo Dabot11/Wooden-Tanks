@@ -10,7 +10,8 @@
     "test": "node --import tsx --test tests/*.test.ts",
     "test:e2e": "playwright test",
     "review:solo": "node --import tsx scripts/review-solo.ts",
-    "review:duo": "node --import tsx scripts/review-duo.ts"
+    "review:duo": "node --import tsx scripts/review-duo.ts",
+    "review:party": "node --import tsx scripts/review-party.ts"
   },
   "dependencies": {
     "phaser": "3.90.0"

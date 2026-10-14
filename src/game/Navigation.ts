@@ -23,7 +23,7 @@ export function findPath(start: Vec, goal: Vec, boxes: Rect[], radius = 20, aren
     const current = queue[head++]; if (current === to) break;
     const x = current % COLS, y = Math.floor(current / COLS);
     const neighbors = [x > 0 ? current - 1 : -1, x < COLS - 1 ? current + 1 : -1, y > 0 ? current - COLS : -1, y < ROWS - 1 ? current + COLS : -1];
-    for (const n of neighbors) if (n >= 0 && free[n] && parent[n] === -1) { parent[n] = current; queue.push(n); }
+    for (const n of neighbors) if (n >= 0 && free[n] && parent[n] === -1 && lineClear(center(current),center(n),boxes,radius+1)) { parent[n] = current; queue.push(n); }
   }
   if (parent[to] < 0) return [];
   const path: Vec[] = []; let index = to;

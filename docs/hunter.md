@@ -1,8 +1,8 @@
-# Cazador: prototipo y debut en la misión 21
+# Cazador: comportamiento y progresión de campaña
 
 En el menú, **Probar cazador** abre una práctica individual o de 2–4 jugadores. Hay un solo cazador y dos coberturas. El equipo confirma sus dispositivos en el lobby habitual. Victoria, derrota, reinicio y salida mantienen la práctica y no registran puntuación, desbloqueos ni victorias de campaña. Las preferencias de audio y controles siguen disponibles.
 
-La campaña incorpora al cazador únicamente en la misión 21, «Líneas de corte». Conserva las introducciones de los tres enemigos anteriores durante las primeras veinte misiones. La variante individual y la de pareja presentan un cazador con dos exploradores; tres y cuatro jugadores reciben un cazador, dos exploradores y un patrullero. Sus posiciones, arena y apariciones son explícitas; no se multiplican cazadores ni escoltas al crear `World`.
+La campaña introduce al cazador en la misión 21, «El aserradero», y lo incorpora progresivamente en 22–40, con una pausa en 23. Conserva las introducciones de los tres enemigos anteriores durante las primeras veinte misiones. La variante individual y la de pareja presentan un cazador con dos exploradores; tres y cuatro jugadores reciben un cazador, dos exploradores y un patrullero. Sus posiciones, arena y apariciones son explícitas; no se multiplican cazadores ni escoltas al crear `World`.
 
 ## Comportamiento
 
@@ -29,12 +29,14 @@ La recuperación de 0,65 segundos después de cualquier disparo y los últimos 0
 
 Carbón con placas cobrizas, chevrón en el cuerpo y detalles de cobre en la torreta. El arco cobrizo anuncia el ataque y el azul pálido el contratiro; ninguno muestra una trayectoria de tiro. El centinela conserva sus misiles rápidos con propulsión y su interceptación.
 
-## Alcance y ajuste siguiente
+## Progresión y variantes
 
-Los mapas 1–20 y 22–40 conservan sus datos anteriores. La revisión completa de tres y cuatro jugadores sigue pendiente; solo su misión 21 tiene este debut diseñado. Los atlas individual y de pareja incluyen la nueva formación y una leyenda de cazadores.
+Las misiones 1–20 y el debut de la 21 conservan sus datos. 22 combina un cazador con vigilancia; 23 ofrece un respiro de cazadores para practicar zigzag. 24–29 combinan uno con bisagra, refugios, compuertas, anillo y ventanas. 30 introduce dos cazadores en flancos distintos. 31–40 alternan movilidad y posiciones defensivas; la 36 conserva cinco centinelas y los equipos grandes encuentran un tercer cazador en encuentros seleccionados del último capítulo.
 
-Primero jugar la práctica y la 21: comprobar que se reconoce el rodeo, que la carga se lee con música y varios jugadores, y que el contraataque resulta satisfactorio. Después de ese ajuste, decidir dónde incorporar cazadores y reducir escoltas en 22–40. El zapador sigue como propuesta; no forma parte de este prototipo.
+La cantidad máxima del tramo 22–40 es 7/9/10/11 enemigos para 1/2/3/4 jugadores. Se sustituyen escoltas redundantes, sin cambiar la inteligencia, velocidades o recarga ya aprobadas. Las variantes de tres/cuatro cuentan con una zona occidental más profunda, carriles de aparición separados, rutas de apoyo y una formación enemiga explícita. Las primeras veinte misiones de esos equipos todavía conservan su base anterior.
+
+Consulta el [registro de progresión](hunter-campaign-review.md) y el [atlas de equipos](https://dabot11.github.io/Wooden-Tanks/party-campaign-review.html), además de los atlas individual y de pareja. El zapador sigue como propuesta y no forma parte de esta integración.
 
 ## Verificación
 
-`npm test` comprueba flanqueo real, visibilidad y memoria, compromiso de objetivo, preparación y recuperación completas, dirección fija al esquivar, vulnerabilidad con un misil, perfil del proyectil, navegación de los despliegues y conservación de los mapas ajenos a la 21. Las pruebas defensivas verifican evasión con disparos reales a 30/60/120 Hz, salidas bloqueadas y fuego cruzado, predicción relativa, intercepción real, límite de munición, cancelación de amenazas y contraataque durante la recuperación. Las pruebas de navegador recorren entrada con 1–4 jugadores, mandos independientes, carga y texturas, un disparo real, pausa, victoria, derrota y repetición sin afectar el progreso. `npm run review:solo` y `npm run review:duo` regeneran sus atlas; `npm run build` verifica TypeScript y producción.
+`npm test` comprueba flanqueo real, visibilidad y memoria, compromiso de objetivo, preparación y recuperación completas, dirección fija al esquivar, vulnerabilidad con un misil, perfil del proyectil, navegación de los despliegues y conservación de las introducciones y del debut de la 21. Las pruebas defensivas verifican evasión con disparos reales a 30/60/120 Hz, salidas bloqueadas y fuego cruzado, predicción relativa, intercepción real, límite de munición, cancelación de amenazas y contraataque durante la recuperación. Las pruebas de navegador recorren entrada con 1–4 jugadores, mandos independientes, carga y texturas, un disparo real, pausa, victoria, derrota y repetición sin afectar el progreso. `npm run review:solo`, `npm run review:duo` y `npm run review:party` regeneran sus atlas; `npm run build` verifica TypeScript y producción.

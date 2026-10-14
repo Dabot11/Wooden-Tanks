@@ -13,7 +13,7 @@ test('campaign registration supports more than 100 authored missions and rejects
 });
 test('missions 31–40 increase reload pressure and never reduce the weighted opposing force', () => {
   assert.equal(levels.length, 40);
-  const weight = (i: number) => levels[i].enemies.reduce((sum, enemy) => sum + ({ basic: 1, patrol: 2, tactical: 3 }[enemy.kind]), 0);
+  const weight = (i: number) => levels[i].enemies.reduce((sum, enemy) => sum + ({ basic: 1, patrol: 2, tactical: 3, hunter: 4 }[enemy.kind]), 0);
   for (let i = 30; i < 40; i++) {
     assert.ok(levels[i].difficulty > levels[i - 1].difficulty);
     assert.ok(weight(i) >= weight(i - 1));

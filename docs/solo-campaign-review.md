@@ -2,7 +2,7 @@
 
 [Abrir el atlas interactivo](https://dabot11.github.io/Wooden-Tanks/solo-campaign-review.html). Se muestran el plano anterior y el revisado, con rutas y puestos de rebote.
 
-Esta revisión afecta a la campaña individual. Se mantienen los IDs, los nombres, los desbloqueos y las reglas de combate. La pareja tiene su propia revisión; tres y cuatro jugadores conservan sus bases salvo el debut del cazador en la 21. La identidad de cada misión queda como guía para adaptar espacios, formaciones y papeles a dos, tres y cuatro jugadores.
+Esta revisión afecta a la campaña individual. Se mantienen los IDs, los nombres, los desbloqueos y las reglas de combate. La pareja tiene su propia revisión; tres y cuatro jugadores conservan sus bases en 1–20 y usan formaciones explícitas en 21–40. La identidad de cada misión queda como guía para adaptar espacios, formaciones y papeles a dos, tres y cuatro jugadores.
 
 La progresión introduce patrulleros en la misión 3, corcho en la 5, cavidades como lección explícita en la 6 y un centinela en la 7. Las misiones 10, 20, 30 y 40 combinan lo aprendido; la 16 mantiene la galería restringida de rebotes. La dificultad estratégica incluye decisiones, ventanas de ataque y cambios de sector: no exige que cada misión tenga más enemigos que la anterior.
 
@@ -37,25 +37,25 @@ G / P / C / H = exploradores grises / patrulleros / centinelas / cazadores.
 | 19. Último cerco | Terreno y fortificaciones | 1 / 3 / 2 / 0 | 0 | 507 | Un cerco se rompe por un sector. No entres al centro sin reservar una salida. |
 | 20. Leyenda del taller | Terreno y fortificaciones | 1 / 3 / 3 / 0 | 0 | 480 | Recupera terreno detrás de cada compuerta y derrota las tres defensas por turnos. |
 | 21. El aserradero | Combate por sectores | 2 / 0 / 0 / 1 | 0 | 760 | El cazador busca tu flanco. Cambia de esquina, provoca su contratiro y ataca mientras recarga. |
-| 22. Cajas apiladas | Combate por sectores | 1 / 4 / 2 / 0 | 0 | 380 | Una caja permite cortar la línea de tiro, pero no cubre la siguiente esquina. |
-| 23. Paso de sierra | Combate por sectores | 1 / 4 / 2 / 0 | 0 | 300 | Lee los pasillos en zigzag y cambia de carril antes de que llegue la siguiente salva. |
-| 24. La bisagra | Combate por sectores | 1 / 3 / 3 / 0 | 0 | 367 | La bisagra central abre diagonales para ambos bandos. Gira por los bordes antes de romperla. |
-| 25. Cuatro refugios | Combate por sectores | 1 / 3 / 3 / 0 | 1 | 362 | Usa un refugio para atraer el tiro y otro para cambiar de ángulo; no permanezcas en el centro. |
-| 26. Doble compuerta | Combate por sectores | 1 / 4 / 3 / 0 | 0 | 410 | Abre solo la compuerta que puedas dominar; el rodeo exterior sigue disponible. |
-| 27. Anillo de guardia | Combate por sectores | 1 / 4 / 3 / 0 | 1 | 404 | Recorre el anillo por fuera y entra únicamente por el sector que ya controlas. |
-| 28. Virutas y pólvora | Combate por sectores | 0 / 5 / 3 / 0 | 0 | 330 | Una esquina oculta tu avance; el corcho cambia qué esquina es segura. |
-| 29. Última defensa | Combate por sectores | 1 / 4 / 3 / 0 | 1 | 351 | Provoca una defensa, retrocede tras la madera y aprovecha su recarga desde otro ángulo. |
-| 30. Gran maestro de madera | Combate por sectores | 0 / 4 / 3 / 0 | 1 | 330 | Encadena conquistas pequeñas: refugio, flanco, compuerta y retirada. |
-| 31. El bastión | Asedio y dominio | 0 / 4 / 3 / 0 | 1 | 420 | Un bastión se conquista cambiando de flanco; no combatas sus tres defensas a la vez. |
-| 32. Callejón de astillas | Asedio y dominio | 1 / 4 / 3 / 0 | 1 | 468 | Abre la esquina de corcho desde un refugio y sal del callejón antes de la siguiente salva. |
-| 33. Tres cruces | Asedio y dominio | 0 / 5 / 3 / 0 | 1 | 391 | Tras cada cruce cambia de refugio. Una cobertura no protege el siguiente tramo. |
-| 34. La tenaza | Asedio y dominio | 0 / 4 / 4 / 0 | 0 | 377 | La tenaza tiene dos brazos. Usa el refugio inicial para elegir cuál romper primero. |
-| 35. Ciudadela de corcho | Asedio y dominio | 0 / 5 / 4 / 0 | 0 | 400 | Conserva una compuerta como escudo mientras abres la otra y cambias de sector. |
-| 36. Cinco vigías | Asedio y dominio | 1 / 3 / 5 / 0 | 1 | 357 | Cinco vigías no deben ver el mismo ángulo. Provoca uno y reubícate tras la madera. |
-| 37. Dientes de madera | Asedio y dominio | 0 / 5 / 4 / 0 | 2 | 460 | Los dientes alternados sirven para cortar salvas. Cambia de carril antes del siguiente tiro. |
-| 38. El nudo | Asedio y dominio | 0 / 5 / 4 / 0 | 2 | 397 | El nudo tiene dos extremos. Aísla una mitad antes de abrir el cruce central. |
-| 39. Asedio al taller | Asedio y dominio | 0 / 5 / 4 / 0 | 0 | 476 | Gana una compuerta, úsala como refugio y encadena el ataque hacia la siguiente. |
-| 40. Comandante del taller | Asedio y dominio | 0 / 5 / 4 / 0 | 0 | 481 | Domina un sector antes de avanzar. Combina refugios, compuertas, salvas y retirada. |
+| 22. Cajas apiladas | Combate por sectores | 1 / 2 / 1 / 1 | 0 | 380 | Las pilas cortan la visión del cazador. Cambia de caja y aprovecha su recuperación antes de avanzar. |
+| 23. Paso de sierra | Combate por sectores | 1 / 2 / 2 / 0 | 0 | 480 | Descansa del cazador: lee el zigzag y cruza cuando los dos centinelas hayan gastado su salva. |
+| 24. La bisagra | Combate por sectores | 1 / 1 / 2 / 1 | 0 | 367 | La bisagra abre diagonales al cazador. Rodea un extremo y rompe el corcho cuando domines la retirada. |
+| 25. Cuatro refugios | Combate por sectores | 1 / 1 / 2 / 1 | 0 | 412 | Usa un refugio para provocar el contratiro y otro para atacar al cazador mientras recarga. |
+| 26. Doble compuerta | Combate por sectores | 1 / 2 / 2 / 1 | 0 | 410 | Abre una puerta desde cobertura; el cazador puede usarla también. Conserva el rodeo exterior. |
+| 27. Anillo de guardia | Combate por sectores | 1 / 2 / 2 / 1 | 1 | 404 | Atrae al cazador hacia una entrada del anillo y sal por la otra antes de contraatacar. |
+| 28. Virutas y pólvora | Combate por sectores | 0 / 2 / 2 / 1 | 0 | 441 | La ele corta su visión, pero el cazador recuerda tu última esquina. Cambia de diagonal antes de disparar. |
+| 29. Última defensa | Combate por sectores | 1 / 1 / 3 / 1 | 1 | 351 | Provoca el contratiro del cazador sin exponerte a los centinelas; cambia de ventana durante su recarga. |
+| 30. Gran maestro de madera | Combate por sectores | 1 / 1 / 2 / 2 | 0 | 470 | Dos cazadores cubren flancos distintos. Aísla uno tras la madera antes de entrar al siguiente sector. |
+| 31. El bastión | Asedio y dominio | 0 / 2 / 3 / 1 | 1 | 420 | El bastión tiene tres defensas y un cazador de enlace. Gana un flanco antes de buscar el rebote. |
+| 32. Callejón de astillas | Asedio y dominio | 0 / 2 / 2 / 2 | 0 | 468 | Dos cazadores rondan el callejón. Mantén un rodeo libre y abre la salida antes de atraerlos. |
+| 33. Tres cruces | Asedio y dominio | 0 / 1 / 3 / 2 | 0 | 391 | Cruza tras la recarga: un cazador guarda el enlace y otro la salida. Cambia de refugio tras cada tiro. |
+| 34. La tenaza | Asedio y dominio | 0 / 1 / 3 / 2 | 0 | 377 | Rompe un brazo de la tenaza, atrae allí a un cazador y aprovecha la retirada antes de enfrentar al otro. |
+| 35. Ciudadela de corcho | Asedio y dominio | 0 / 0 / 4 / 2 | 0 | 600 | Una compuerta abierta, otra como escudo. Evita que los dos cazadores te alcancen desde sectores distintos. |
+| 36. Cinco vigías | Asedio y dominio | 0 / 1 / 5 / 1 | 0 | 483 | Los cinco vigías fijan los ángulos y un cazador busca el espacio entre ellos. Provoca una defensa y reubícate. |
+| 37. Dientes de madera | Asedio y dominio | 0 / 2 / 3 / 2 | 0 | 460 | Los dientes cortan la visión de dos cazadores. Cambia de carril y evita volver a su última línea de tiro. |
+| 38. El nudo | Asedio y dominio | 0 / 2 / 3 / 2 | 2 | 397 | Aísla una mitad del nudo: cada cazador parte de un extremo y las cavidades limitan el escape por el centro. |
+| 39. Asedio al taller | Asedio y dominio | 0 / 1 / 4 / 2 | 0 | 476 | Gana una compuerta y úsala para separar a los cazadores. Conquista un sector antes de abrir el siguiente. |
+| 40. Comandante del taller | Asedio y dominio | 0 / 1 / 4 / 2 | 0 | 489 | Examen de mando: separa a los cazadores, provoca defensas y conquista los tres sectores con una retirada preparada. |
 
 ## 01 · Primeras huellas
 
@@ -406,166 +406,166 @@ Presión inicial, tres semillas de IA y jugador inmóvil: al menos 8 segundos ha
 
 ## 22 · Cajas apiladas
 
-**Objetivo:** Una caja permite cortar la línea de tiro, pero no cubre la siguiente esquina.
+**Objetivo:** Las pilas cortan la visión del cazador. Cambia de caja y aprovecha su recuperación antes de avanzar.
 
 **Identidad que conservar al adaptar jugadores:** Tres pilas escalonadas forman una cadena de refugios y dos circuitos.
 
-**Ajustes:** Cada pila tiene un defensor o un flanco móvil; el cuarto patrullero sustituye un guardia repetido.
+**Ajustes:** Un cazador ocupa el enlace oriental y sustituye escolta repetida; un centinela controla el frente alto y dos patrullas permiten elegir circuito.
 
-Despliegue: (180, 500); enemigos G/P/C/H: 1 / 4 / 2 / 0. 0 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (180, 500); enemigos G/P/C/H: 1 / 2 / 1 / 1. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Cadena superior:** (257, 101) → (599, 101) → (789, 291) → (1055, 291). Recorrido comprobado: 1283 unidades.
 - **Cadena inferior:** (447, 557) → (751, 519) → (1055, 443). Recorrido comprobado: 947 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 4: 302 → 176; pieza 5: 284 → 164. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 5.73 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 4.23 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 23 · Paso de sierra
 
-**Objetivo:** Lee los pasillos en zigzag y cambia de carril antes de que llegue la siguiente salva.
+**Objetivo:** Descansa del cazador: lee el zigzag y cruza cuando los dos centinelas hayan gastado su salva.
 
 **Identidad que conservar al adaptar jugadores:** Tres dientes alternados y una compuerta lateral, con pasos de escape amplios.
 
-**Ajustes:** Se separan las patrullas por pasillos, se elimina un guardia redundante y se empieza desde arriba.
+**Ajustes:** Pausa de cazadores: cinco enemigos repartidos por dientes y extremos, con un cruce central vigilado por el explorador.
 
-Despliegue: (170, 170); enemigos G/P/C/H: 1 / 4 / 2 / 0. 0 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 170); enemigos G/P/C/H: 1 / 2 / 2 / 0. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Zigzag:** (219, 443) → (485, 443) → (675, 253) → (979, 291). Recorrido comprobado: 1402 unidades.
 - **Ruta exterior:** (181, 557) → (485, 595) → (865, 557) → (1169, 557). Recorrido comprobado: 1379 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 4: 308 → 164. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 4.87 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: al menos 8 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 24 · La bisagra
 
-**Objetivo:** La bisagra central abre diagonales para ambos bandos. Gira por los bordes antes de romperla.
+**Objetivo:** La bisagra abre diagonales al cazador. Rodea un extremo y rompe el corcho cuando domines la retirada.
 
 **Identidad que conservar al adaptar jugadores:** Cuatro apoyos alrededor de una bisagra destructible.
 
-**Ajustes:** Se retira el patrullero que aparecía cerca del jugador; el refuerzo interior guarda el cruce, no la salida inicial.
+**Ajustes:** Un cazador vigila el brazo oriental; dos centinelas fijan extremos y la escolta interior deja libre la elección del giro.
 
-Despliegue: (180, 500); enemigos G/P/C/H: 1 / 3 / 3 / 0. 0 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (180, 500); enemigos G/P/C/H: 1 / 1 / 2 / 1. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Giro norte:** (257, 139) → (599, 177) → (941, 177). Recorrido comprobado: 1055 unidades.
 - **Giro sur:** (295, 557) → (713, 595) → (1017, 557). Recorrido comprobado: 854 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 5: 353 → 223. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 5.57 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 4.00 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 25 · Cuatro refugios
 
-**Objetivo:** Usa un refugio para atraer el tiro y otro para cambiar de ángulo; no permanezcas en el centro.
+**Objetivo:** Usa un refugio para provocar el contratiro y otro para atacar al cazador mientras recarga.
 
 **Identidad que conservar al adaptar jugadores:** Cuatro refugios separados con un corredor central de rotación.
 
-**Ajustes:** La salida se coloca frente al corredor lateral; el guardia norte deja margen para elegir refugio.
+**Ajustes:** Un cazador reemplaza dos vigilantes del centro: necesita rodear los refugios y deja ventanas para cambiar de ángulo.
 
-Despliegue: (180, 320); enemigos G/P/C/H: 1 / 3 / 3 / 0. 1 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (180, 320); enemigos G/P/C/H: 1 / 1 / 2 / 1. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Refugios del norte:** (257, 101) → (561, 177) → (979, 177). Recorrido comprobado: 1034 unidades.
 - **Refugios del sur:** (257, 557) → (713, 595) → (1017, 557). Recorrido comprobado: 1013 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 5: 299 → 165. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 4.10 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 6.00 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 26 · Doble compuerta
 
-**Objetivo:** Abre solo la compuerta que puedas dominar; el rodeo exterior sigue disponible.
+**Objetivo:** Abre una puerta desde cobertura; el cazador puede usarla también. Conserva el rodeo exterior.
 
 **Identidad que conservar al adaptar jugadores:** Dos compuertas en serie dividen el combate en tres sectores.
 
-**Ajustes:** Compuertas más anchas: romperlas abre pasos utilizables, con rodeos intactos y el guardia alejado del inicio.
+**Ajustes:** Un cazador parte del sector final y puede atravesar puertas abiertas; dos centinelas y tres escoltas dividen las líneas de avance.
 
-Despliegue: (180, 500); enemigos G/P/C/H: 1 / 4 / 3 / 0. 0 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (180, 500); enemigos G/P/C/H: 1 / 2 / 2 / 1. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Rodeo norte:** (257, 101) → (637, 101) → (941, 101). Recorrido comprobado: 1090 unidades.
 - **Rodeo sur:** (295, 557) → (637, 557) → (1017, 557). Recorrido comprobado: 850 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 2: 538 → 166; pieza 5: 608 → 168. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 5.13 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 4.23 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 27 · Anillo de guardia
 
-**Objetivo:** Recorre el anillo por fuera y entra únicamente por el sector que ya controlas.
+**Objetivo:** Atrae al cazador hacia una entrada del anillo y sal por la otra antes de contraatacar.
 
 **Identidad que conservar al adaptar jugadores:** Anillo incompleto con dos entradas enfrentadas y bisagra interior.
 
-**Ajustes:** El patrullero lateral y el guardia gris dejan de acosar el punto de aparición; los móviles cubren accesos diferentes.
+**Ajustes:** Un cazador patrulla el frente derecho del anillo; la escolta se reduce y conserva una vigilancia distinta en cada entrada.
 
-Despliegue: (180, 330); enemigos G/P/C/H: 1 / 4 / 3 / 0. 1 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (180, 330); enemigos G/P/C/H: 1 / 2 / 2 / 1. 1 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Anillo norte:** (295, 101) → (713, 101) → (1017, 177). Recorrido comprobado: 988 unidades.
 - **Anillo sur:** (295, 557) → (637, 595) → (1017, 557). Recorrido comprobado: 980 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 7: 282 → 171. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 4.63 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 4.97 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 28 · Virutas y pólvora
 
-**Objetivo:** Una esquina oculta tu avance; el corcho cambia qué esquina es segura.
+**Objetivo:** La ele corta su visión, pero el cazador recuerda tu última esquina. Cambia de diagonal antes de disparar.
 
 **Identidad que conservar al adaptar jugadores:** Dos eles opuestas y una unión central destructible.
 
-**Ajustes:** Se convierte la presión gris en patrullas repartidas; se conserva una retirada diagonal de cobertura a cobertura.
+**Ajustes:** El cazador ocupa la diagonal oriental; se reducen tres escoltas y una defensa para que el reto sea cambiar de esquina.
 
-Despliegue: (180, 500); enemigos G/P/C/H: 0 / 5 / 3 / 0. 0 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (180, 500); enemigos G/P/C/H: 0 / 2 / 2 / 1. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Diagonal norte:** (257, 139) → (675, 253) → (979, 139). Recorrido comprobado: 1226 unidades.
 - **Diagonal sur:** (371, 557) → (751, 557) → (1093, 481). Recorrido comprobado: 983 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 5: 302 → 176. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 4.67 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 4.57 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 29 · Última defensa
 
-**Objetivo:** Provoca una defensa, retrocede tras la madera y aprovecha su recarga desde otro ángulo.
+**Objetivo:** Provoca el contratiro del cazador sin exponerte a los centinelas; cambia de ventana durante su recarga.
 
 **Identidad que conservar al adaptar jugadores:** Tres defensas apoyadas por columnas desfasadas y dos ventanas de corcho.
 
-**Ajustes:** Se baja a tres centinelas y se distribuye la escolta para que el desafío sea cambiar el ángulo, no recibir cuatro salvas desde el inicio.
+**Ajustes:** Tres centinelas conservan frentes separados; un cazador reemplaza patrullas redundantes en el enlace superior derecho.
 
-Despliegue: (180, 320); enemigos G/P/C/H: 1 / 4 / 3 / 0. 1 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (180, 320); enemigos G/P/C/H: 1 / 1 / 3 / 1. 1 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Ventana norte:** (257, 101) → (637, 101) → (941, 139). Recorrido comprobado: 1375 unidades.
 - **Ventana sur:** (257, 557) → (713, 557) → (1093, 595). Recorrido comprobado: 1087 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 5: 281 → 169; pieza 6: 329 → 189. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 2.60 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 2.57 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 30 · Gran maestro de madera
 
-**Objetivo:** Encadena conquistas pequeñas: refugio, flanco, compuerta y retirada.
+**Objetivo:** Dos cazadores cubren flancos distintos. Aísla uno tras la madera antes de entrar al siguiente sector.
 
 **Identidad que conservar al adaptar jugadores:** Examen de tres sectores con corredores exteriores que enlazan cada conquista.
 
-**Ajustes:** Siete enemigos con posiciones propias sustituyen la formación repetida de nueve; el capítulo termina combinando estrategias y no saturando el mapa.
+**Ajustes:** Primera pareja de cazadores, con puestos alto y bajo separados; dos centinelas y dos escoltas completan seis enemigos.
 
-Despliegue: (170, 500); enemigos G/P/C/H: 0 / 4 / 3 / 0. 1 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 500); enemigos G/P/C/H: 1 / 1 / 2 / 2. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Conquista norte:** (219, 101) → (523, 101) → (865, 101). Recorrido comprobado: 1519 unidades.
 - **Conquista sur:** (371, 557) → (751, 557) → (1131, 595). Recorrido comprobado: 971 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 5: 290 → 164; pieza 6: 284 → 167; pieza 8: 389 → 194. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 3.23 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 4.23 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 31 · El bastión
 
-**Objetivo:** Un bastión se conquista cambiando de flanco; no combatas sus tres defensas a la vez.
+**Objetivo:** El bastión tiene tres defensas y un cazador de enlace. Gana un flanco antes de buscar el rebote.
 
 **Identidad que conservar al adaptar jugadores:** Dos muros verticales y una bisagra baja protegen tres puestos escalonados.
 
-**Ajustes:** Inicio central protegido y siete enemigos situados según las coberturas, en lugar de reutilizar el grupo de nueve del capítulo anterior.
+**Ajustes:** Tres centinelas conservan el bastión; un cazador cubre el enlace derecho y solo dos patrullas sostienen las aproximaciones.
 
-Despliegue: (170, 320); enemigos G/P/C/H: 0 / 4 / 3 / 0. 1 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 320); enemigos G/P/C/H: 0 / 2 / 3 / 1. 1 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Flanco del bastión norte:** (219, 101) → (599, 101) → (941, 177). Recorrido comprobado: 955 unidades.
 - **Flanco del bastión sur:** (257, 557) → (713, 557) → (1055, 595). Recorrido comprobado: 1053 unidades.
@@ -578,81 +578,81 @@ Presión inicial, tres semillas de IA y jugador inmóvil: 4.90 segundos hasta la
 
 ## 32 · Callejón de astillas
 
-**Objetivo:** Abre la esquina de corcho desde un refugio y sal del callejón antes de la siguiente salva.
+**Objetivo:** Dos cazadores rondan el callejón. Mantén un rodeo libre y abre la salida antes de atraerlos.
 
 **Identidad que conservar al adaptar jugadores:** Un callejón de tres tramos, con compuerta inicial y dos rodeos permanentes.
 
-**Ajustes:** Los tramos dejan salidas amplias; los defensores guardan el callejón y no copian las posiciones de la misión 31.
+**Ajustes:** Dos cazadores sustituyen tres escoltas y una defensa; los extremos mantienen centinelas y las patrullas guardan salidas opuestas.
 
-Despliegue: (170, 500); enemigos G/P/C/H: 1 / 4 / 3 / 0. 1 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 500); enemigos G/P/C/H: 0 / 2 / 2 / 2. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Rodeo alto:** (219, 101) → (523, 101) → (903, 139). Recorrido comprobado: 1124 unidades.
 - **Rodeo bajo:** (295, 557) → (675, 557) → (1093, 557). Recorrido comprobado: 935 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 2: 299 → 166. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 4.23 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 4.10 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 33 · Tres cruces
 
-**Objetivo:** Tras cada cruce cambia de refugio. Una cobertura no protege el siguiente tramo.
+**Objetivo:** Cruza tras la recarga: un cazador guarda el enlace y otro la salida. Cambia de refugio tras cada tiro.
 
 **Identidad que conservar al adaptar jugadores:** Tres cruces escalonados, cada uno con vigilancia y un borde de escape.
 
-**Ajustes:** Se reparte la escolta entre los tres cruces y se alterna el inicio al norte para variar el orden de conquista.
+**Ajustes:** Dos cazadores en sectores distintos y tres centinelas dan función a los cruces; una patrulla basta para vigilar el acceso alto.
 
-Despliegue: (170, 170); enemigos G/P/C/H: 0 / 5 / 3 / 0. 1 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 170); enemigos G/P/C/H: 0 / 1 / 3 / 2. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Cruces por el norte:** (257, 101) → (675, 101) → (1017, 101). Recorrido comprobado: 871 unidades.
 - **Cruces por el sur:** (219, 519) → (523, 557) → (789, 557) → (1093, 443). Recorrido comprobado: 1249 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 4: 297 → 171. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 2.90 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 4.37 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 34 · La tenaza
 
-**Objetivo:** La tenaza tiene dos brazos. Usa el refugio inicial para elegir cuál romper primero.
+**Objetivo:** Rompe un brazo de la tenaza, atrae allí a un cazador y aprovecha la retirada antes de enfrentar al otro.
 
 **Identidad que conservar al adaptar jugadores:** Pinza desfasada con una cobertura inicial y dos escapes opuestos.
 
-**Ajustes:** La cuarta defensa vigila el brazo derecho; la escolta móvil se reparte entre brazos y no cerca del inicio.
+**Ajustes:** Dos cazadores ocupan brazos opuestos; tres centinelas y una patrulla sustituyen las cuatro defensas con escolta repetida.
 
-Despliegue: (170, 320); enemigos G/P/C/H: 0 / 4 / 4 / 0. 0 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 320); enemigos G/P/C/H: 0 / 1 / 3 / 2. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Brazo norte:** (219, 101) → (599, 101) → (1017, 139). Recorrido comprobado: 1024 unidades.
 - **Brazo sur:** (219, 557) → (675, 557) → (1055, 557). Recorrido comprobado: 1078 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 4: 245 → 175. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 3.93 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 4.17 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 35 · Ciudadela de corcho
 
-**Objetivo:** Conserva una compuerta como escudo mientras abres la otra y cambias de sector.
+**Objetivo:** Una compuerta abierta, otra como escudo. Evita que los dos cazadores te alcancen desde sectores distintos.
 
 **Identidad que conservar al adaptar jugadores:** Ciudadela de dos compuertas y refugios en L, con defensas interiores y exteriores.
 
-**Ajustes:** Las cuatro defensas tienen frentes distintos; cada patrulla protege una ruta o una compuerta concreta.
+**Ajustes:** Los cuatro centinelas conservan la ciudadela; dos cazadores de enlace sustituyen las cinco patrullas sin invadir el inicio.
 
-Despliegue: (170, 500); enemigos G/P/C/H: 0 / 5 / 4 / 0. 0 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 500); enemigos G/P/C/H: 0 / 0 / 4 / 2. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Borde exterior norte:** (257, 101) → (637, 101) → (979, 101). Recorrido comprobado: 1130 unidades.
 - **Borde exterior sur:** (371, 557) → (751, 557) → (1131, 595). Recorrido comprobado: 973 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 4: 511 → 164; pieza 6: 305 → 215. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 5.20 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 5.33 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 36 · Cinco vigías
 
-**Objetivo:** Cinco vigías no deben ver el mismo ángulo. Provoca uno y reubícate tras la madera.
+**Objetivo:** Los cinco vigías fijan los ángulos y un cazador busca el espacio entre ellos. Provoca una defensa y reubícate.
 
 **Identidad que conservar al adaptar jugadores:** Cinco puestos de observación separados por columnas y un techo central.
 
-**Ajustes:** Cinco centinelas se conservan como identidad, pero la escolta se reduce a cuatro y cada vigía tiene una aproximación posible.
+**Ajustes:** Se mantienen los cinco centinelas como identidad; un cazador y una patrulla sustituyen cuatro escoltas para limitar el fuego simultáneo.
 
-Despliegue: (170, 320); enemigos G/P/C/H: 1 / 3 / 5 / 0. 1 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 320); enemigos G/P/C/H: 0 / 1 / 5 / 1. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Puestos del norte:** (257, 101) → (561, 101) → (903, 139). Recorrido comprobado: 884 unidades.
 - **Puestos del sur:** (257, 557) → (751, 557) → (1055, 595). Recorrido comprobado: 1053 unidades.
@@ -663,74 +663,74 @@ Presión inicial, tres semillas de IA y jugador inmóvil: 4.70 segundos hasta la
 
 ## 37 · Dientes de madera
 
-**Objetivo:** Los dientes alternados sirven para cortar salvas. Cambia de carril antes del siguiente tiro.
+**Objetivo:** Los dientes cortan la visión de dos cazadores. Cambia de carril y evita volver a su última línea de tiro.
 
 **Identidad que conservar al adaptar jugadores:** Una sierra de columnas alternadas, con enlaces anchos por arriba y abajo.
 
-**Ajustes:** Los dientes dejan cruces transitables; los enemigos defienden pasillos distintos y hay dos puntos de retirada.
+**Ajustes:** Dos cazadores rondan dientes opuestos; tres centinelas y dos patrullas conservan vigilancia sin llenar cada pasillo.
 
-Despliegue: (170, 500); enemigos G/P/C/H: 0 / 5 / 4 / 0. 2 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 500); enemigos G/P/C/H: 0 / 2 / 3 / 2. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Dientes por arriba:** (219, 101) → (561, 101) → (865, 101). Recorrido comprobado: 1048 unidades.
 - **Dientes por abajo:** (295, 557) → (675, 557) → (1055, 557). Recorrido comprobado: 897 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 5: 288 → 167. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 3.10 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 3.23 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 38 · El nudo
 
-**Objetivo:** El nudo tiene dos extremos. Aísla una mitad antes de abrir el cruce central.
+**Objetivo:** Aísla una mitad del nudo: cada cazador parte de un extremo y las cavidades limitan el escape por el centro.
 
 **Identidad que conservar al adaptar jugadores:** Dos eles enfrentadas y una ventana de corcho alrededor del nudo.
 
-**Ajustes:** Inicio alto y defensores independientes por sector; las cavidades laterales evitan que el centro sea una autopista.
+**Ajustes:** Un cazador por extremo reemplaza escolta y una defensa; tres centinelas y dos patrullas guardan conexiones concretas.
 
-Despliegue: (170, 170); enemigos G/P/C/H: 0 / 5 / 4 / 0. 2 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 170); enemigos G/P/C/H: 0 / 2 / 3 / 2. 2 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Extremo norte:** (219, 101) → (713, 101) → (941, 101). Recorrido comprobado: 807 unidades.
 - **Extremo sur:** (257, 519) → (751, 557) → (1131, 595). Recorrido comprobado: 1237 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 5: 336 → 197. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 2.63 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 2.73 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 39 · Asedio al taller
 
-**Objetivo:** Gana una compuerta, úsala como refugio y encadena el ataque hacia la siguiente.
+**Objetivo:** Gana una compuerta y úsala para separar a los cazadores. Conquista un sector antes de abrir el siguiente.
 
 **Identidad que conservar al adaptar jugadores:** Asedio de dos compuertas en serie, con cuatro defensas en sectores separados.
 
-**Ajustes:** Se reparte la formación entre sectores; el jugador siempre conserva un rodeo aunque las dos compuertas sigan cerradas.
+**Ajustes:** Cuatro centinelas y dos cazadores defienden sectores diferentes; solo una patrulla guarda el acceso alto del asedio.
 
-Despliegue: (170, 500); enemigos G/P/C/H: 0 / 5 / 4 / 0. 0 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 500); enemigos G/P/C/H: 0 / 1 / 4 / 2. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Asedio norte:** (257, 101) → (599, 101) → (941, 101). Recorrido comprobado: 1534 unidades.
 - **Asedio sur:** (295, 557) → (713, 557) → (1131, 595). Recorrido comprobado: 975 unidades.
 
 Pasos de corcho (ruta cerrada → abierta): pieza 5: 281 → 170; pieza 6: 287 → 164. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 3.07 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 4.60 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## 40 · Comandante del taller
 
-**Objetivo:** Domina un sector antes de avanzar. Combina refugios, compuertas, salvas y retirada.
+**Objetivo:** Examen de mando: separa a los cazadores, provoca defensas y conquista los tres sectores con una retirada preparada.
 
 **Identidad que conservar al adaptar jugadores:** Examen de mando: tres sectores enlazados, cuatro defensas y una compuerta transversal opcional.
 
-**Ajustes:** Nueve enemigos con tareas y posiciones propias reemplazan el grupo repetido de doce; cada sector tiene acceso y retirada.
+**Ajustes:** Siete enemigos especializados sustituyen nueve: cuatro centinelas, dos cazadores y una patrulla, con accesos y retiradas por sector.
 
-Despliegue: (170, 500); enemigos G/P/C/H: 0 / 5 / 4 / 0. 0 líneas directas iniciales; 8 direcciones libres de escape.
+Despliegue: (170, 500); enemigos G/P/C/H: 0 / 1 / 4 / 2. 0 líneas directas iniciales; 8 direcciones libres de escape.
 
 - **Mando por el norte:** (257, 101) → (561, 101) → (941, 139). Recorrido comprobado: 1404 unidades.
 - **Mando por el sur:** (333, 557) → (751, 557) → (1093, 595). Recorrido comprobado: 935 unidades.
 
-Pasos de corcho (ruta cerrada → abierta): pieza 5: 281 → 255; pieza 6: 241 → 174; pieza 8: 302 → 168. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
+Pasos de corcho (ruta cerrada → abierta): pieza 5: 281 → 171; pieza 6: 241 → 174; pieza 8: 302 → 168. Abrirlos también cambia las líneas de fuego; no conviene destruir toda la cobertura automáticamente.
 
-Presión inicial, tres semillas de IA y jugador inmóvil: 3.80 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
+Presión inicial, tres semillas de IA y jugador inmóvil: 5.37 segundos hasta la primera caída. Las rutas requieren combatir y reaccionar: son opciones tácticas, no corredores invulnerables.
 
 ## Próximas revisiones por cantidad de jugadores
 
-El registro `campaignVariants` permite seleccionar datos por número de jugadores. La variante 1 contiene estos diseños; 2 tiene su revisión de pareja. Las variantes 3 y 4 conservan sus bases anteriores salvo el debut del cazador en la 21. Para cada revisión siguiente, parte de la identidad documentada, conserva las introducciones de enemigos y decide expresamente posiciones, rutas y refuerzos. No basta con multiplicar tanques o ampliar coordenadas. Mantén refugios y salidas útiles para el equipo completo y comprueba el fuego amigo desde cada aparición.
+El registro `campaignVariants` permite seleccionar datos por número de jugadores. La variante 1 contiene estos diseños; 2 tiene su revisión de pareja. Las variantes 3 y 4 conservan sus bases anteriores en 1–20; 21–40 tienen formaciones, papeles y rutas explícitas, visibles en `party-campaign-review.html`. Para cada revisión siguiente, parte de la identidad documentada, conserva las introducciones de enemigos y decide expresamente posiciones, rutas y refuerzos. No basta con multiplicar tanques o ampliar coordenadas. Mantén refugios y salidas útiles para el equipo completo y comprueba el fuego amigo desde cada aparición.
 
 Reproducir: `npm run review:solo`. Validación: `npm test`, `npm run build` y `npm run test:e2e`.
