@@ -53,8 +53,8 @@ test('the real two-controller campaign advances through every briefing and prese
 });
 test('P2 opens and traverses the reviewed gate with ordinary controller shooting while P1 uses keyboard',async({page})=>{
   await startDuo(page,true);
-  await page.evaluate(()=>{const s=(window as any).__wooden;s.scene.restart({session:{...s.session,level:25}});});
-  await page.waitForFunction(()=>(window as any).__wooden?.world.level.id===26);
+  await page.evaluate(()=>{const s=(window as any).__wooden;s.scene.restart({session:{...s.session,level:15}});});
+  await page.waitForFunction(()=>(window as any).__wooden?.world.level.id===16);
   const gate=await page.evaluate(()=>{
     const w=(window as any).__wooden.world,o=w.obstacles[1],p=w.players[1];w.ai.update=()=>{};
     Object.assign(p,{x:o.x-60,y:o.y+o.h/2,turret:0});return {x:o.x,w:o.w};
@@ -74,14 +74,14 @@ test('P2 opens and traverses the reviewed gate with ordinary controller shooting
 });
 test('duo atlas shows forty selectable maps, roles, deployment and real open-gate paths',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('/duo-campaign-review.html#mission-26');await expect(page.locator('#title')).toContainText('26 ·');
+  await page.goto('/duo-campaign-review.html#mission-16');await expect(page.locator('#title')).toContainText('16 ·');
   await expect(page.locator('#mission option')).toHaveCount(40);
   await expect(page.locator('#duo [data-route]')).toHaveCount(2);await expect(page.locator('#duo [data-rally]')).toHaveCount(1);
   await expect(page.locator('#roles')).toContainText('P1');await expect(page.locator('#roles')).toContainText('P2');
   await page.locator('#gates').check();await expect(page.locator('#duo [data-cork]')).toHaveCount(2);
-  await page.locator('#mission').selectOption('15');await expect(page.locator('#duo [data-bank]')).toHaveCount(4);
+  await page.locator('#mission').selectOption('25');await expect(page.locator('#duo [data-bank]')).toHaveCount(4);
   await page.locator('#paths').uncheck();await expect(page.locator('#duo [data-route]')).toHaveCount(0);
-  await page.keyboard.press('ArrowRight');await expect(page.locator('#title')).toContainText('17 ·');
+  await page.keyboard.press('ArrowRight');await expect(page.locator('#title')).toContainText('27 ·');
   await page.setViewportSize({width:390,height:844});await expect(page.locator('#duo svg')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   await page.screenshot({path:'.playwright/duo-atlas-mobile.png'});expect(errors).toEqual([]);

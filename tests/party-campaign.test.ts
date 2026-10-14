@@ -35,9 +35,9 @@ for (const count of [1, 2, 3, 4] as const) test(`${count} players: all published
 });
 test('the campaign introduces only gray scouts, striped raiders and stationary sentinels progressively', () => {
   assert.ok(levels.slice(0, 2).every(l => l.enemies.every(e => e.kind === 'basic')));
-  assert.ok(levels.slice(2, 6).some(l => l.enemies.some(e => e.kind === 'patrol')));
-  assert.ok(levels.slice(0, 6).every(l => l.enemies.every(e => e.kind !== 'tactical')));
-  assert.ok(levels[6].enemies.some(e => e.kind === 'tactical'));
+  assert.ok(levels.slice(10, 20).some(l => l.enemies.some(e => e.kind === 'patrol')));
+  assert.ok(levels.slice(0, 20).every(l => l.enemies.every(e => e.kind !== 'tactical')));
+  assert.ok(levels[20].enemies.some(e => e.kind === 'tactical'));
   assert.deepEqual(new Set(levels.flatMap(l => l.enemies.map(e => e.kind))), new Set(['basic', 'patrol', 'tactical', 'hunter']));
 });
 for (const count of [3, 4] as PlayerCount[]) for (const layout of ['two-pads', 'keyboard-pad'] as const) test(`${count} players with ${layout}: stable device assignment, reconnect safety and shared pause`, () => {
@@ -93,13 +93,13 @@ test('a stationary sentinel shoots down an incoming shell, consumes its slow rel
 });
 
 test('gallery movement remains inside the player zone and real ricochets can kill every protected sentinel', () => {
-  const w = new World(levels[15]);
+  const w = new World(levels[25]);
   for (let i = 0; i < 300; i++) w.move(w.player, { x: 0, y: 1 }, 116.25, 0.05);
   assert.ok(w.player.y < 420);
   for (let i = 0; i < 300; i++) w.move(w.player, { x: 1, y: 0 }, 116.25, 0.05);
   assert.ok(w.player.x < 482);
-  for (let index = 0; index < levels[15].enemies.length; index++) {
-    const board = new World(levels[15]), target = board.enemies[index];
+  for (let index = 0; index < levels[25].enemies.length; index++) {
+    const board = new World(levels[25]), target = board.enemies[index];
     board.tanks.filter(t => t.kind !== 'player' && t.id !== target.id).forEach(t => t.alive = false);
     const angle = bankAngle(board.player, target, board.solids)!;
     board.player.turret = angle; assert.ok(board.fire(board.player));

@@ -8,13 +8,12 @@ import {auditCork,canHitFrom} from '../src/game/SoloAudit.ts';
 import {lineClear} from '../src/game/CollisionManager.ts';
 import {findPath} from '../src/game/Navigation.ts';
 
-for(const count of [3,4] as const)for(let id=22;id<=40;id++)test(`${count} players, mission ${id}: bounded force, separated firing lanes, traversable roles and real defenses`,()=>{
+for(const count of [3,4] as const)for(let id=21;id<=40;id++)test(`${count} players, mission ${id}: bounded force, separated firing lanes, traversable roles and real defenses`,()=>{
   const level=getLevel(id-1,count),w=new World(level,count),a=auditParty(level,count,true);
   assert.deepEqual(a.issues,[],`${level.name}: ${a.issues.join('; ')}`);
   assert.equal(w.level,level);assert.deepEqual(w.enemies.map(t=>({x:t.x,y:t.y,kind:t.kind})),level.enemies,'no automatic waves');
   assert.deepEqual(w.players.map(p=>({x:p.x,y:p.y})),level.playerSpawns);
-  assert.equal(level.enemies.length,duoLevels[id-1].enemies.length+count-2);
-  assert.ok(level.enemies.length<cooperativeLevels[id-1].enemies.length*count);
+  assert.ok(level.enemies.length<=(count===3?10:11));
   assert.ok(a.separation>=(count===3?252:288));
   assert.ok(a.idle>=3,'all three seeded AI runs leave an initial reaction window');
   assert.deepEqual(a.routes.map(r=>r.player),Array.from({length:count},(_,i)=>i+1));
@@ -24,7 +23,7 @@ for(const count of [3,4] as const)for(let id=22;id<=40;id++)test(`${count} playe
   assert.equal(w.alivePlayers.length,count,'two seconds of opening fire cause no teammate or immediate self-ricochet deaths');
   for(const [index,e] of new World(level,count).enemies.entries())if(e.kind==='tactical'){
     const board=new World(level,count);
-    assert.ok(a.routes.some(r=>r.path.filter((_,i)=>i%2===0).some(p=>canHitFrom(level,p,index,!lineClear(p,e,board.solids,5),count,r.player-1))),`sentinel ${index+1}: a real projectile can reach it with every teammate present`);
+    assert.ok(a.routes.some(r=>r.path.filter((_,i)=>i%2===0).some(p=>canHitFrom(level,p,index,!lineClear(p,e,board.solids,5),count,r.player-1)))||level.design!.bankTargets?.some(b=>b.enemy===index&&canHitFrom(level,b.from,index,true,count)),`sentinel ${index+1}: a real projectile can reach it with every teammate present`);
   }
   for(const gate of auditCork(level,count)){
     assert.ok(Number.isFinite(gate.before)&&gate.before-gate.after>5);
@@ -38,15 +37,15 @@ for(const count of [3,4] as const)for(let id=22;id<=40;id++)test(`${count} playe
 test('hunter encounters advance by chapter with explicit upper bounds and intentional strategy pauses',()=>{
   for(const count of [1,2,3,4] as const){
     const cap=[0,7,9,10,11][count];
-    for(let id=22;id<=40;id++){
+    for(let id=21;id<=40;id++){
       const l=getLevel(id-1,count),hunters=l.enemies.filter(e=>e.kind==='hunter');
       assert.ok(l.enemies.length<=cap);assert.ok(hunters.length<=3);
-      assert.equal(hunters.length>0,id!==23);
-      if(id<30)assert.ok(hunters.length<=1,'first combinations retain one hunter for every team size');
+      assert.equal(hunters.length>0,id>=31);
+      if(id<33)assert.ok(hunters.length<=1,'first combinations retain one hunter for every team size');
       assert.equal(l.design!.identity,levels[id-1].design!.identity);
     }
-    assert.equal(getLevel(29,count).enemies.filter(e=>e.kind==='hunter').length,2);
-    assert.equal(getLevel(35,count).enemies.filter(e=>e.kind==='tactical').length,5,'preserve the five sentry mission');
+    assert.equal(getLevel(32,count).enemies.filter(e=>e.kind==='hunter').length,2);
+    assert.equal(getLevel(29,count).enemies.filter(e=>e.kind==='tactical').length,5,'five sentries close their own chapter');
   }
   assert.equal(getLevel(39,4).enemies.filter(e=>e.kind==='hunter').length,3);
 });

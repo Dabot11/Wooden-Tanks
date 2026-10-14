@@ -9,7 +9,7 @@ test('a thirty-mission winner starts chapter four, sees its roster and unlocks m
   await expect(page.locator('.mission-chapter')).toHaveCount(4);
   await expect(page.locator('.mission-choice').nth(30)).toBeEnabled(); await expect(page.locator('.mission-choice').nth(31)).toBeDisabled();
   await page.locator('.mission-choice').nth(30).click();
-  await expect(page.getByRole('heading', { name: 'El bastión', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Primer cazador', exact: true })).toBeVisible();
   await expect(page.locator('.brief-total')).toContainText(`${levels[30].enemies.length} tanques enemigos`);
   await waitForPlaying(page);
   await page.evaluate(() => {

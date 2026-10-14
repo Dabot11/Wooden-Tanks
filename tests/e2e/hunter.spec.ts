@@ -61,14 +61,14 @@ for(const count of [2,3,4])test(`${count} controllers can enter hunter practice,
  expect(await page.evaluate(()=>({practice:(window as any).__wooden.session.practice,count:(window as any).__wooden.world.players.length}))).toEqual({practice:true,count});
  await page.screenshot({path:`.playwright/hunter-team-${count}.png`});
 });
-test('mission 21 campaign briefing and atlas expose the reduced formation and hunter introduction',async({page})=>{
+test('mission 31 campaign briefing and atlas expose the reduced formation and hunter introduction',async({page})=>{
  await seed(page);await page.goto('/');await page.locator('#play').click();
- await page.evaluate(()=>{const s=(window as any).__wooden;s.scene.restart({session:{...s.session,level:20}});});
- await page.waitForFunction(()=>(window as any).__wooden?.world.level.id===21);
- await expect(page.locator('.brief-total')).toContainText('3 tanques enemigos');await expect(page.locator('.enemy-brief-row[data-kind="hunter"]')).toContainText('× 1');
- await expect(page.locator('.mission-briefing')).toContainText('Cambia de esquina');
- await page.goto('/solo-campaign-review.html#mission-21');await expect(page.locator('#metrics div').first()).toContainText('3Enemigos');await expect(page.locator('#lesson')).toContainText('cazador');
- await page.goto('/duo-campaign-review.html#mission-21');await expect(page.locator('#metrics div').first()).toContainText('3Enemigos');await expect(page.locator('#lesson')).toContainText('cazador');
+ await page.evaluate(()=>{const s=(window as any).__wooden;s.scene.restart({session:{...s.session,level:30}});});
+ await page.waitForFunction(()=>(window as any).__wooden?.world.level.id===31);
+ await expect(page.locator('.brief-total')).toContainText('5 tanques enemigos');await expect(page.locator('.enemy-brief-row[data-kind="hunter"]')).toContainText('× 1');
+ await expect(page.locator('.mission-briefing')).toContainText('Un solo cazador debuta');
+ await page.goto('/solo-campaign-review.html#mission-31');await expect(page.locator('#metrics div').first()).toContainText('5Enemigos');await expect(page.locator('#lesson')).toContainText('cazador');
+ await page.goto('/duo-campaign-review.html#mission-31');await expect(page.locator('#metrics div').first()).toContainText('6Enemigos');await expect(page.locator('#lesson')).toContainText('cazador');
 });
 test('practice defeat finishes the animation and retries the same trial without touching campaign progress',async({page})=>{
  await seed(page);await trial(page);const save=await page.evaluate(()=>localStorage.getItem('wooden-tanks-v1'));await waitForPlaying(page);

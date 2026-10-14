@@ -1,6 +1,6 @@
 import { ARENA } from '../types';
 import type { Level, PlayerCount, Vec } from '../types';
-/** Only mission 21 is authored here; the broader 3/4-player review remains a separate task. */
+/** Historical hunter arena, now used as the geometry template for the mission 31 debut. */
 export function hunterPartyDebut(source:Level,count:3|4):Level {
   const scale=count===3?1.24:1.28,staging=160;
   const point=(p:Vec):Vec=>({x:ARENA.x+staging+(p.x-ARENA.x)*scale,y:ARENA.y+(p.y-ARENA.y)*scale});

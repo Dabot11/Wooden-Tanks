@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { levels, cooperativeLevels, getLevel } from '../src/game/LevelManager.ts';
+import { levels, cooperativeLevels, getLevel, templateCampaignVariants } from '../src/game/LevelManager.ts';
 import { auditSolo, auditCork, canHitFrom } from '../src/game/SoloAudit.ts';
 import { World } from '../src/game/World.ts';
 import { EnemyAI } from '../src/game/EnemyAI.ts';
@@ -55,8 +55,8 @@ test('solo revisions preserve mission identity and exact existing cooperative da
     }
   }
   assert.deepEqual(new Set(levels.slice(0,2).flatMap(l=>l.enemies.map(e=>e.kind))),new Set(['basic']));
-  assert.ok(levels.slice(0,6).every(l=>l.enemies.every(e=>e.kind!=='tactical')));
-  assert.equal(levels[6].enemies.filter(e=>e.kind==='tactical').length,1);
+  assert.ok(levels.slice(0,20).every(l=>l.enemies.every(e=>e.kind!=='tactical')));
+  assert.equal(levels[20].enemies.filter(e=>e.kind==='tactical').length,1);
 });
 
 test('published review data matches the playable solo catalog and preserved baseline', async()=>{
@@ -68,7 +68,7 @@ test('published review data matches the playable solo catalog and preserved base
   assert.equal(reports.length,levels.length);
   for(const [index,report]of reports.entries()) {
     assert.deepEqual(report.level,levels[index],`mission ${index+1}: regenerate the report with npm run review:solo`);
-    assert.deepEqual(report.before,cooperativeLevels[index]);
+    assert.deepEqual(report.before,templateCampaignVariants[1][index]);
     assert.equal(report.audit.issues.length,0);
     assert.deepEqual(report.cork,auditCork(levels[index]));
   }

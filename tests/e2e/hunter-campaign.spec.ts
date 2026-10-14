@@ -46,15 +46,15 @@ for(const count of [1,2,3,4]as PlayerCount[])test(`late campaign: all 19 formati
 });
 test('late-party atlas covers every mission and shows exact bounded forces, routes and hunter progression',async({page})=>{
   await page.goto('/party-campaign-review.html#mission-40');await expect(page.locator('#title')).toContainText('40');
-  await expect(page.locator('#mission option')).toHaveCount(40);await expect(page.locator('#map3 [data-kind="hunter"]')).toHaveCount(2);await expect(page.locator('#map4 [data-kind="hunter"]')).toHaveCount(3);
+  await expect(page.locator('#mission option')).toHaveCount(40);await expect(page.locator('#map3 [data-kind="hunter"]')).toHaveCount(3);await expect(page.locator('#map4 [data-kind="hunter"]')).toHaveCount(3);
   await expect(page.locator('#map4 polyline[data-player]')).toHaveCount(4);
   await page.locator('#mission').selectOption('22');await expect(page.locator('#title')).toContainText('23');await expect(page.locator('[data-kind="hunter"]')).toHaveCount(0);
   await page.locator('#paths').uncheck();await expect(page.locator('polyline[data-player]')).toHaveCount(0);
-  await page.locator('#mission').selectOption('35');await expect(page.locator('#map4 [data-kind="tactical"]')).toHaveCount(5);
+  await page.locator('#mission').selectOption('29');await expect(page.locator('#map4 [data-kind="tactical"]')).toHaveCount(5);
 });
 test('four-player bastion accepts a real mouse-fired bank shot under the larger camera zoom',async({page})=>{
-  await start(page,4,true);await mission(page,31);
-  const shot=getLevel(30,4).design!.bankTargets![0];
+  await start(page,4,true);await mission(page,21);
+  const shot=getLevel(20,4).design!.bankTargets![0];
   const bearing=await page.evaluate(shot=>{
     const w=(window as any).__wooden.world,p=w.player,t=w.enemies[shot.enemy];w.ai.update=()=>{};Object.assign(p,shot.from);
     // This authored post banks off the top edge of the actual larger arena.

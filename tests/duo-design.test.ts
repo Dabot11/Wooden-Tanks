@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { levels, duoLevels, cooperativeLevels, getLevel } from '../src/game/LevelManager.ts';
+import { levels, duoLevels, cooperativeLevels, getLevel, templateCampaignVariants } from '../src/game/LevelManager.ts';
 import { World } from '../src/game/World.ts';
 import { auditDuo } from '../src/game/DuoAudit.ts';
 import { auditCork, canHitFrom } from '../src/game/SoloAudit.ts';
@@ -48,7 +48,7 @@ for(const level of duoLevels)test(`duo ${level.id}: two safe deployments, assign
 
 test('duo preserves the introductory layouts, legacy comparison data and campaign introductions',()=>{
   assert.equal(duoLevels.length,40);
-  assert.equal(createHash('sha256').update(JSON.stringify(levels.slice(0,21))).digest('hex'),'efdaaf4522ab92619e369dc25f08969d3d8c4e23e9a5313e530085a3b3a7ce8a');
+  assert.equal(createHash('sha256').update(JSON.stringify(templateCampaignVariants[1].slice(0,21))).digest('hex'),'efdaaf4522ab92619e369dc25f08969d3d8c4e23e9a5313e530085a3b3a7ce8a');
   assert.equal(createHash('sha256').update(JSON.stringify(cooperativeLevels)).digest('hex'),'72f8366dceb74a8c58de3266c4b37979596d356b34e2ca4be8bdebbf3b424596');
   for(const [i,l]of duoLevels.entries()){
     assert.equal(getLevel(i,2),l);assert.equal(getLevel(i,1),levels[i]);
@@ -57,10 +57,10 @@ test('duo preserves the introductory layouts, legacy comparison data and campaig
     assert.equal(l.design!.identity,levels[i].design!.identity);
   }
   assert.ok(duoLevels.slice(0,2).every(l=>l.enemies.every(e=>e.kind==='basic')));
-  assert.ok(duoLevels[2].enemies.some(e=>e.kind==='patrol'));
-  assert.ok(duoLevels.slice(0,6).every(l=>l.enemies.every(e=>e.kind!=='tactical')));
-  assert.equal(duoLevels[6].enemies.filter(e=>e.kind==='tactical').length,1);
-  assert.equal(duoLevels[35].enemies.filter(e=>e.kind==='tactical').length,5);
+  assert.equal(duoLevels[10].enemies.filter(e=>e.kind==='patrol').length,1);
+  assert.ok(duoLevels.slice(0,20).every(l=>l.enemies.every(e=>e.kind!=='tactical')));
+  assert.equal(duoLevels[20].enemies.filter(e=>e.kind==='tactical').length,1);
+  assert.equal(duoLevels[29].enemies.filter(e=>e.kind==='tactical').length,5);
 });
 
 test('authored duet still permits real friendly fire',()=>{

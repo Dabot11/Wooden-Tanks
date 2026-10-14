@@ -1,12 +1,12 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { levels, cooperativeLevels } from '../src/game/LevelManager.ts';
+import { levels, templateCampaignVariants, ENEMY_CHAPTERS } from '../src/game/LevelManager.ts';
 import { auditSolo, auditCork } from '../src/game/SoloAudit.ts';
 import { World } from '../src/game/World.ts';
 import { bankAngle } from '../src/game/EnemyAI.ts';
 import { EnemyAI } from '../src/game/EnemyAI.ts';
-const phases=['Aprendiz del taller','Terreno y fortificaciones','Combate por sectores','Asedio y dominio'];
+const phases=ENEMY_CHAPTERS.map(c=>c.name);
 const reports=levels.map(level=>{
-  const audit=auditSolo(level),before=cooperativeLevels[level.id-1];
+  const audit=auditSolo(level),before=templateCampaignVariants[1][level.id-1];
   let idle=8;
   for(const seed of [1,7,19]){
     let state=seed;const w=new World(level);
@@ -33,10 +33,10 @@ mkdirSync('public',{recursive:true});mkdirSync('docs',{recursive:true});
 const roster=(level:typeof levels[number])=>['basic','patrol','tactical','hunter'].map(kind=>level.enemies.filter(e=>e.kind===kind).length).join(' / ');
 let md='# Revisión de las 40 misiones: un jugador\n\n';
 md+='[Abrir el atlas interactivo](https://dabot11.github.io/Wooden-Tanks/solo-campaign-review.html). Se muestran el plano anterior y el revisado, con rutas y puestos de rebote.\n\n';
-md+='Esta revisión afecta a la campaña individual. Se mantienen los IDs, los nombres, los desbloqueos y las reglas de combate. La pareja tiene su propia revisión; tres y cuatro jugadores usan formaciones explícitas en las 40 misiones. La identidad de cada misión queda como guía para adaptar espacios, formaciones y papeles a dos, tres y cuatro jugadores.\n\n';
-md+='La progresión introduce patrulleros en la misión 3, corcho en la 5, cavidades como lección explícita en la 6 y un centinela en la 7. Las misiones 10, 20, 30 y 40 combinan lo aprendido; la 16 mantiene la galería restringida de rebotes. La dificultad estratégica incluye decisiones, ventanas de ataque y cambios de sector: no exige que cada misión tenga más enemigos que la anterior.\n\n';
+md+='Las 160 variantes se revisan como una campaña compartida: 40 misiones para 1/2/3/4 jugadores, con formaciones y despliegues propios. El atlas compara la edición anterior con la nueva secuencia. Se conservan desbloqueos y reglas de combate; la galería pasa a la 26 y los cinco vigías a la 30.\n\n';
+md+='Cada bloque de diez introduce un enemigo: 1–10 solo exploradores grises; 11–20 añade patrulleros; 21–30 añade centinelas; 31–40 añade cazadores. Los estrenos 11/21/31 tienen exactamente uno del tipo nuevo en todos los tamaños de equipo. Corcho, cavidades, rutas y asaltos por sectores sostienen los diez retos de cada bloque.\n\n';
 md+='Se verifican despliegues, dos rutas con holgura por misión, posiciones de tiro reales contra cada centinela y pasos de corcho que se abren con tres disparos. Las pruebas de presión usan tres semillas de IA con el jugador inmóvil. Este tiempo sirve para detectar muertes demasiado tempranas, no para medir la dificultad total ni para prometer victoria siguiendo una ruta sin combatir.\n\n';
-md+='El cazador debuta en la misión 21 con poca escolta. Su prueba aislada está disponible desde «Probar cazador» en el menú y conserva el progreso de campaña.\n\n';
+md+='El cazador debuta en la 31. Su práctica aislada sigue disponible en el menú y conserva el progreso. Cada misión documenta una decisión táctica; las cantidades se ajustan por sector, sin multiplicar toda la escolta por jugador.\n\n';
 md+='## Resumen\n\nG / P / C / H = exploradores grises / patrulleros / centinelas / cazadores.\n\n| Misión | Etapa | G / P / C / H | Líneas iniciales | Distancia mínima | Enfoque |\n|---|---|---|---:|---:|---|\n';
 for(const r of reports)md+=`| ${r.level.id}. ${r.level.name} | ${r.phase} | ${roster(r.level)} | ${r.audit.directThreats} | ${Math.round(r.audit.nearestEnemy)} | ${r.level.design!.lesson} |\n`;
 for(const r of reports){

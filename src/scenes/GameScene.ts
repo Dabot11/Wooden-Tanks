@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { duelLevel, duelResult, DUEL_TARGET } from '../game/Duel';
 import { World } from '../game/World';
-import { getLevel, levels } from '../game/LevelManager';
+import { getLevel, levels, HUNTER_DEBUT_INDEX } from '../game/LevelManager';
 import { hunterTrial } from '../game/missions/hunterDebut';
 import { BoardRenderer } from '../game/BoardRenderer';
 import { ParticleEffects } from '../game/ParticleEffects';
@@ -176,7 +176,7 @@ export class GameScene extends Phaser.Scene {
       } else {
         this.status = 'ended'; document.querySelector('#app')!.classList.remove('gameplay');
         showOverlay(this.root, { eyebrow: 'GAME OVER', title: 'Hasta la próxima batalla', description: `${String(this.session.score).padStart(6, '0')} puntos · Récord ${String(progress.data.best).padStart(6, '0')}`, cancel: () => this.menu(), actions: [
-          { text: 'Volver a intentarlo →', run: () => this.scene.restart({ session: { level: this.session.practice?20:0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop, playerCount: this.session.playerCount, practice:this.session.practice } }) },
+          { text: 'Volver a intentarlo →', run: () => this.scene.restart({ session: { level: this.session.practice?HUNTER_DEBUT_INDEX:0, score: 0, lives: 3, missionStartScore: 0, coop: this.session.coop, playerCount: this.session.playerCount, practice:this.session.practice } }) },
           { text: 'Volver al menú', secondary: true, run: () => this.menu() },
         ] });
       }

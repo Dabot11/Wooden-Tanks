@@ -20,6 +20,7 @@ export interface Spawn extends Vec { kind: Exclude<TankKind, 'player'> }
 export type PlayerCount = 1 | 2 | 3 | 4;
 export interface TacticalRoute { name: string; points: Vec[]; player?: PlayerCount }
 export interface MissionDesign {
+  progression?: { chapter: number; sourceId: number; introduced: Spawn['kind'] };
   lesson: string;
   identity: string;
   changes: string;

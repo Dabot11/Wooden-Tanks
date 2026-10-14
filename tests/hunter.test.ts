@@ -82,10 +82,10 @@ test('fast hunter and player missiles destroy each other even when they cross wi
  assert.equal(w.projectiles.length,0);assert.equal(h.alive,true);assert.equal(p.alive,true);
  assert.equal(w.events.filter(e=>e.type==='shellCollision').length,1);
 });
-for(const count of [1,2,3,4]as PlayerCount[])test(`mission 21 and isolated hunter practice support ${count} players without multiplying hunters`,()=>{
- const l=getLevel(20,count),w=new World(l,count),trial=new World(hunterTrial(l),count);
+for(const count of [1,2,3,4]as PlayerCount[])test(`mission 31 and isolated hunter practice support ${count} players without multiplying hunters`,()=>{
+ const l=getLevel(30,count),w=new World(l,count),trial=new World(hunterTrial(l),count);
  assert.equal(w.players.length,count);assert.equal(w.enemies.filter(e=>e.kind==='hunter').length,1);assert.equal(trial.enemies.length,1);assert.equal(trial.obstacles.length,2);
- assert.equal(w.enemies.length,count<=2?3:4);
+ assert.equal(w.enemies.length,4+count);
  for(const t of [...w.tanks,...trial.tanks])assert.ok((w.tanks.includes(t)?w:trial).canStand(t,t.radius,t.id));
  for(const p of w.players){
    assert.ok(w.enemies.every(e=>Math.hypot(p.x-e.x,p.y-e.y)>295));
@@ -107,11 +107,10 @@ for(const count of [1,2,3,4]as PlayerCount[])test(`mission 21 and isolated hunte
    step(board,3);assert.equal(board.alivePlayers.length,count,'intro permits a reaction');
  }
 });
-test('hunter campaign preserves the introductory missions and its reviewed debut',()=>{
- const hash=(ls:Level[])=>createHash('sha256').update(JSON.stringify(ls.slice(0,21))).digest('hex');
- assert.equal(hash(levels),'efdaaf4522ab92619e369dc25f08969d3d8c4e23e9a5313e530085a3b3a7ce8a');assert.equal(hash(duoLevels),'52d470083c9839ca2eb0c87856229b8d7874daa16830fb6d4b4540fab8031e47');
+test('hunters appear only in the fourth chapter, with one at the introduction',()=>{
  for(const count of [1,2,3,4]as PlayerCount[])for(let i=0;i<40;i++){
-   const l=getLevel(i,count);assert.equal(l.enemies.some(e=>e.kind==='hunter'),i>=20&&i!==22);
-   if(count>=3)assert.equal(l.playerSpawns?.length,count);
+   const l=getLevel(i,count);assert.equal(l.enemies.some(e=>e.kind==='hunter'),i>=30);
+   if(i===30)assert.equal(l.enemies.filter(e=>e.kind==='hunter').length,1);
+   if(count>=2)assert.equal(l.playerSpawns?.length,count);
  }
 });

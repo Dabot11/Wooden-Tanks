@@ -81,7 +81,7 @@ Elige **Cooperativo local**, selecciona 2, 3 o 4 jugadores y pulsa un botón en 
 - MENÚ en cualquier mando o ESC pausa para todos. A confirma y B regresa. Una desconexión pausa y conserva el puesto: ningún otro mando sustituye automáticamente al ausente. Suelta sticks y gatillos al reanudar. Si Chrome cambia el índice del dispositivo, vuelve al menú para reasignarlo.
 - Cada jugador adicional amplía ambos ejes del mapa un 20 % y añade una dotación completa de enemigos: cuatro jugadores tienen 1,6 veces el ancho/alto y cuatro veces los enemigos. La cámara muestra todo el terreno; el mouse se transforma a coordenadas del mundo y la mira permanece exactamente en el cursor.
 
-La campaña contiene cuarenta misiones con cobertura, corcho destructible, cavidades y rutas que exigen esquivas y rebotes. En la misión 16, Galería de rebotes, las cavidades encierran a los jugadores en una zona: la pared bloquea el tiro directo y los centinelas deben alcanzarse rebotando por abajo. El progreso, récord y preferencias existentes se conservan. Las pruebas simulan Xbox con nombres iguales e índices independientes; Bluetooth/USB físicos en macOS requieren comprobación en la laptop.
+La campaña contiene cuarenta misiones con cobertura, corcho destructible, cavidades y rutas que exigen esquivas y rebotes. En la misión 26, Galería de rebotes, las cavidades encierran a los jugadores en una zona: la pared bloquea el tiro directo y los centinelas deben alcanzarse rebotando por abajo. El progreso, récord y preferencias existentes se conservan. Las pruebas simulan Xbox con nombres iguales e índices independientes; Bluetooth/USB físicos en macOS requieren comprobación en la laptop.
 
 ## Sala de jugadores y duelo
 
@@ -98,8 +98,8 @@ Duelo es todos contra todos, sin enemigos de IA. El último tanque vivo gana la 
 Solo estos tres tipos aparecen en las cuarenta misiones:
 
 - **Explorador gris (misión 1):** móvil y lento, un misil activo, sin rebotes.
-- **Patrullero violeta con franjas oscuras (misión 3):** móvil, puede esquivar, hasta dos misiles activos y un rebote por misil.
-- **Centinela marfil con negro/naranja (misión 7):** inmóvil; misil propulsado 80 % más rápido, un rebote y recarga de 3,4 segundos. Detecta amenazas próximas con línea de visión y dispara para interceptarlas. Ataque y defensa consumen la misma recarga; su giro limitado permite vencerlo con salvas o rebotes tardíos.
+- **Patrullero violeta con franjas oscuras (misión 11):** móvil, puede esquivar, hasta dos misiles activos y un rebote por misil.
+- **Centinela marfil con negro/naranja (misión 21):** inmóvil; misil propulsado 80 % más rápido, un rebote y recarga de 3,4 segundos. Detecta amenazas próximas con línea de visión y dispara para interceptarlas. Ataque y defensa consumen la misma recarga; su giro limitado permite vencerlo con salvas o rebotes tardíos.
 
 Los jugadores conservan dos rebotes y la velocidad de movimiento previamente reducida. Los proyectiles registran su perfil al dispararse, incluso si su propietario muere. El centinela destruye amenazas mediante colisiones reales entre misiles, sin escudo invisible.
 
@@ -162,20 +162,26 @@ Consulta el [registro de las 40 variantes](docs/duo-campaign-review.md) o el [at
 
 ## Probar el cazador
 
-**Probar cazador** en el menú abre una práctica con un cazador y dos coberturas, para uno a cuatro jugadores, conservando el progreso de campaña. La misión 21 presenta al nuevo enemigo con poca escolta: tres enemigos para uno/dos jugadores y cuatro para tres/cuatro. El cazador flanquea un 40 % más rápido que el jugador, esquiva misiles visibles y puede usar su único disparo para interceptarlos. Sus misiles viajan al doble de velocidad normal, con un rebote. Muere con un impacto; la recuperación después de disparar permite contraatacarlo. Consulta el [diseño y alcance del prototipo](docs/hunter.md).
+**Probar cazador** abre una práctica con un cazador y dos coberturas, para uno a cuatro jugadores, conservando el progreso. En campaña debuta en la misión 31, con exactamente uno para todo el equipo. Flanquea un 40 % más rápido que el jugador, esquiva misiles visibles y puede usar su único disparo para interceptarlos. Sus misiles viajan al doble de velocidad normal, con un rebote. Muere con un impacto; la recuperación permite contraatacarlo. Consulta sus [reglas](docs/hunter.md).
 
 
 ## Cazadores en las misiones 22–40
 
-La campaña combina cazadores con refugios, puertas y defensas, sustituyendo escoltas repetidas. La 23 da una pausa de cazadores; la 30 introduce dos flancos; la 36 conserva cinco centinelas. Los equipos grandes encuentran hasta tres cazadores en algunos combates finales. La dificultad aprobada del cazador se conserva.
+## Cuatro capítulos y 160 variantes
 
-El tramo 22–40 limita las fuerzas a **7/9/10/11 enemigos** para **1/2/3/4 jugadores**, con formaciones explícitas. Tres y cuatro tienen carriles iniciales separados, más espacio de despliegue, rutas asignadas y apoyos por sector. Sus misiones 1–20 tienen su propia revisión: hasta ocho/nueve enemigos para tres/cuatro jugadores, con una galería 16 ampliada y restringida.
+| Misiones | Tipo que se incorpora | Progresión |
+|---|---|---|
+| 1–10 | Explorador gris | Solo grises: flancos, corcho, cavidades y rutas de retirada |
+| 11–20 | Patrullero violeta | Uno en la 11, dos en la 12, tres en la 13; después combina patrullas y exploradores |
+| 21–30 | Centinela | Uno en la 21, dos en la 22, tres en la 24; galería restringida en la 26 y cinco vigías en la 30 |
+| 31–40 | Cazador | Uno en la 31–32, dos en la 33–35 y tres desde la 36, con escoltas y defensas por sector |
 
-Consulta la [progresión por misión y tamaño de equipo](docs/hunter-campaign-review.md) y el [atlas de tres/cuatro jugadores](https://dabot11.github.io/Wooden-Tanks/party-campaign-review.html). `npm run review:party` los regenera a partir de los mapas jugables.
+Cada estreno tiene un solo enemigo del tipo nuevo, también para cuatro jugadores. El límite global es **7/9/10/11 enemigos** para **1/2/3/4 jugadores**; 1–20 usa hasta ocho/nueve para equipos de tres/cuatro. Las formaciones no se multiplican por jugador.
 
+Las 160 variantes conservan caminos de retirada, apariciones separadas y reuniones accesibles. La pareja gana una zona inicial más profunda para evitar que las paredes devuelvan inmediatamente una salva hacia los jugadores. El fuego amigo y las físicas siguen activos.
 
-## Primeros veinte niveles para tres y cuatro
+`src/game/missions/chapterProgression.ts` declara la secuencia, las mezclas y el objetivo táctico de cada misión. Los catálogos anteriores sirven como plantillas de geometría y comparación. El guardado sigue usando los mismos desbloqueos numéricos y preferencias; la práctica del cazador conserva su aislamiento.
 
-Cada misión declara su formación, apariciones separadas, papeles y rutas de relevo. 1–2 usan solo exploradores; 3 introduce un patrullero, 5 el corcho, 6 las cavidades y 7 un único centinela para todo el equipo. La galería 16 mantiene cuatro/cinco centinelas, una barrera de cavidades que cierra la zona ampliada y rebotes comprobados con los compañeros presentes. 17–20 combinan puertas, retirada y asaltos por sectores.
+[Atlas completo de las 160 variantes](https://dabot11.github.io/Wooden-Tanks/campaign-review.html). Los atlas [individual](https://dabot11.github.io/Wooden-Tanks/solo-campaign-review.html), [de pareja](https://dabot11.github.io/Wooden-Tanks/duo-campaign-review.html) y [de equipos](https://dabot11.github.io/Wooden-Tanks/party-campaign-review.html) documentan rutas, corcho y rebotes reales.
 
-Las campañas individual y de pareja, las variantes 21–40 y el comportamiento de los enemigos conservan sus datos aprobados. El [atlas de equipos](https://dabot11.github.io/Wooden-Tanks/party-campaign-review.html) ahora muestra las 40 misiones y los rebotes reales.
+`npm run audit:campaign` comprueba las 160 variantes: espacio de aparición, separación, cobertura, rutas, reunión, tres semillas de presión inicial, dos segundos de salvas simultáneas, tiros reales contra cada centinela y utilidad de los pasos de corcho. Es una auditoría de seguridad y soluciones tácticas; el equilibrio percibido también necesita partidas humanas. `npm run review:campaign` regenera el atlas completo después de regenerar los tres atlas detallados.

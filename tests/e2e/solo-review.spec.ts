@@ -25,10 +25,10 @@ test('all forty solo layouts render their authored briefing, deploy safely and a
   expect(errors).toEqual([]);
 });
 
-test('mission 26 cork opens a real route using ordinary shooting and keyboard movement', async ({ page }) => {
+test('mission 16 cork opens a real route using ordinary shooting and keyboard movement', async ({ page }) => {
   await page.goto('/');await page.locator('#play').click();
-  await page.evaluate(()=>{const s=(window as any).__wooden;s.scene.restart({session:{...s.session,level:25}});});
-  await page.waitForFunction(()=>(window as any).__wooden?.world.level.id===26);
+  await page.evaluate(()=>{const s=(window as any).__wooden;s.scene.restart({session:{...s.session,level:15}});});
+  await page.waitForFunction(()=>(window as any).__wooden?.world.level.id===16);
   await page.evaluate(()=>{const w=(window as any).__wooden.world;w.ai.update=()=>{};w.player.x=360;w.player.y=364;w.player.turret=0;});
   await waitForPlaying(page);
   await page.mouse.move(530,364);await page.keyboard.down('d');await page.waitForTimeout(600);await page.keyboard.up('d');
@@ -41,19 +41,19 @@ test('mission 26 cork opens a real route using ordinary shooting and keyboard mo
   try { await expect.poll(()=>page.evaluate(()=>(window as any).__wooden.world.player.x)).toBeGreaterThan(510); }
   finally { await page.keyboard.up('d'); }
   expect(await page.evaluate(()=>(window as any).__wooden.world.player.alive)).toBe(true);
-  await page.screenshot({path:'.playwright/solo-gate-26.png'});
+  await page.screenshot({path:'.playwright/solo-gate-16.png'});
 });
 
 test('first sentinel can be defeated by real ricochet salvos from the protected tactical post', async ({ page }) => {
   await page.goto('/');await page.locator('#play').click();
-  await page.evaluate(()=>{const s=(window as any).__wooden;s.scene.restart({session:{...s.session,level:6}});});
-  await page.waitForFunction(()=>(window as any).__wooden?.world.level.id===7);
+  await page.evaluate(()=>{const s=(window as any).__wooden;s.scene.restart({session:{...s.session,level:20}});});
+  await page.waitForFunction(()=>(window as any).__wooden?.world.level.id===21);
   const aim=await page.evaluate(async()=>{
     const {bankAngle}=await import('/src/game/EnemyAI.ts');
     const w=(window as any).__wooden.world;
     // Isolate the fortified encounter after the support guard has been cleared.
-    w.tanks.filter((t:any)=>t.kind==='basic').forEach((t:any)=>t.alive=false);
-    w.player.x=827;w.player.y=481;
+    w.tanks.filter((t:any)=>t.kind!=='player'&&t.kind!=='tactical').forEach((t:any)=>t.alive=false);
+    Object.assign(w.player,w.level.design.bankTargets[0].from);
     const target=w.enemies[0];target.cooldown=0;
     const angle=bankAngle(w.player,target,w.solids,2193);w.player.turret=angle;
     return {x:w.player.x+Math.cos(angle)*160,y:w.player.y+Math.sin(angle)*160};

@@ -45,8 +45,8 @@ for(const count of [3,4]as const)test(`${count} controllers: all twenty early fo
   expect(await page.evaluate(()=>(window as any).__wooden.world.players.length)).toBe(count);expect(errors).toEqual([]);
 });
 for(const count of [3,4]as const)test(`${count} players: gallery fires a real bank shot with ${count===4?'mouse and three controllers':'the first controller'}`,async({page})=>{
-  await setup(page,count,count===4);await mission(page,16);
-  const l=getLevel(15,count),b=l.design!.bankTargets![0],w=new World(l,count),angle=bankAngle(b.from,w.enemies[b.enemy],w.solids,2193)!;
+  await setup(page,count,count===4);await mission(page,26);
+  const l=getLevel(25,count),b=l.design!.bankTargets![0],w=new World(l,count),angle=bankAngle(b.from,w.enemies[b.enemy],w.solids,2193)!;
   await page.evaluate(from=>{const w=(window as any).__wooden.world;w.ai.update=()=>{};Object.assign(w.player,from);},b.from);await waitForPlaying(page);await page.waitForFunction(()=>(window as any).__wooden.world.elapsed>.2);
   if(count===4){
     const cursor=await page.evaluate(({from,angle})=>{const c=(window as any).__wooden.cameras.main,origin=c.getWorldPoint(0,0);return {x:(from.x+Math.cos(angle)*300-origin.x)*c.zoom,y:(from.y+Math.sin(angle)*300-origin.y)*c.zoom};},{from:b.from,angle});
@@ -60,16 +60,16 @@ for(const count of [3,4]as const)test(`${count} players: gallery fires a real ba
   await page.screenshot({path:`.playwright/early-gallery-${count}-bank.png`});
 });
 test('the full party atlas preserves deep links and shows actual gallery ricochets',async({page})=>{
-  await page.goto('/party-campaign-review.html#mission-16');await expect(page.locator('#mission option')).toHaveCount(40);
-  await expect(page.locator('#title')).toContainText('16');await expect(page.locator('#map3 [data-kind="tactical"]')).toHaveCount(4);await expect(page.locator('#map4 [data-kind="tactical"]')).toHaveCount(5);
+  await page.goto('/party-campaign-review.html#mission-26');await expect(page.locator('#mission option')).toHaveCount(40);
+  await expect(page.locator('#title')).toContainText('26');await expect(page.locator('#map3 [data-kind="tactical"]')).toHaveCount(4);await expect(page.locator('#map4 [data-kind="tactical"]')).toHaveCount(5);
   await expect(page.locator('#map3 polyline[data-bank]')).toHaveCount(4);await expect(page.locator('#map4 polyline[data-bank]')).toHaveCount(5);
-  await page.locator('#mission').selectOption('2');await expect(page.locator('#map4 [data-kind="patrol"]')).toHaveCount(1);
-  await page.locator('#mission').selectOption('6');await expect(page.locator('#map3 [data-kind="tactical"]')).toHaveCount(1);await expect(page.locator('#map4 [data-kind="tactical"]')).toHaveCount(1);
+  await page.locator('#mission').selectOption('10');await expect(page.locator('#map4 [data-kind="patrol"]')).toHaveCount(1);
+  await page.locator('#mission').selectOption('20');await expect(page.locator('#map3 [data-kind="tactical"]')).toHaveCount(1);await expect(page.locator('#map4 [data-kind="tactical"]')).toHaveCount(1);
   await page.locator('#mission').selectOption('39');await expect(page.locator('#title')).toContainText('40');await expect(page.locator('#map4 [data-kind="hunter"]')).toHaveCount(3);
 });
 for(const count of [3,4]as const)test(`${count} players: campaign keeps the team through gallery and hunter chapter transitions`,async({page})=>{
   test.setTimeout(60000);await setup(page,count);
-  for(const id of [15,16,20]){
+  for(const id of [25,26,30]){
     await mission(page,id);await page.evaluate(()=>{(window as any).__wooden.world.ai.update=()=>{};});await waitForPlaying(page);
     // Complete this formation to exercise the real victory, score and next-mission flow.
     await page.evaluate(()=>{(window as any).__wooden.world.enemies.forEach((e:any)=>e.alive=false);});
@@ -77,6 +77,6 @@ for(const count of [3,4]as const)test(`${count} players: campaign keeps the team
     const next=getLevel(id,count);await expect(page.locator('.brief-total')).toContainText(`${next.enemies.length} tanques enemigos · ${count} jugadores`);
     expect(await page.evaluate(()=>{const s=(window as any).__wooden;return {players:s.world.players.map((p:any)=>({x:p.x,y:p.y})),lives:s.session.lives,score:s.session.score};})).toMatchObject({players:next.playerSpawns,lives:3});
     expect(await page.evaluate(()=>(window as any).__wooden.session.score)).toBeGreaterThan(0);
-    if(id===20)await expect(page.locator('.enemy-brief-row[data-kind="hunter"]')).toContainText('× 1');
+    if(id===30)await expect(page.locator('.enemy-brief-row[data-kind="hunter"]')).toContainText('× 1');
   }
 });

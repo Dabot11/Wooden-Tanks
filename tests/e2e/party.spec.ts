@@ -64,8 +64,8 @@ test('four-player mixed input keeps the mouse exact under zoom; friendly fire an
   await expect(page.locator('.gamepad-status')).toContainText('Reconecta P3');
 });
 test('gallery shows the restricted zone and a mouse-fired bank shot reaches a protected sentinel', async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('wooden-tanks-v1', JSON.stringify({ unlocked: 20, best: 0, muted: true, wins: 0 })));
-  await page.goto('/'); await page.locator('#select').click(); await page.locator('.mission-choice').nth(15).click();
+  await page.addInitScript(() => localStorage.setItem('wooden-tanks-v1', JSON.stringify({ unlocked: 40, best: 0, muted: true, wins: 0 })));
+  await page.goto('/'); await page.locator('#select').click(); await page.locator('.mission-choice').nth(25).click();
   await waitForPlaying(page);
   const aim = await page.evaluate(() => {
     const w = (window as any).__wooden.world;

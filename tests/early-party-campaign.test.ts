@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {getLevel,levels,duoLevels,campaignVariants} from '../src/game/LevelManager.ts';
+import {getLevel,levels,duoLevels,campaignVariants,templateCampaignVariants} from '../src/game/LevelManager.ts';
 import {World} from '../src/game/World.ts';
 import {auditParty} from '../src/game/PartyAudit.ts';
 import {auditCork,canHitFrom} from '../src/game/SoloAudit.ts';
@@ -33,7 +33,7 @@ for(const count of [3,4]as const)for(let id=1;id<=20;id++)test(`${count} players
   }
 });
 for(const count of [3,4]as const)test(`${count} players: the expanded gallery cannot be escaped and its real bank shots remain usable`,()=>{
-  const l=getLevel(15,count);
+  const l=getLevel(25,count);
   for(let slot=0;slot<count;slot++){
     const w=new World(l,count),p=w.players[slot];
     w.players.filter(t=>t.id!==p.id).forEach(t=>t.alive=false);
@@ -51,18 +51,18 @@ for(const count of [3,4]as const)test(`${count} players: the expanded gallery ca
 test('all team sizes retain the first scout, raider, sentinel and hunter introductions',()=>{
   for(const count of [3,4]as const){
     assert.ok([0,1].every(i=>getLevel(i,count).enemies.every(e=>e.kind==='basic')));
-    assert.equal(getLevel(2,count).enemies.filter(e=>e.kind==='patrol').length,1);
-    assert.ok(Array.from({length:6},(_,i)=>getLevel(i,count)).every(l=>l.enemies.every(e=>e.kind!=='tactical')));
-    assert.equal(getLevel(6,count).enemies.filter(e=>e.kind==='tactical').length,1);
-    assert.ok(Array.from({length:20},(_,i)=>getLevel(i,count)).every(l=>l.enemies.every(e=>e.kind!=='hunter')));
-    assert.equal(getLevel(20,count).enemies.filter(e=>e.kind==='hunter').length,1);
+    assert.equal(getLevel(10,count).enemies.filter(e=>e.kind==='patrol').length,1);
+    assert.ok(Array.from({length:20},(_,i)=>getLevel(i,count)).every(l=>l.enemies.every(e=>e.kind!=='tactical')));
+    assert.equal(getLevel(20,count).enemies.filter(e=>e.kind==='tactical').length,1);
+    assert.ok(Array.from({length:30},(_,i)=>getLevel(i,count)).every(l=>l.enemies.every(e=>e.kind!=='hunter')));
+    assert.equal(getLevel(30,count).enemies.filter(e=>e.kind==='hunter').length,1);
     assert.ok(getLevel(4,count).obstacles.some(o=>o.destructible));assert.ok(getLevel(5,count).holes!.length>0);
   }
 });
-test('solo, duo and every previously approved 21–40 team formation remain byte-for-byte unchanged',()=>{
+test('the historical geometry catalogs remain intact for chapter review comparisons',()=>{
   const hash=(v:unknown)=>createHash('sha256').update(JSON.stringify(v)).digest('hex');
-  assert.equal(hash(levels),'e48e4242518f6f6f3cc4895a05bdc59acd721e2852483592cd7a4ffe87a63caa');
-  assert.equal(hash(duoLevels),'061466f8021733eb8062c49e20bfd83a8fbf4b70063411ca9ce4fe98e6b78c4a');
-  assert.equal(hash(campaignVariants[3].slice(20)),'1791f29fe4ec9e81f1f950df7f32d4d8789edacdd1d1090810dd80ea12379c84');
-  assert.equal(hash(campaignVariants[4].slice(20)),'7b6abfffb41ba899f14b9c76e1015984c630f4ef877c1b563a667e103d036a88');
+  assert.equal(hash(templateCampaignVariants[1]),'e48e4242518f6f6f3cc4895a05bdc59acd721e2852483592cd7a4ffe87a63caa');
+  assert.equal(hash(templateCampaignVariants[2]),'061466f8021733eb8062c49e20bfd83a8fbf4b70063411ca9ce4fe98e6b78c4a');
+  assert.equal(hash(templateCampaignVariants[3].slice(20)),'1791f29fe4ec9e81f1f950df7f32d4d8789edacdd1d1090810dd80ea12379c84');
+  assert.equal(hash(templateCampaignVariants[4].slice(20)),'7b6abfffb41ba899f14b9c76e1015984c630f4ef877c1b563a667e103d036a88');
 });

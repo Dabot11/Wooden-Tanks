@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { CHAPTER_SIZE } from '../game/Campaign';
-import { levels } from '../game/LevelManager';
+import { levels, HUNTER_DEBUT_INDEX, ENEMY_CHAPTERS } from '../game/LevelManager';
 import { createTextures } from '../game/TextureFactory';
 import { progress } from '../game/Progress';
 import { audio } from '../game/AudioManager';
@@ -41,8 +41,8 @@ export class MenuScene extends Phaser.Scene {
       audio.unlock();let close:()=>void;
       const dismiss=()=>{close();root.querySelector<HTMLElement>('#hunter-test')!.focus({preventScroll:true});};
       close=showOverlay(root,{eyebrow:'TALLER DE PRUEBAS',title:'Conoce al cazador',description:'Un cazador y dos coberturas. Prueba sus flancos y su preparación de disparo sin avanzar la campaña.',cancel:dismiss,actions:[
-        {text:'Probar solo →',run:()=>{close();audio.muted=progress.data.muted;this.scene.start('Game',{session:{level:20,score:0,lives:3,missionStartScore:0,practice:true}});}},
-        {text:'Probar en equipo →',secondary:true,run:()=>{close();showCoopSetup(root,coop=>{audio.muted=progress.data.muted;this.scene.start('Game',{session:{level:20,score:0,lives:3,missionStartScore:0,coop,practice:true}});});}},
+        {text:'Probar solo →',run:()=>{close();audio.muted=progress.data.muted;this.scene.start('Game',{session:{level:HUNTER_DEBUT_INDEX,score:0,lives:3,missionStartScore:0,practice:true}});}},
+        {text:'Probar en equipo →',secondary:true,run:()=>{close();showCoopSetup(root,coop=>{audio.muted=progress.data.muted;this.scene.start('Game',{session:{level:HUNTER_DEBUT_INDEX,score:0,lives:3,missionStartScore:0,coop,practice:true}});});}},
         {text:'Volver',secondary:true,run:dismiss},
       ]});
     });
@@ -57,7 +57,7 @@ export class MenuScene extends Phaser.Scene {
       for (const level of levels) {
         if ((level.id - 1) % CHAPTER_SIZE === 0) {
           const heading = document.createElement('h3'); heading.className = 'mission-chapter';
-          heading.textContent = `Capítulo ${Math.ceil(level.id / CHAPTER_SIZE)} · Misiones ${level.id}–${Math.min(level.id + CHAPTER_SIZE - 1, levels.length)}`;
+          heading.textContent = `Capítulo ${Math.ceil(level.id / CHAPTER_SIZE)} · ${ENEMY_CHAPTERS[Math.floor((level.id-1)/CHAPTER_SIZE)]?.name??'Nuevos desafíos'} · Misiones ${level.id}–${Math.min(level.id + CHAPTER_SIZE - 1, levels.length)}`;
           grid.append(heading);
         }
         const button = document.createElement('button'); button.className = 'mission-choice'; button.disabled = level.id > progress.data.unlocked;

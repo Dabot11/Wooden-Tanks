@@ -1,10 +1,10 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { levels, duoLevels } from '../src/game/LevelManager';
+import { levels, duoLevels, ENEMY_CHAPTERS } from '../src/game/LevelManager';
 import { auditDuo } from '../src/game/DuoAudit';
 import { auditCork } from '../src/game/SoloAudit';
 import { World } from '../src/game/World';
 import { bankAngle } from '../src/game/EnemyAI';
-const phases=['Aprender a cooperar','Abrir terreno en pareja','Controlar sectores','Asaltos coordinados'];
+const phases=ENEMY_CHAPTERS.map(c=>c.name);
 const reports=duoLevels.map(level=>{
   const audit=auditDuo(level,true);
   const bankShots=(level.design!.bankTargets??[]).map(shot=>{
@@ -26,10 +26,10 @@ for(const r of reports)if(r.audit.issues.length)throw new Error(`${r.level.id}: 
 mkdirSync('docs',{recursive:true});mkdirSync('public',{recursive:true});
 const roster=(l:typeof levels[number])=>['basic','patrol','tactical','hunter'].map(k=>l.enemies.filter(e=>e.kind===k).length).join(' / ');
 let md='# Revisión de las 40 misiones: dos jugadores\n\n[Atlas interactivo](https://dabot11.github.io/Wooden-Tanks/duo-campaign-review.html). Compara cada misión individual con su variante para la pareja.\n\n';
-md+='Los nombres, IDs, desbloqueos e introducciones de enemigos se comparten con la campaña individual. Cada variante de dos jugadores declara arena, dos posiciones iniciales, formación enemiga, dos rutas asignadas y un punto de reagrupamiento. `World` utiliza esos datos directamente: no vuelve a escalar el mapa ni duplica los enemigos. Las misiones 21–40 incorporan cazadores progresivamente y reducen escoltas redundantes.\n\n';
-md+='Progresión: grises en 1–2, patrulleros desde 3, corcho en 5, cavidades en 6 y un solo centinela en 7. Los cierres 10/20/30/40 combinan lo aprendido; la galería 16 conserva su zona restringida y 36 conserva cinco vigías. El desafío cooperativo cambia de flancos separados a apoyo, relevo de señuelo, apertura de sectores y asalto conjunto. La cantidad de enemigos no tiene que crecer en cada misión: importa su función.\n\n';
+md+='La secuencia de capítulos y los desbloqueos se comparten con la campaña individual. Cada pareja tiene arena, apariciones separadas, formación, rutas y reunión propias. La zona de despliegue gana profundidad para evitar rebotes inmediatos al disparar al inicio; World no duplica formaciones ni vuelve a escalar los mapas.\n\n';
+md+='Grises en 1–10, un patrullero en 11, un centinela en 21 y un cazador en 31. Cada capítulo aumenta su presencia con retos de flancos, corcho, cavidades y sectores. La galería restringida pasa a la 26; los cinco vigías cierran el capítulo en la 30. Los estrenos no se multiplican por jugador.\n\n';
 md+='Las rutas son opciones tácticas con obstáculos intactos, no trayectorias invulnerables ni posiciones obligatorias. El punto de reagrupamiento es accesible, pero requiere conquistar el terreno. Ambos pueden intercambiar papeles. La prueba de presión deja a ambos inmóviles y mide la primera caída con tres semillas; detecta comienzos abruptos, no la dificultad total. Las salvas simultáneas hacia delante se comprueban sin IA, para aislar el riesgo inicial de fuego amigo; después de moverse cada jugador sigue siendo responsable de sus trayectorias y rebotes.\n\n';
-md+='El cazador debuta en la misión 21 con poca escolta. Su prueba aislada está disponible desde «Probar cazador» en el menú y conserva el progreso de campaña.\n\n';
+md+='El cazador debuta en la 31. La práctica del menú utiliza esa arena, un solo cazador y el guardado aislado.\n\n';
 md+='## Catálogo\n\nG / P / C / H = exploradores grises / patrulleros / centinelas / cazadores. Distancias expresadas en unidades del mundo.\n\n| Misión | G / P / C / H | Separación | Líneas P1 / P2 | Objetivo de pareja |\n|---|---|---:|---|---|\n';
 for(const r of reports)md+=`| ${r.level.id}. ${r.level.name} | ${roster(r.level)} | ${Math.round(r.audit.separation)} | ${r.audit.players.map(p=>p.directThreats).join(' / ')} | ${r.level.subtitle} |\n`;
 for(const r of reports){const l=r.level,d=l.design!,c=d.cooperation!;
