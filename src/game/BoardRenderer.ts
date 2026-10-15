@@ -38,13 +38,6 @@ export class BoardRenderer {
     }
     for (const obstacle of world.obstacles) this.blocks.set(obstacle.id, this.blockImage(obstacle.x, obstacle.y, obstacle.w, obstacle.h, obstacle.destructible));
     for (const tank of world.tanks) this.createTank(tank);
-    // A few faded winding tracks establish the handmade reference composition.
-    for (let path = 0; path < 3; path++) for (let i = 0; i < 160; i++) {
-      const t = i / 160 * Math.PI * 2;
-      const x = 300 + path * 300 + Math.cos(t) * (170 - path * 20);
-      const y = 310 + Math.sin(t) * 130 + Math.sin(t * 3) * 35;
-      if (!world.movementSolids.some(b => x > b.x - 12 && x < b.x + b.w + 12 && y > b.y - 12 && y < b.y + b.h + 12)) this.marks.push({ x, y, angle: Math.atan2(Math.cos(t) * 130 + Math.cos(t * 3) * 105, -Math.sin(t) * (170 - path * 20)), alpha: 0.065 });
-    }
     this.render(0);
   }
   private blockImage(x: number, y: number, w: number, h: number, destructible = false) {
