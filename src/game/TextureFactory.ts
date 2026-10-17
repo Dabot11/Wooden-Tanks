@@ -96,16 +96,38 @@ export function createTextures(scene: Phaser.Scene) {
         t.strokeStyle = '#e1ad7c'; t.lineWidth = 2; t.beginPath(); t.moveTo(-6,-10); t.lineTo(2,0); t.lineTo(-6,10); t.stroke();
       }
     }
+    if (kind === 'basic' || kind === 'patrol') {
+      // Broad, clipped hazard bands remain visible around the rotating turret.
+      t.save(); t.beginPath(); t.roundRect(-21, -18, 40, 32, 5); t.clip();
+      t.fillStyle = kind === 'basic' ? '#e9dec0' : '#e4c6ee';
+      for (const x of [-27, -9, 9, 27]) {
+        t.beginPath(); t.moveTo(x, -18); t.lineTo(x + 8, -18); t.lineTo(x - 10, 14); t.lineTo(x - 18, 14); t.closePath(); t.fill();
+      }
+      t.restore();
+    }
     scene.textures.addCanvas(`body-${kind}`, body.canvas);
     const turret = canvas(90, 90), u = turret.ctx; u.translate(45, 45);
     rounded(u, -10, -9, 27, 23, 8, '#00000044');
-    rounded(u, 4, -3, 30, 7, 2, '#4c3d28'); rounded(u, 4, -5, 29, 6, 2, '#dcc189'); u.fillStyle = '#f7e3ae'; u.fillRect(6, -5, 25, 2); u.fillStyle = '#2e2a21'; u.fillRect(31, -4, 3, 4);
+    // Steel tube, squared muzzle brake and a dark bore distinguish the gun from brass shells.
+    rounded(u, 4, -4, 27, 8, 1, '#323e43');
+    u.fillStyle = '#91a2a6'; u.fillRect(8, -4, 22, 2);
+    u.fillStyle = '#53676d'; u.fillRect(8, -1, 22, 3);
+    rounded(u, 17, -5, 4, 10, 1, '#33464c');
+    rounded(u, 29, -6, 8, 12, 1, '#29383e');
+    u.fillStyle = '#9aaaaa'; u.fillRect(30, -6, 6, 2);
+    u.fillStyle = '#0c171c'; u.fillRect(35, -3, 2, 6);
     rounded(u, -12, -12, 27, 23, 7, hex(color));
     const tg = u.createLinearGradient(0, -12, 0, 12); tg.addColorStop(0, '#ffffff66'); tg.addColorStop(0.5, '#ffffff00'); tg.addColorStop(1, '#00000066'); u.fillStyle = tg; u.beginPath(); u.roundRect(-12, -12, 27, 23, 7); u.fill();
     rounded(u, -7, -8, 15, 12, 4, '#18272088'); u.strokeStyle = '#ffffff55'; u.lineWidth = 1; u.beginPath(); u.roundRect(-7, -8, 15, 12, 4); u.stroke();
     u.fillStyle = '#ead7a0'; u.fillRect(-4, -9, 8, 2);
     if (!['player', 'partner', 'third', 'fourth'].includes(kind)) { u.fillStyle = kind === 'tactical' ? '#eb7628' : '#25232d'; u.fillRect(-11, -3, 25, 4); }
     if (kind === 'hunter') { u.fillStyle = '#be8057'; u.fillRect(-10,-9,4,17); u.fillRect(12,-4,16,4); }
+    if (kind === 'basic' || kind === 'patrol') {
+      u.save(); u.beginPath(); u.roundRect(-12, -12, 27, 23, 7); u.clip();
+      u.strokeStyle = kind === 'basic' ? '#e9dec0' : '#e4c6ee'; u.lineWidth = 4;
+      for (const x of [-8, 5, 18]) { u.beginPath(); u.moveTo(x, -12); u.lineTo(x - 12, 11); u.stroke(); }
+      u.restore();
+    }
     scene.textures.addCanvas(`turret-${kind}`, turret.canvas);
   }
 }

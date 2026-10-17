@@ -8,10 +8,8 @@ async function startDuo(page:Page,keyboard=false){
   },keyboard?1:2);
   await page.goto('/');await page.locator('#coop').click();
   await page.getByRole('button',{name:keyboard?'Teclado + controles →':'Jugar con controles →',exact:true}).click();
-  await page.waitForTimeout(200);if(keyboard)await page.keyboard.press('Enter');
-  await page.evaluate(()=>(window as any).__duoPads.forEach((p:any)=>p.buttons[0]={pressed:true,value:1}));
   await page.waitForTimeout(200);
-  await page.evaluate(()=>(window as any).__duoPads.forEach((p:any)=>p.buttons[0]={pressed:false,value:0}));
+  await page.getByRole('button', { name: 'Empezar partida →', exact: true }).click();
   await page.waitForFunction(()=>(window as any).__wooden?.status==='intro');
 }
 test('all forty duo variants render exact formations and accept independent Gamepad API inputs',async({page})=>{

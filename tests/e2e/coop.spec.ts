@@ -12,10 +12,7 @@ async function start(page: Page, keyboard = false) {
   await page.goto('/'); await page.locator('#coop').click();
   await page.getByRole('button', { name: keyboard ? 'Teclado + controles →' : 'Jugar con controles →', exact: true }).click();
   await page.waitForTimeout(150);
-  if (keyboard) await page.keyboard.press('Enter');
-  await page.evaluate(() => (window as any).__testPads.forEach((p: any) => p.buttons[0] = { pressed: true, value: 1 }));
-  await page.waitForTimeout(150);
-  await page.evaluate(() => (window as any).__testPads.forEach((p: any) => p.buttons[0] = { pressed: false, value: 0 }));
+  await page.getByRole('button', { name: 'Empezar partida →', exact: true }).click();
   await waitForPlaying(page);
   await page.evaluate(() => { (window as any).__wooden.world.ai.update = () => {}; });
   await page.waitForTimeout(100);
@@ -138,7 +135,7 @@ test('a survivor can win, both return next mission, and a team wipe costs only o
   await kill(page, 1); await expect.poll(async () => (await state(page)).lives).toBe(2);
   await waitForPlaying(page);
   expect((await state(page)).players.every(p => p.alive)).toBe(true); expect((await state(page)).level).toBe(1);
-  await press(page, 0, 9); await page.getByRole('button', { name: 'Volver al menú', exact: true }).click();
+  await press(page, 0, 9); await page.getByRole('button', { name: 'Salir de la campaña', exact: true }).click(); await page.getByRole('button', { name: 'Sí, finalizar partida' }).click();
   await expect(page.locator('#play')).toBeVisible(); await page.locator('#play').click();
   await waitForPlaying(page); expect((await state(page)).players).toHaveLength(1);
 });

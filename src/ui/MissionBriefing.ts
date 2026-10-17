@@ -24,7 +24,7 @@ function tankPortrait(textures: Phaser.Textures.TextureManager, kind: string) {
 }
 export function showMissionBriefing(root: HTMLElement, world: World, proceed: () => void, cancel: () => void, textures: Phaser.Textures.TextureManager) {
   const remove = showOverlay(root, { eyebrow: `MISIÓN ${String(world.level.id).padStart(2, '0')}`, title: world.level.name,
-    description: world.level.subtitle, cancel, actions: [{ text: 'Continuar →', run: proceed }, { text: 'Volver al menú', secondary: true, run: cancel }] });
+    description: world.level.subtitle, cancel, actions: [{ text: 'Continuar →', run: proceed }, { text: 'Salir de la campaña', secondary: true, danger: true, run: cancel }] });
   const card = root.querySelector<HTMLElement>('.modal:last-child')!;
   card.classList.add('mission-briefing'); card.querySelector('.modal-symbol')!.remove();
   // JPEG keeps the floor preview small enough for a CSS custom property.

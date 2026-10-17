@@ -175,6 +175,8 @@ test('A confirms and B returns from Game Over and victory screens', async ({ pag
   await neutral(page); await press(page, 0);
   await waitForPlaying(page); expect((await state(page)).lives).toBe(3);
   await neutral(page); await press(page, 9); await press(page, 13); await press(page, 13); await press(page, 0);
+  await expect(page.locator('.exit-confirmation')).toBeVisible();
+  await press(page, 13); await press(page, 0);
   await expect(page.locator('#play')).toBeVisible();
   await press(page, 0);
   await waitForPlaying(page); await neutral(page);

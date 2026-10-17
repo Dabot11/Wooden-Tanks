@@ -113,3 +113,21 @@ test('a fresh deflection takes over immediately beyond the configured deadzone',
   c.poll([pad()]); c.keyboardMouse();
   assert.equal(c.poll([pad({ axes: [0, 0, 0.201, 0] })]).mode, 'gamepad');
 });
+
+test('battle transition accepts held sticks immediately without leaking menu confirmation or held RT', () => {
+  const c = ready();
+  const held = withButton(withButton(pad({ axes: [0.8, 0, 0, 1] }), 0), 7);
+  c.poll([held]); c.suppress(); c.poll([held]);
+  c.prepareBattle();
+  const first = c.poll([held]);
+  assert.ok(first.move.x > 0); assert.equal(first.aim.y, 1);
+  assert.equal(first.confirm, false); assert.equal(first.fire, false);
+  c.poll([withButton(pad({ axes: [0.8, 0, 0, 1] }), 0)]);
+  assert.equal(c.poll([held]).fire, true, 'RT works after release while sticks stay held');
+});
+
+test('fresh RT and pause presses work on the first poll after a battle transition', () => {
+  const c = ready(); c.suppress(); c.prepareBattle();
+  const first = c.poll([withButton(withButton(pad({ axes: [1, 0, 0, 1] }), 7), 9)]);
+  assert.equal(first.move.x, 1); assert.equal(first.fire, true); assert.equal(first.pause, true);
+});

@@ -14,8 +14,7 @@ async function trial(page:Page,count=1){
    await page.getByRole('button',{name:'Probar en equipo →',exact:true}).click();
    if(count!==2)await page.getByRole('button',{name:`${count} jugadores`,exact:true}).click();
    await page.getByRole('button',{name:'Jugar con controles →',exact:true}).click();await page.waitForTimeout(200);
-   await page.evaluate(()=>(window as any).__hunterPads.forEach((p:any)=>p.buttons[0]={pressed:true,value:1}));await page.waitForTimeout(200);
-   await page.evaluate(()=>(window as any).__hunterPads.forEach((p:any)=>p.buttons[0]={pressed:false,value:0}));
+  await page.getByRole('button', { name: 'Empezar partida →', exact: true }).click();
  }
  await page.getByRole('heading',{name:'Encuentro con el cazador',exact:true}).waitFor();
 }

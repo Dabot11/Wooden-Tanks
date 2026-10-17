@@ -18,12 +18,11 @@ async function open(page:Page,count:number,keyboard=false) {
   await page.getByRole('button',{name:`${count} jugadores`,exact:true}).click();
   if(keyboard) await page.getByRole('button',{name:'Teclado + controles →',exact:true}).click();
   await page.waitForTimeout(150);
-  if(keyboard) await page.keyboard.press('Enter');
-  for(let i=0;i<count-(keyboard?1:0);i++) await ready(page,i);
+  await page.getByRole('button',{name:'Empezar partida →',exact:true}).click();
   await expect.poll(()=>page.evaluate(()=>(window as any).__wooden?.status)).toBe('playing');
   await page.waitForTimeout(100);
 }
-for(const count of [2,3,4]) test(`${count}-player duel waits for each device and supports P pause and unpause`,async({page})=>{
+for(const count of [2,3,4]) test(`${count}-player duel assigns each device and supports P pause and unpause`,async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   await open(page,count);
   expect(await page.evaluate(()=>(window as any).__wooden.world.players.length)).toBe(count);
@@ -37,25 +36,21 @@ for(const count of [2,3,4]) test(`${count}-player duel waits for each device and
   expect(score!.x + score!.width).toBeLessThan(plaque!.x); expect(score!.y + score!.height).toBeLessThan(app!.y + app!.height);
   await page.screenshot({path:`.playwright/duel-${count}.png`});expect(errors).toEqual([]);
 });
-test('lobby shows brands, missing devices, individual readiness and reconnect confirmation',async({page})=>{
+test('lobby shows brands, missing devices and automatic readiness after reconnect',async({page})=>{
   await pads(page,3);await page.goto('/');await page.locator('#duel').click();await page.getByRole('button',{name:'4 jugadores',exact:true}).click();
   await expect(page.locator('.lobby-roster')).toContainText('Xbox');await expect(page.locator('.lobby-roster')).toContainText('Nintendo');await expect(page.locator('.lobby-roster')).toContainText('PlayStation');
   await expect(page.locator('.coop-detection')).toContainText('Falta agregar 1 control');
-  await ready(page,0);await expect(page.locator('.lobby-player').nth(0)).toHaveAttribute('data-ready','true');
-  await expect(page.locator('.player-lobby')).toBeVisible();
+  await expect(page.locator('.lobby-player[data-ready="true"]')).toHaveCount(3);
+  await expect(page.getByRole('button',{name:'Empezar partida →',exact:true})).toBeDisabled();
   await page.evaluate(()=>(window as any).__lobbyPads[0].connected=false);
   await expect(page.locator('.lobby-player').nth(0)).toContainText('Desconectado');
   await expect(page.locator('.lobby-player').nth(0)).toHaveAttribute('data-ready','false');
-  await page.evaluate(()=>{(window as any).__lobbyPads[0].connected=true;(window as any).__lobbyPads[0].buttons[0]={pressed:true,value:1};});
-  await page.waitForTimeout(150);await expect(page.locator('.lobby-player').nth(0)).toHaveAttribute('data-ready','false');
-  await page.evaluate(()=>(window as any).__lobbyPads[0].buttons[0]={pressed:false,value:0});await page.waitForTimeout(100);await ready(page,0);
+  await page.evaluate(()=>(window as any).__lobbyPads[0].connected=true);
   await expect(page.locator('.lobby-player').nth(0)).toHaveAttribute('data-ready','true');
   await page.getByRole('button',{name:'Teclado + controles →',exact:true}).click();
   await expect(page.locator('.lobby-player').nth(0)).toContainText('Teclado y mouse');
-  await expect(page.locator('.lobby-player[data-ready="true"]')).toHaveCount(0);
-  await expect(page.locator('.keyboard-ready')).toBeFocused();
-  await page.keyboard.down('Enter'); await page.keyboard.down('Enter'); await page.keyboard.up('Enter');
-  await expect(page.locator('.lobby-player').nth(0)).toHaveAttribute('data-ready','true');
+  await expect(page.locator('.lobby-player[data-ready="true"]')).toHaveCount(4);
+  await expect(page.getByRole('button',{name:'Empezar partida →',exact:true})).toBeFocused();
   await page.screenshot({path:'.playwright/player-lobby.png'});
 });
 test('duel handles a draw, three victories and a rematch without changing campaign progress',async({page})=>{
@@ -77,29 +72,17 @@ test('duel handles a draw, three victories and a rematch without changing campai
   expect(await page.evaluate(()=>(window as any).__wooden.world.players.length)).toBe(4);
   expect(await page.evaluate(()=>localStorage.getItem('wooden-tanks-v1'))).toBe(save);
 });
-test('a controller can choose party size with D-pad and A, then ready without activating configuration again',async({page})=>{
+test('D-pad selects party size and A starts without a trackpad',async({page})=>{
   await pads(page,3);await page.goto('/');await page.locator('#duel').click();await page.waitForTimeout(150);
-  for(let i=0;i<2;i++) {
+  for (let i=0;i<2;i++) {
     await page.evaluate(()=>(window as any).__lobbyPads[0].buttons[12]={pressed:true,value:1});await page.waitForTimeout(120);
     await page.evaluate(()=>(window as any).__lobbyPads[0].buttons[12]={pressed:false,value:0});await page.waitForTimeout(120);
   }
   await expect(page.getByRole('button',{name:'3 jugadores',exact:true})).toBeFocused();
-  await ready(page,0);await expect(page.locator('.lobby-player')).toHaveCount(3);
-  await expect(page.locator('.lobby-player[data-ready="true"]')).toHaveCount(0);
-  await ready(page,0);await expect(page.locator('.lobby-player').nth(0)).toHaveAttribute('data-ready','true');
-  await page.evaluate(()=>(window as any).__lobbyPads[0].buttons[12]={pressed:true,value:1});await page.waitForTimeout(120);
-  await page.evaluate(()=>(window as any).__lobbyPads[0].buttons[12]={pressed:false,value:0});
-  await page.getByRole('button',{name:'3 jugadores',exact:true}).click();
-  await ready(page,0);await expect(page.locator('.lobby-player').nth(0)).toHaveAttribute('data-ready','true');
-});
-test('keyboard confirmation after controller navigation still lets the controller ready on its first press',async({page})=>{
-  await pads(page,1);await page.goto('/');await page.locator('#duel').click();
-  await page.getByRole('button',{name:'Teclado + controles →',exact:true}).click();await page.waitForTimeout(150);
-  for(const button of [13,12]) {
-    await page.evaluate(i=>(window as any).__lobbyPads[0].buttons[i]={pressed:true,value:1},button);await page.waitForTimeout(120);
-    await page.evaluate(i=>(window as any).__lobbyPads[0].buttons[i]={pressed:false,value:0},button);await page.waitForTimeout(120);
-  }
-  await expect(page.locator('.keyboard-ready')).toBeFocused();await page.keyboard.press('Enter');
-  await expect(page.locator('.lobby-player').nth(0)).toHaveAttribute('data-ready','true');
-  await ready(page,0);await expect.poll(()=>page.evaluate(()=>(window as any).__wooden?.status)).toBe('playing');
+  await ready(page,0);
+  await expect(page.locator('.lobby-player[data-ready="true"]')).toHaveCount(3);
+  await expect(page.getByRole('button',{name:'Empezar partida →',exact:true})).toBeFocused();
+  await ready(page,0);
+  await expect.poll(()=>page.evaluate(()=>(window as any).__wooden?.status)).toBe('playing');
+  expect(await page.evaluate(()=>(window as any).__wooden.world.players.length)).toBe(3);
 });

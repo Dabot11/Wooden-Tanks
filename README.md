@@ -87,7 +87,7 @@ La campaña contiene cuarenta misiones con cobertura, corcho destructible, cavid
 
 Cooperativo y Duelo comparten una sala para 2, 3 o 4 jugadores. Primero elige cantidad y esquema de entrada. Cada puesto muestra su número, color y dispositivo: Xbox, Nintendo, PlayStation, control genérico o teclado/mouse. Los mandos se identifican por el nombre que comunica el navegador y requieren mapeo estándar de Gamepad API.
 
-Cada mando confirma con el botón inferior: A en Xbox, B en Nintendo o ✕ en PlayStation. P1 con teclado/mouse confirma con Enter. La partida comienza cuando todos estén listos; vuelve a pulsar para retirar la confirmación. Si faltan dispositivos aparece la cantidad pendiente. Una desconexión conserva el puesto y exige confirmar de nuevo al reconectar.
+El lobby muestra tres pasos: elegir la cantidad de jugadores, revisar los dispositivos y empezar. Los mandos compatibles se asignan automáticamente y cada tarjeta identifica el jugador, la marca y el número de control. Se puede seleccionar teclado/mouse para P1. **Empezar partida** se habilita cuando hay dispositivos para todos; A o Enter inicia explícitamente. Una desconexión conserva el puesto y deshabilita el inicio hasta reconectar. Si el navegador aún no muestra un mando, pulsa un botón para que lo detecte.
 
 Duelo es todos contra todos, sin enemigos de IA. El último tanque vivo gana la ronda; tres victorias ganan la partida. Si todos caen en el mismo intercambio se repite la ronda sin puntos. Tres arenas alternan cobertura y corcho, con apariciones separadas. La revancha conserva los dispositivos y reinicia los resultados; no modifica el récord ni los desbloqueos de campaña.
 
@@ -97,8 +97,8 @@ Duelo es todos contra todos, sin enemigos de IA. El último tanque vivo gana la 
 
 Solo estos tres tipos aparecen en las cuarenta misiones:
 
-- **Explorador gris (misión 1):** móvil y lento, un misil activo, sin rebotes.
-- **Patrullero violeta con franjas oscuras (misión 11):** móvil, puede esquivar, hasta dos misiles activos y un rebote por misil.
+- **Explorador gris con franjas claras (misión 1):** móvil y lento, un misil activo, sin rebotes.
+- **Patrullero violeta con franjas lavanda (misión 11):** móvil, puede esquivar, hasta dos misiles activos y un rebote por misil.
 - **Centinela marfil con negro/naranja (misión 21):** inmóvil; misil propulsado 80 % más rápido, un rebote y recarga de 3,4 segundos. Detecta amenazas próximas con línea de visión y dispara para interceptarlas. Ataque y defensa consumen la misma recarga; su giro limitado permite vencerlo con salvas o rebotes tardíos.
 
 Los jugadores conservan dos rebotes y la velocidad de movimiento previamente reducida. Los proyectiles registran su perfil al dispararse, incluso si su propietario muere. El centinela destruye amenazas mediante colisiones reales entre misiles, sin escudo invisible.
@@ -140,7 +140,7 @@ El juego está diseñado para computadora con teclado/mouse o gamepad estándar.
 
 ## Preparación y audio
 
-La campaña tiene 40 misiones. Las partidas que terminaron el capítulo de veinte misiones desbloquean la misión 21 y conservan el récord y el sonido. Antes de cada misión y cada reintento aparece su nombre, objetivo y cantidad real de exploradores, patrulleros y centinelas, incluidos los refuerzos del cooperativo. La simulación espera a **Continuar** (clic, Enter o A del mando). Los duelos conservan su introducción de ronda.
+La campaña tiene 40 misiones. Las partidas que terminaron el capítulo de veinte misiones desbloquean la misión 21 y conservan el récord y el sonido. Antes de cada misión y cada reintento aparece su nombre, objetivo y cantidad real de exploradores, patrulleros y centinelas, incluidos los refuerzos del cooperativo. La simulación espera a **Continuar** (clic, Enter o A del mando). Después de Continuar hay una cuenta regresiva visible de **3, 2, 1**, con el tablero completo y la simulación detenida. Los duelos conservan su introducción de ronda antes de la cuenta regresiva. Los sticks ya inclinados responden al empezar sin exigir que vuelvan al centro; el gatillo que venía sostenido al salir del briefing debe soltarse una vez. **Salir de la campaña** aparece en rojo y exige confirmar la pérdida del avance de la partida; conserva las misiones desbloqueadas y el récord.
 
 Una marcha original de 112 BPM combina melodía de juguete, bajo y percusión. Los efectos se sintetizan con Web Audio: disparos con chasquido y golpe grave, resonancias cortas de madera para rebotes, crujidos para destrucciones y orugas sincronizadas con el desplazamiento real. El volumen de la música deja espacio a los efectos; un compresor y límites de voces controlan las salvas grandes.
 

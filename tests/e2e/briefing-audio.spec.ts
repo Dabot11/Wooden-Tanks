@@ -8,7 +8,7 @@ test('briefing waits indefinitely, displays the roster, continues and returns be
   await expect(page.locator('.enemy-brief-row[data-kind="tactical"]')).toHaveCount(0);
   await expect(page.locator('.enemy-brief-row img')).toBeVisible();
   expect(await page.locator('.mission-briefing').evaluate(el=>getComputedStyle(el).backgroundImage)).toContain('url(');
-  await expect(page.getByRole('button',{name:'Volver al menú',exact:true})).toBeInViewport({ratio:1});
+  await expect(page.getByRole('button',{name:'Salir de la campaña',exact:true})).toBeInViewport({ratio:1});
   await page.waitForTimeout(600); // Let the decorative entrance finish for the visual review.
   await page.screenshot({path:'.playwright/briefing-new-solo.png'});
   const before=await page.evaluate(()=>{const w=(window as any).__wooden.world;return {elapsed:w.elapsed,positions:w.tanks.map((p:any)=>[p.x,p.y]),shots:w.projectiles.length};});
@@ -77,8 +77,7 @@ test('four-player chapter briefing includes all reinforcements and accepts Conti
   });
   await page.goto('/');await page.locator('#coop').click();await page.getByRole('button',{name:'4 jugadores',exact:true}).click();
   await page.getByRole('button',{name:'Jugar con controles →',exact:true}).click();await page.waitForTimeout(200);
-  await page.evaluate(()=>(window as any).__briefPads.forEach((p:any)=>p.buttons[0]={pressed:true,value:1}));await page.waitForTimeout(120);
-  await page.evaluate(()=>(window as any).__briefPads.forEach((p:any)=>p.buttons[0]={pressed:false,value:0}));
+  await page.getByRole('button', { name: 'Empezar partida →', exact: true }).click();
   await expect(page.locator('.brief-total')).toContainText('4 tanques enemigos · 4 jugadores');
   await page.evaluate(()=>{const s=(window as any).__wooden;s.scene.restart({session:{...s.session,level:31}});});
   await expect(page.getByRole('heading',{name:'Callejón de astillas',exact:true})).toBeVisible();
@@ -91,7 +90,7 @@ test('four-player chapter briefing includes all reinforcements and accepts Conti
     await expect(row.locator('img')).toBeVisible();
   }
   const loaded=await page.locator('.enemy-brief-row img').evaluateAll(images=>images.every(i=>(i as HTMLImageElement).complete&&(i as HTMLImageElement).naturalWidth>0));expect(loaded).toBe(true);
-  for(const name of ['Continuar →','Volver al menú'])await expect(page.getByRole('button',{name,exact:true})).toBeInViewport({ratio:1});
+  for(const name of ['Continuar →','Salir de la campaña'])await expect(page.getByRole('button',{name,exact:true})).toBeInViewport({ratio:1});
   await page.waitForTimeout(600);
   await page.screenshot({path:'.playwright/briefing-new-four.png'});
   await page.evaluate(()=>(window as any).__briefPads[3].buttons[0]={pressed:true,value:1});

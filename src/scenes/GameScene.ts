@@ -9,14 +9,14 @@ import { progress } from '../game/Progress';
 import { audio } from '../game/AudioManager';
 import { HUD } from '../ui/HUD';
 import { showMissionBriefing } from '../ui/MissionBriefing';
-import { showOverlay } from '../ui/Overlay';
+import { showOverlay, confirmCampaignExit } from '../ui/Overlay';
 import type { PlayerCount } from '../game/types';
 import type { CoopLayout } from '../input/GamepadTeam';
 import { gamepad } from '../input/GamepadRuntime';
 import { showGamepadSettings } from '../ui/GamepadSettings';
 export interface Session { level: number; score: number; lives: number; missionStartScore: number; coop?: CoopLayout; playerCount?: PlayerCount; mode?: 'duel'; round?: number; wins?: number[]; practice?: boolean }
 export class GameScene extends Phaser.Scene {
-  world!: World; session!: Session; status: 'intro' | 'playing' | 'paused' | 'won' | 'dead' | 'ended' = 'intro';
+  world!: World; session!: Session; status: 'intro' | 'countdown' | 'playing' | 'paused' | 'won' | 'dead' | 'ended' = 'intro';
   private board!: BoardRenderer; private effects!: ParticleEffects; private hud!: HUD;
   private keys!: Record<string, Phaser.Input.Keyboard.Key>; private root!: HTMLElement;
   private queuedShot = false; private aimMode: 'default' | 'mouse' | 'gamepad' = 'default'; private padAim = { x: 0, y: -1 };
@@ -72,19 +72,42 @@ export class GameScene extends Phaser.Scene {
       const intro = document.createElement('div'); intro.className = 'mission-intro';
       intro.innerHTML = `<span class="eyebrow">DUELO LOCAL</span><strong>Ronda ${this.session.round}</strong><span>${this.world.level.subtitle}</span>`;
       this.root.append(intro); audio.setScene('briefing');
-      this.time.delayedCall(1500, () => { intro.remove(); this.beginBattle(); });
+      this.time.delayedCall(1500, () => { intro.remove(); this.startCountdown(); });
     } else {
       audio.setScene('briefing');
       this.closeBriefing = showMissionBriefing(this.root, this.world, () => {
         if (this.status !== 'intro' || (this.session.coop && !gamepad.ready)) return;
-        this.closeBriefing?.(); this.closeBriefing = undefined; this.beginBattle();
-      }, () => this.menu(), this.textures);
+        this.closeBriefing?.(); this.closeBriefing = undefined; this.startCountdown();
+      }, () => this.requestCampaignExit(), this.textures);
     }
     if (import.meta.env.DEV) (window as any).__wooden = this;
   }
   get audioState() { return audio.state; }
+  private startCountdown() {
+    this.status = 'countdown'; this.queuedShot = false;
+    gamepad.prepareBattle();
+    document.querySelector('#app')!.classList.add('gameplay');
+    (document.activeElement as HTMLElement)?.blur();
+    const banner = document.createElement('div'); banner.className = 'battle-countdown';
+    banner.setAttribute('role', 'status'); banner.setAttribute('aria-live', 'assertive');
+    banner.innerHTML = '<span>UBICA TU TANQUE · PLANEA TU RUTA</span><strong>3</strong>';
+    this.root.append(banner);
+    let remaining = 3;
+    // Pause the visible countdown if a controller disconnects or the tab loses focus.
+    const timer = this.time.addEvent({ delay: 1000, loop: true, callback: () => {
+      if (document.hidden || !document.hasFocus() || (this.session.coop && !gamepad.ready)) {
+        banner.querySelector('span')!.textContent = 'VUELVE AL JUEGO Y CONECTA TUS CONTROLES';
+        remaining = 3; banner.querySelector('strong')!.textContent = '3'; return;
+      }
+      banner.querySelector('span')!.textContent = 'UBICA TU TANQUE · PLANEA TU RUTA';
+      if (--remaining) banner.querySelector('strong')!.textContent = String(remaining);
+      else { timer.remove(); banner.remove(); this.beginBattle(); }
+    } });
+    this.events.once('shutdown', () => { timer.remove(); banner.remove(); });
+  }
+  private requestCampaignExit() { confirmCampaignExit(this.root, () => this.menu()); }
   private beginBattle() {
-    audio.unlock(); audio.setScene('battle'); gamepad.suppress(); this.input.keyboard!.resetKeys(); this.queuedShot = false; this.status = 'playing'; document.querySelector('#app')!.classList.add('gameplay'); (document.activeElement as HTMLElement)?.blur();
+    audio.unlock(); audio.setScene('battle'); this.input.keyboard!.resetKeys(); this.queuedShot = false; this.status = 'playing'; document.querySelector('#app')!.classList.add('gameplay'); (document.activeElement as HTMLElement)?.blur();
   }
   pauseGame() {
     if (this.status !== 'playing') return;
@@ -95,12 +118,12 @@ export class GameScene extends Phaser.Scene {
     this.closePause = showOverlay(this.root, { eyebrow: `${this.session.mode === 'duel' ? 'RONDA' : 'MISIÓN'} ${this.world.level.id}`, title: 'Una pequeña pausa', pauseKey: true, description: this.session.coop ? 'Pausa para todos los jugadores. Si un control se desconecta, reconéctalo antes de reanudar.' : 'El taller puede esperar. Vuelve cuando estés listo.', cancel: () => this.resumeGame(), symbol: '<span class="pause-icon" style="margin:auto;width:24px;height:26px"></span>', actions: [
       { text: 'Reanudar →', run: () => this.resumeGame() },
       { text: this.session.mode === 'duel' ? 'Reiniciar ronda' : 'Reiniciar misión', secondary: true, run: () => this.restartMission() },
-      { text: 'Volver al menú', secondary: true, run: () => this.menu() },
+      { text: this.session.mode === 'duel' ? 'Volver al menú' : 'Salir de la campaña', secondary: true, danger: this.session.mode !== 'duel', run: () => this.session.mode === 'duel' ? this.menu() : this.requestCampaignExit() },
       { text: 'Ajustes del control', secondary: true, run: () => { this.closePadSettings = showGamepadSettings(this.root); } },
     ] });
   }
   resumeGame() {
-    if (this.status !== 'paused' || (this.session.coop && !gamepad.ready)) return;
+    if (this.status !== 'paused' || this.root.querySelector('.exit-confirmation') || (this.session.coop && !gamepad.ready)) return;
     gamepad.suppress();
     this.closePadSettings?.(); this.closePadSettings = undefined;
     this.closePause?.(); this.closePause = undefined; audio.unlock(); audio.setScene('battle'); this.status = 'playing'; this.queuedShot = false;
@@ -169,9 +192,9 @@ export class GameScene extends Phaser.Scene {
       if (!this.sys.isActive() || this.status !== 'dead') return;
       audio.setScene('briefing'); gamepad.suppress(); this.status = 'ended';
       if (this.session.lives > 0) {
-        showOverlay(this.root, { eyebrow: 'MISIÓN FALLIDA', title: this.session.coop ? 'El equipo ha caído' : 'Tanque destruido', description: `${this.session.lives} ${this.session.lives === 1 ? 'vida restante' : 'vidas restantes'}. Vuelve a intentarlo cuando estés listo.`, cancel: () => this.menu(), actions: [
+        showOverlay(this.root, { eyebrow: 'MISIÓN FALLIDA', title: this.session.coop ? 'El equipo ha caído' : 'Tanque destruido', description: `${this.session.lives} ${this.session.lives === 1 ? 'vida restante' : 'vidas restantes'}. Vuelve a intentarlo cuando estés listo.`, cancel: () => this.requestCampaignExit(), actions: [
           { text: 'Reintentar misión →', run: () => this.restartMission() },
-          { text: 'Volver al menú', secondary: true, run: () => this.menu() },
+          { text: 'Salir de la campaña', secondary: true, danger: true, run: () => this.requestCampaignExit() },
         ] });
       } else {
         this.status = 'ended'; document.querySelector('#app')!.classList.remove('gameplay');

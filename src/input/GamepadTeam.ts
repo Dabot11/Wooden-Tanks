@@ -23,6 +23,7 @@ export class GamepadTeam {
   get ready() { return !this.layout || this.frames.slice(this.layout === 'keyboard-pad' ? 1 : 0, this.playerCount).every(f => f.mapped); }
   configure(config: Partial<GamepadConfig>) { this.controllers.forEach(c => c.configure(config)); }
   suppress() { this.controllers.forEach(c => c.suppress()); }
+  prepareBattle() { this.controllers.forEach(c => c.prepareBattle()); }
   keyboardMouse() { if (!this.layout) this.controllers[0].keyboardMouse(); }
   startCoop(layout: CoopLayout, pads: readonly (PadSnapshot | null)[], playerCount: PlayerCount = 2, preserveOrder = false): boolean {
     const mapped = pads.filter((p): p is PadSnapshot => !!p && p.connected && isMapped(p));

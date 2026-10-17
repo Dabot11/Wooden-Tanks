@@ -12,8 +12,7 @@ async function start(page:Page,count:1|2|3|4){
   else{
     await page.locator('#coop').click();if(count>2)await page.getByRole('button',{name:`${count} jugadores`,exact:true}).click();
     await page.getByRole('button',{name:'Jugar con controles →',exact:true}).click();await page.waitForTimeout(200);
-    await page.evaluate(()=>(window as any).__chapterPads.forEach((p:any)=>p.buttons[0]={pressed:true,value:1}));await page.waitForTimeout(200);
-    await page.evaluate(()=>(window as any).__chapterPads.forEach((p:any)=>p.buttons[0]={pressed:false,value:0}));
+  await page.getByRole('button', { name: 'Empezar partida →', exact: true }).click();
   }
   await page.waitForFunction(()=>(window as any).__wooden?.status==='intro');
 }
@@ -26,7 +25,7 @@ for(const count of [1,2,3,4]as const)test(`${count} players: all forty chapter l
   for(let id=1;id<=40;id++){
     if(id>1)await mission(page,id);const l=getLevel(id-1,count);
     await expect(page.getByRole('heading',{name:l.name,exact:true})).toBeVisible();
-    for(const name of ['Continuar →','Volver al menú'])await expect(page.getByRole('button',{name,exact:true})).toBeInViewport({ratio:1});
+    for(const name of ['Continuar →','Salir de la campaña'])await expect(page.getByRole('button',{name,exact:true})).toBeInViewport({ratio:1});
     const kinds=new Set(l.enemies.map(e=>e.kind));await expect(page.locator('.enemy-brief-row')).toHaveCount(kinds.size);
     for(const k of kinds)await expect(page.locator(`.enemy-brief-row[data-kind="${k}"]`)).toContainText(`× ${l.enemies.filter(e=>e.kind===k).length}`);
     expect(await page.evaluate(()=>{const w=(window as any).__wooden.world;return {players:w.players.map((p:any)=>({x:p.x,y:p.y})),enemies:w.enemies.map((e:any)=>({x:e.x,y:e.y,kind:e.kind})),elapsed:w.elapsed};})).toEqual({players:l.playerSpawns??[l.player],enemies:l.enemies,elapsed:0});

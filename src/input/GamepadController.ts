@@ -52,6 +52,7 @@ export class GamepadController {
   config: GamepadConfig;
   private armed = false;
   private trigger = false;
+  private battleFireBlocked = false;
   private previous = { confirm: false, cancel: false, pause: false, up: false, down: false, left: false, right: false };
   private navLatch: Vec = zero();
   private anchorMove: Vec = zero();
@@ -67,11 +68,19 @@ export class GamepadController {
     this.armed = false;
     this.frame = { ...this.frame, move: zero(), aim: zero(), fire: false, confirm: false, cancel: false, pause: false, navigation: zero() };
   }
+  /** A known device can move/aim on the first battle frame, even with sticks held.
+   * Keep menu button edges and require a held trigger to be released once. */
+  prepareBattle() {
+    if (!this.frame.mapped) return;
+    this.armed = true;
+    this.battleFireBlocked = this.trigger;
+    this.frame = { ...this.frame, fire: false, confirm: false, cancel: false, pause: false, navigation: zero() };
+  }
   poll(pads: readonly (PadSnapshot | null)[]): PadFrame {
     const pad = selectPad(pads, this.frame);
     const changed = this.frame.index !== (pad?.index ?? null) || this.frame.id !== (pad?.id ?? '');
     if (changed) {
-      this.armed = false; this.trigger = false; this.navLatch = zero();
+      this.armed = false; this.trigger = false; this.battleFireBlocked = false; this.navLatch = zero();
       this.anchorMove = zero(); this.anchorAim = zero();
       this.previous = { confirm: false, cancel: false, pause: false, up: false, down: false, left: false, right: false };
     }
@@ -89,6 +98,7 @@ export class GamepadController {
     const rt = pad.buttons[STANDARD_BUTTONS.fire]?.value;
     const triggerValue = typeof rt === 'number' && Number.isFinite(rt) ? Math.max(0, Math.min(1, rt)) : 0;
     const fire = triggerValue >= (this.trigger ? 0.35 : 0.55);
+    if (triggerValue < 0.1) this.battleFireBlocked = false;
     let navigation = zero();
     if (Math.hypot(move.x, move.y) < 0.35) this.navLatch = zero();
     else if (Math.max(Math.abs(move.x), Math.abs(move.y)) >= 0.6) {
@@ -117,7 +127,7 @@ export class GamepadController {
     this.previous = buttons; this.trigger = fire;
     this.frame = {
       connected: true, mapped: true, id: pad.id, index: pad.index, mode,
-      move: wasArmed ? move : zero(), aim: wasArmed ? aim : zero(), fire: wasArmed && fire,
+      move: wasArmed ? move : zero(), aim: wasArmed ? aim : zero(), fire: wasArmed && fire && !this.battleFireBlocked,
       confirm: wasArmed && confirm, cancel: wasArmed && cancel, pause: wasArmed && pause, navigation: wasArmed ? navigation : zero(),
     };
     return this.frame;

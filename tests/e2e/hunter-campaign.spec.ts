@@ -14,9 +14,7 @@ async function start(page:Page,count:PlayerCount,keyboard=false){
   else{
     await page.locator('#coop').click();if(count>2)await page.getByRole('button',{name:`${count} jugadores`,exact:true}).click();
     await page.getByRole('button',{name:keyboard?'Teclado + controles →':'Jugar con controles →',exact:true}).click();await page.waitForTimeout(200);
-    if(keyboard)await page.keyboard.press('Enter');
-    await page.evaluate(()=>(window as any).__campaignPads.forEach((p:any)=>p.buttons[0]={pressed:true,value:1}));await page.waitForTimeout(200);
-    await page.evaluate(()=>(window as any).__campaignPads.forEach((p:any)=>p.buttons[0]={pressed:false,value:0}));
+  await page.getByRole('button', { name: 'Empezar partida →', exact: true }).click();
   }
   await page.waitForFunction(()=>(window as any).__wooden?.status==='intro');
 }
