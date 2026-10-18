@@ -136,7 +136,7 @@ export class World {
     for (const p of projectiles) {
       if (!p.alive) continue;
       p.age += dt;
-      if (p.age > 7) p.alive = false;
+      // Age only protects the muzzle from immediate self-collision; impacts end a shot.
     }
     let time = dt;
     // Advance every shell to the earliest shared impact, then recalculate trajectories.

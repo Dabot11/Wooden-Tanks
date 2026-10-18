@@ -132,12 +132,45 @@ test('shells can collide during the remainder of a frame after a bounce', () => 
   assert.equal(w.events.filter(e => e.type === 'bounce').length, 1);
   assert.equal(w.events.filter(e => e.type === 'shellCollision').length, 1);
 });
-test('expired shells cannot destroy live shells and collisions remove only colliding missiles', () => {
+test('inactive shells cannot destroy live shells and collisions remove only colliding missiles', () => {
   const w = openWorld(); w.player.turret = Math.PI / 2;
-  w.projectiles = [shot({ x: 500, y: 300, age: 7 }), shot({ id: 21, x: 520, y: 300, vx: -430 })];
+  w.projectiles = [shot({ x: 500, y: 300, age: 7, alive: false }), shot({ id: 21, x: 520, y: 300, vx: -430 })];
   w.update(0.05, input, false); assert.equal(w.projectiles.length, 1);
   w.projectiles = [shot({ x: 500, y: 300 }), shot({ id: 21, x: 520, y: 300, vx: -430 }),
     ...[22, 23, 24].map((id, i) => shot({ id, x: 600, y: 300 + i * 20 }))];
   w.update(0.05, input, false);
   assert.equal(w.projectiles.length, 3); assert.ok(w.fire(w.player));
+});
+
+
+for (const hz of [30, 60, 120]) test(`long flights survive beyond seven seconds and two bounces until the third wall hit at ${hz} Hz`, () => {
+  const w = new World({ ...base, arena: { x: 48, y: 100, w: 2000, h: 500 }, obstacles: [] });
+  const p = shot({ x: 148, y: 300, vx: 322.5, maxBounces: 2 });
+  w.projectiles = [p];
+  let sawLongFlight = false, sawSecondBounce = false;
+  for (let frame = 0; frame < hz * 25 && p.alive; frame++) {
+    w.update(1 / hz, input, false);
+    if (p.age > 7 && p.bounces <= 2) {
+      sawLongFlight = true;
+      assert.ok(p.alive, 'a missile in the air must not expire');
+      assert.ok(w.projectiles.includes(p));
+    }
+    if (p.bounces === 2) { sawSecondBounce = true; assert.ok(p.alive); }
+  }
+  assert.ok(sawLongFlight); assert.ok(sawSecondBounce);
+  assert.equal(p.bounces, 3); assert.equal(p.alive, false);
+  assert.equal(w.projectiles.length, 0);
+  assert.equal(w.events.filter(e => e.type === 'bounce').length, 3);
+});
+
+test('an old missile after its second bounce can still destroy a tank or collide with another missile', () => {
+  const w = openWorld(), target = w.enemies[0];
+  const p = shot({ x: target.x - 50, y: target.y, age: 30, bounces: 2 });
+  w.stepProjectile(p, 0.2);
+  assert.equal(target.alive, false); assert.equal(p.alive, false);
+  const pair = openWorld();
+  pair.projectiles = [shot({ x: 500, y: 300, age: 30, bounces: 2 }), shot({ id: 21, x: 520, y: 300, vx: -430 })];
+  pair.update(0.05, input, false);
+  assert.equal(pair.projectiles.length, 0);
+  assert.equal(pair.events.filter(e => e.type === 'shellCollision').length, 1);
 });

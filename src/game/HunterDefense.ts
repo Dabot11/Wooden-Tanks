@@ -15,7 +15,7 @@ export function incomingThreats(w:World,t:Tank,velocity:Vec):Threat[] {
     const fraction=sweepCircle(shot,{x:(shot.vx-velocity.x)*horizon,y:(shot.vy-velocity.y)*horizon},t,t.radius+12);
     if(fraction===null)return [];
     const time=fraction*horizon,hit={x:shot.x+shot.vx*time,y:shot.y+shot.vy*time};
-    return shot.age+time<7&&lineClear(shot,hit,w.solids,4)?[{shot,time}]:[];
+    return lineClear(shot,hit,w.solids,4)?[{shot,time}]:[];
   }).sort((a,b)=>a.time-b.time||a.shot.id-b.shot.id);
 }
 /** Check the whole short escape, including pits and tanks, and prefer the side with less crossfire. */

@@ -17,7 +17,7 @@ Se mueve a 162,75 unidades por segundo, un 40 % más rápido que el jugador actu
 
 ## Evasión y contratiro
 
-Detecta misiles visibles a menos de 500 unidades y predice impactos durante los siguientes 0,9 segundos, incluyendo su propio movimiento. No conoce proyectiles detrás de muros ni anticipa rebotes ocultos: reevalúa una trayectoria cuando el misil realmente rebota. Descarta proyectiles que se alejan o caducan antes de llegar. También reconoce fuego amigo y sus propios misiles tras un rebote.
+Detecta misiles visibles a menos de 500 unidades y predice impactos durante los siguientes 0,9 segundos, incluyendo su propio movimiento. No conoce proyectiles detrás de muros ni anticipa rebotes ocultos: reevalúa una trayectoria cuando el misil realmente rebota. Descarta proyectiles que se alejan o ya están destruidos; la antigüedad de un misil activo no reduce su amenaza. También reconoce fuego amigo y sus propios misiles tras un rebote.
 
 Tras 0,1 segundos de reacción, elige un desplazamiento perpendicular de 0,34 segundos a su velocidad habitual. Comprueba todo el recorrido contra muros, cavidades, tanques y otros misiles; busca el lado libre de fuego cruzado. Hay 0,45 segundos de descanso entre esquivas. Al terminar evita volver a cruzar el mismo disparo si permanecer en su posición es seguro.
 

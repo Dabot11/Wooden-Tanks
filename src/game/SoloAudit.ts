@@ -40,7 +40,7 @@ export function auditSolo(level: Level): SoloAudit {
   }
   return {id:level.id,issues:[...new Set(issues)],routes,directThreats,nearestEnemy,escapeDirections,bankTargets:level.design?.bankTargets?.length??0};
 }
-/** Real projectile geometry, including tank bodies, wall ricochets and the seven-second lifetime. */
+/** Real projectile geometry, including tank bodies and wall ricochets, within a bounded seven-second probe. */
 export function canHitFrom(level: Level, from: Vec, index: number, ricochet: boolean, playerCount: PlayerCount = 1, playerIndex = 0): boolean {
   const world = new World(level,playerCount), target = world.enemies[index], player=world.players[playerIndex];
   if (!world.canStand(from,player.radius,player.id)) return false;

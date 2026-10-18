@@ -18,11 +18,12 @@ function shoot(w:World,range:number){
   p.x=h.x-Math.cos(angle)*range;p.y=h.y-Math.sin(angle)*range;p.turret=angle;
   assert.ok(w.fire(p));return {move:{x:0,y:0},aim:{x:h.x,y:h.y},fire:false};
 }
-test('threat detection requires a visible incoming trajectory and ignores departing, expired and unbounced own shells',()=>{
+test('threat detection requires a visible incoming trajectory and ignores departing, inactive and unbounced own shells',()=>{
   const w=new World(fixture),h=w.enemies[0];h.x=650;
   const incoming=shell(450,300);w.projectiles=[incoming];assert.equal(incomingThreats(w,h,{x:0,y:0}).length,1);
   incoming.vx=-322.5;assert.equal(incomingThreats(w,h,{x:0,y:0}).length,0);
-  incoming.vx=322.5;incoming.age=6.8;assert.equal(incomingThreats(w,h,{x:0,y:0}).length,0);
+  incoming.vx=322.5;incoming.age=30;incoming.bounces=2;assert.equal(incomingThreats(w,h,{x:0,y:0}).length,1);
+  incoming.alive=false;assert.equal(incomingThreats(w,h,{x:0,y:0}).length,0);incoming.alive=true;incoming.bounces=0;
   incoming.age=0;incoming.owner=h.id;assert.equal(incomingThreats(w,h,{x:0,y:0}).length,0);
   incoming.bounces=1;assert.equal(incomingThreats(w,h,{x:0,y:0}).length,1);
   w.obstacles.push({id:99,x:520,y:250,w:44,h:100,alive:true,destructible:false,hp:3});assert.equal(incomingThreats(w,h,{x:0,y:0}).length,0);
